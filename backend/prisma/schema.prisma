@@ -8,19 +8,23 @@ datasource db {
 }
 
 model Media {
-  id                  Int           @id @default(autoincrement())
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  originalFileName    String
-  storedFileName      String
-  mimeType            String
-  byteSize            Int
-  storageKey          String        @unique
-  siteSettingsLogo    SiteSettings? @relation("SiteSettingsLogo")
-  siteSettingsFavicon SiteSettings? @relation("SiteSettingsFavicon")
-  partnerLogo         Partner?      @relation("PartnerLogo")
-  productImage        Product?      @relation("ProductImage")
-  serviceImage        Service?      @relation("ServiceImage")
+  id                     Int           @id @default(autoincrement())
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  originalFileName       String
+  storedFileName         String
+  mimeType               String
+  byteSize               Int
+  storageKey             String        @unique
+  siteSettingsLogo       SiteSettings? @relation("SiteSettingsLogo")
+  siteSettingsFavicon    SiteSettings? @relation("SiteSettingsFavicon")
+  partnerLogo            Partner?      @relation("PartnerLogo")
+  productImage           Product?      @relation("ProductImage")
+  serviceImage           Service?      @relation("ServiceImage")
+  homePageHeroImage      HomePage?     @relation("HomePageHeroImage")
+  homePageAboutImage     HomePage?     @relation("HomePageAboutPreviewImage")
+  homePageWhyImage       HomePage?     @relation("HomePageWhyImage")
+  aboutPageOverviewImage AboutPage?    @relation("AboutPageOverviewImage")
 }
 
 model SiteSettings {
@@ -130,4 +134,51 @@ model Service {
   displayOrder Int      @default(0)
   imageMediaId Int?     @unique
   image        Media?   @relation("ServiceImage", fields: [imageMediaId], references: [id], onDelete: SetNull)
+}
+
+model HomePage {
+  id                         Int      @id @default(autoincrement())
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+  singletonKey               String   @unique @default("default")
+  heroTitle                  String
+  heroDescription            String
+  heroImageMediaId           Int?     @unique
+  primaryCtaText             String
+  primaryCtaUrl              String
+  secondaryCtaText           String
+  secondaryCtaUrl            String
+  aboutPreviewTitle          String
+  aboutPreviewDescription    String
+  aboutPreviewImageMediaId   Int?     @unique
+  aboutPreviewCtaText        String
+  aboutPreviewCtaUrl         String
+  partnersSectionTitle       String
+  partnersSectionDescription String?
+  productsSectionTitle       String
+  productsSectionDescription String?
+  servicesSectionTitle       String
+  servicesSectionDescription String?
+  whyTitle                   String
+  whyDescription             String
+  whyImageMediaId            Int?     @unique
+  contactSectionTitle        String
+  contactSectionDescription  String?
+  heroImage                  Media?   @relation("HomePageHeroImage", fields: [heroImageMediaId], references: [id], onDelete: SetNull)
+  aboutPreviewImage          Media?   @relation("HomePageAboutPreviewImage", fields: [aboutPreviewImageMediaId], references: [id], onDelete: SetNull)
+  whyImage                   Media?   @relation("HomePageWhyImage", fields: [whyImageMediaId], references: [id], onDelete: SetNull)
+}
+
+model AboutPage {
+  id                   Int      @id @default(autoincrement())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  singletonKey         String   @unique @default("default")
+  overview             String
+  overviewImageMediaId Int?     @unique
+  vision               String
+  mission              String
+  values               String
+  capabilities         String
+  overviewImage        Media?   @relation("AboutPageOverviewImage", fields: [overviewImageMediaId], references: [id], onDelete: SetNull)
 }
