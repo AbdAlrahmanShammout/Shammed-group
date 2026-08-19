@@ -11,6 +11,9 @@ import { DatabaseConfigService } from '@/config/database/database-config.service
 import jwtConfigs from '@/config/jwt/jwt-configs';
 import { jwtConfigSchema } from '@/config/jwt/jwt-config.schema';
 import { JwtConfigService } from '@/config/jwt/jwt-config.service';
+import storageConfigs from '@/config/storage/storage-configs';
+import { storageConfigSchema } from '@/config/storage/storage-config.schema';
+import { StorageConfigService } from '@/config/storage/storage-config.service';
 import swaggerConfigs from '@/config/swagger/swagger-configs';
 import { swaggerConfigSchema } from '@/config/swagger/swagger-config.schema';
 import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
@@ -21,17 +24,36 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      load: [...appConfigs, ...databaseConfigs, ...jwtConfigs, ...swaggerConfigs],
+      load: [
+        ...appConfigs,
+        ...databaseConfigs,
+        ...jwtConfigs,
+        ...storageConfigs,
+        ...swaggerConfigs,
+      ],
       validationSchema: Joi.object({
         ...appConfigSchema,
         ...databaseConfigSchema,
         ...jwtConfigSchema,
+        ...storageConfigSchema,
         ...swaggerConfigSchema,
       }),
       validationOptions: { abortEarly: false, allowUnknown: true },
     }),
   ],
-  providers: [AppConfigService, DatabaseConfigService, JwtConfigService, SwaggerConfigService],
-  exports: [AppConfigService, DatabaseConfigService, JwtConfigService, SwaggerConfigService],
+  providers: [
+    AppConfigService,
+    DatabaseConfigService,
+    JwtConfigService,
+    StorageConfigService,
+    SwaggerConfigService,
+  ],
+  exports: [
+    AppConfigService,
+    DatabaseConfigService,
+    JwtConfigService,
+    StorageConfigService,
+    SwaggerConfigService,
+  ],
 })
 export class ConfigsModule {}
