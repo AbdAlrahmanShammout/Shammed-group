@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { Injectable } from '@nestjs/common';
@@ -27,6 +27,22 @@ export class StorageManagerService {
       byteSize: input.content.byteLength,
       storageKey: storedFileName,
     };
+  }
+
+  async deleteFile(storageKey: string): Promise<void> {
+    const destinationPath = path.join(this.storageConfigService.rootPath, storageKey);
+    try {
+      await unlink(destinationPath);
+    } catch (error) {
+      if (this.isMissingFileError(error)) {
+        return;
+      }
+      throw new DependencyFailureException({
+        message: 'Failed to delete the stored file',
+        code: 'STORAGE_DELETE_FAILED',
+        userFriendly: true,
+      });
+    }
   }
 
   private parseAllowedMimeType(mimeType: string, originalFileName: string): AllowedImageMimeType {
@@ -67,5 +83,11 @@ export class StorageManagerService {
         userFriendly: true,
       });
     }
+  }
+
+  private isMissingFileError(error: unknown): boolean {
+    return (
+      typeof error === 'object' && error !== null && 'code' in error && error.code === 'ENOENT'
+    );
   }
 }

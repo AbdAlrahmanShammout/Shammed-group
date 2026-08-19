@@ -6,5 +6,9 @@ export class BaseEntity {
 }
 
 export type OptionalRelations<T> = {
-  [K in keyof T]: T[K] extends object | null | undefined ? T[K] | undefined : T[K];
+  [K in keyof T]: T[K] extends Date
+    ? T[K]
+    : T[K] extends object | null | undefined
+      ? T[K] | undefined
+      : T[K];
 };
