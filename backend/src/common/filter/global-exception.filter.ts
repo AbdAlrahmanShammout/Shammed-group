@@ -1,10 +1,17 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 
-import { AppConfigService } from '@/config/app/app-config.service';
 import { normalizeException } from '@/common/filter/exception_mappers/exception-mapper';
 import { handleGraphqlException } from '@/common/filter/exception_return_handler/graphql_exception.handler';
 import { handleHttpException } from '@/common/filter/exception_return_handler/http_exception.handler';
 import { GeneralTypeException } from '@/common/filter/exception_return_handler/type/general-type.exception';
+import { AppConfigService } from '@/config/app/app-config.service';
 
 @Catch()
 @Injectable()
@@ -58,7 +65,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   }
 
   private formatErrorResponse(normalized: GeneralTypeException, host: ArgumentsHost): unknown {
-    if (host.getType() === 'graphql') {
+    if (host.getType<string>() === 'graphql') {
       return handleGraphqlException(normalized, host);
     }
     handleHttpException(normalized, host);

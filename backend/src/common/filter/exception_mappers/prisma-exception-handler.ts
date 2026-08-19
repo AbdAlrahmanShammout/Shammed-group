@@ -42,7 +42,9 @@ export function mapPrismaException(exception: unknown): GeneralTypeException | n
   return null;
 }
 
-function mapKnownPrismaRequestError(exception: PrismaClientKnownRequestError): GeneralTypeException {
+function mapKnownPrismaRequestError(
+  exception: PrismaClientKnownRequestError,
+): GeneralTypeException {
   switch (exception.code) {
     case 'P2002':
       return new GeneralTypeException({

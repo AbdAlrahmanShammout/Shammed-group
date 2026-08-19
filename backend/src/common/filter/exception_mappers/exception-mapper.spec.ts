@@ -12,7 +12,9 @@ describe('normalizeException', () => {
   });
 
   it('maps framework HttpException without treating it as a defect', () => {
-    const actual = normalizeException(new HttpException('Too many requests', HttpStatus.TOO_MANY_REQUESTS));
+    const actual = normalizeException(
+      new HttpException('Too many requests', HttpStatus.TOO_MANY_REQUESTS),
+    );
     expect(actual.statusCode).toBe(HttpStatus.TOO_MANY_REQUESTS);
     expect(actual.code).toBe('HTTP_EXCEPTION');
   });
