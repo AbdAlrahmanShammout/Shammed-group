@@ -5,6 +5,9 @@ import * as Joi from 'joi';
 import appConfigs from '@/config/app/app-configs';
 import { appConfigSchema } from '@/config/app/app-config.schema';
 import { AppConfigService } from '@/config/app/app-config.service';
+import authConfigs from '@/config/auth/auth-configs';
+import { authConfigSchema } from '@/config/auth/auth-config.schema';
+import { AuthConfigService } from '@/config/auth/auth-config.service';
 import databaseConfigs from '@/config/database/database-configs';
 import { databaseConfigSchema } from '@/config/database/database-config.schema';
 import { DatabaseConfigService } from '@/config/database/database-config.service';
@@ -26,6 +29,7 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
       cache: true,
       load: [
         ...appConfigs,
+        ...authConfigs,
         ...databaseConfigs,
         ...jwtConfigs,
         ...storageConfigs,
@@ -33,6 +37,7 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
       ],
       validationSchema: Joi.object({
         ...appConfigSchema,
+        ...authConfigSchema,
         ...databaseConfigSchema,
         ...jwtConfigSchema,
         ...storageConfigSchema,
@@ -43,6 +48,7 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
   ],
   providers: [
     AppConfigService,
+    AuthConfigService,
     DatabaseConfigService,
     JwtConfigService,
     StorageConfigService,
@@ -50,6 +56,7 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
   ],
   exports: [
     AppConfigService,
+    AuthConfigService,
     DatabaseConfigService,
     JwtConfigService,
     StorageConfigService,
