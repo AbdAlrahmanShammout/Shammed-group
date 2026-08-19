@@ -1,0 +1,16 @@
+{
+  "name": "shammed-group",
+  "private": true,
+  "packageManager": "pnpm@11.10.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=11.0.0"
+  },
+  "scripts": {
+    "backend": "pnpm --filter backend start:dev",
+    "backend:build": "pnpm --filter backend build",
+    "backend:lint": "pnpm --filter backend lint",
+    "backend:test": "pnpm --filter backend test",
+    "frontend": "pnpm --filter frontend start:dev"
+  }
+}

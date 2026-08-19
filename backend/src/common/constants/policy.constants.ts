@@ -1,0 +1,7 @@
+export const CORS_PREFLIGHT_MAX_AGE_SECONDS = 600;
+export const DEFAULT_THROTTLE_TTL_MS = 60_000;
+export const DEFAULT_THROTTLE_LIMIT = 100;
+export const LOGIN_THROTTLE_TTL_MS = 60_000;
+export const LOGIN_THROTTLE_LIMIT = 5;
+export const REQUEST_BODY_JSON_LIMIT = '100kb';
+export const READY_CHECK_TIMEOUT_MS = 2_000;

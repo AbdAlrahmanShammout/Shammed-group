@@ -1,0 +1,27 @@
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import request from 'supertest';
+
+import { AppModule } from '@/app.module';
+
+describe('Health (e2e)', () => {
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('GET /health/live returns ok without checking dependencies', async () => {
+    const actual = await request(app.getHttpServer()).get('/health/live');
+    expect(actual.status).toBe(200);
+    expect(actual.body).toEqual({ status: 'ok' });
+  });
+});

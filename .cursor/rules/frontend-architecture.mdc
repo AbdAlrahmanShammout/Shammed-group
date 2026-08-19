@@ -1,0 +1,91 @@
+---
+description: Enforce the repository architecture and engineering conventions defined in FRONTEND-ARCHITECTURE.md
+alwaysApply: true
+---
+
+# Architecture Authority
+
+`docs/FRONTEND-ARCHITECTURE.md` is the authoritative architecture and engineering specification for frontend work in this repository.
+
+For all coding, planning, refactoring, debugging, migration, testing, and code-review tasks:
+
+- Read the relevant sections of `docs/FRONTEND-ARCHITECTURE.md` before making changes.
+- Follow the dependency boundaries defined in `docs/FRONTEND-ARCHITECTURE.md`.
+- Follow its folder and feature organization.
+- Follow its naming conventions.
+- Follow its app/pages/features/shared layering.
+- Follow its required frontend stack (React, Vite, Tailwind, shadcn/ui, TanStack Query, React Hook Form, Zod, React Router).
+- Follow its UI system and design-consistency rules.
+- Follow its server-state versus client-state rules.
+- Follow its API-layer and data-fetching conventions.
+- Follow its forms, validation, routing, and authentication UX conventions.
+- Follow its error, loading, and empty-state conventions.
+- Follow its accessibility, responsive, and testing standards.
+- Follow its feature implementation workflows.
+- Preserve the distinction between UI, feature logic, API/data access, and app infrastructure.
+- Do not scatter raw API calls through UI components.
+- Do not import another feature's internal files.
+- Do not duplicate backend business rules, entitlement, or critical calculations in the UI.
+- Do not introduce alternative architectural patterns simply because they are common in other React or Next.js projects.
+
+If existing code conflicts with `docs/FRONTEND-ARCHITECTURE.md`:
+
+1. Do not propagate the conflicting pattern into new code.
+2. Flag the inconsistency.
+3. Follow `docs/FRONTEND-ARCHITECTURE.md` for new implementation unless explicitly instructed otherwise.
+
+If a user request appears to conflict with `docs/FRONTEND-ARCHITECTURE.md`:
+
+1. Identify the conflict clearly.
+2. Explain the architectural consequence.
+3. Ask for or follow an explicit user override when necessary.
+
+Do not modify `docs/FRONTEND-ARCHITECTURE.md` unless explicitly requested.
+
+# Required Workflow
+
+Before substantial implementation:
+
+1. Identify which sections of `docs/FRONTEND-ARCHITECTURE.md` apply.
+2. Inspect the affected existing implementation.
+3. Plan the change according to those rules.
+
+During implementation:
+
+4. Keep route/page components thin.
+5. Keep feature UI, hooks, and feature API modules inside the owning feature.
+6. Keep HTTP client, auth headers, error parsing, and query-key infrastructure in the API layer.
+7. Keep reusable UI free of feature ownership.
+8. Keep server state in TanStack Query and local UI state local.
+9. Respect feature and dependency boundaries.
+
+After implementation:
+
+10. Run relevant tests.
+11. Run lint, type checking, and build if configured.
+12. Review all changed files against `docs/FRONTEND-ARCHITECTURE.md`.
+13. Fix architecture violations introduced by the change before declaring the task complete.
+
+# Architecture Compliance Check
+
+Before completing a task, explicitly verify:
+
+- correct file placement
+- correct naming
+- correct feature ownership
+- correct dependency direction
+- thin page/route composition
+- no feature-to-feature internal imports
+- no shared UI importing features
+- no raw API calls from UI components
+- server state not copied into a global client store by default
+- backend remains authoritative for business rules
+- no duplicated critical business calculations
+- generated OpenAPI contract types used rather than backend source types
+- correct query-key and data-fetching usage
+- loading, error, and empty states present
+- accessibility and responsive requirements met
+- design-system components reused before new primitives are created
+- required tests added or updated
+
+The architecture document takes precedence over inferred conventions.
