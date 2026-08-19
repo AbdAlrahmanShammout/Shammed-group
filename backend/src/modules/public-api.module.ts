@@ -6,6 +6,8 @@ import { PartnerPublicController } from '@/modules/partner/partner.public.contro
 import { PartnerModule } from '@/modules/partner/partner.module';
 import { ProductCategoryPublicController } from '@/modules/product-category/product-category.public.controller';
 import { ProductCategoryModule } from '@/modules/product-category/product-category.module';
+import { ProductPublicController } from '@/modules/product/product.public.controller';
+import { ProductModule } from '@/modules/product/product.module';
 import { SiteSettingsPublicController } from '@/modules/site-settings/site-settings.public.controller';
 import { SiteSettingsModule } from '@/modules/site-settings/site-settings.module';
 import { SocialLinkPublicController } from '@/modules/social-link/social-link.public.controller';
@@ -16,6 +18,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
     LocationModule,
     PartnerModule,
     ProductCategoryModule,
+    ProductModule,
     SiteSettingsModule,
     SocialLinkModule,
   ],
@@ -23,6 +26,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
     LocationPublicController,
     PartnerPublicController,
     ProductCategoryPublicController,
+    ProductPublicController,
     SiteSettingsPublicController,
     SocialLinkPublicController,
   ],
