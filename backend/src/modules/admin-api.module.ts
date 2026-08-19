@@ -8,15 +8,18 @@ import { LocationAdminController } from '@/modules/location/location.admin.contr
 import { LocationModule } from '@/modules/location/location.module';
 import { MediaAdminController } from '@/modules/media/media.admin.controller';
 import { MediaModule } from '@/modules/media/media.module';
+import { SiteSettingsAdminController } from '@/modules/site-settings/site-settings.admin.controller';
+import { SiteSettingsModule } from '@/modules/site-settings/site-settings.module';
 import { SocialLinkAdminController } from '@/modules/social-link/social-link.admin.controller';
 import { SocialLinkModule } from '@/modules/social-link/social-link.module';
 
 @Module({
-  imports: [AuthModule, LocationModule, MediaModule, SocialLinkModule],
+  imports: [AuthModule, LocationModule, MediaModule, SiteSettingsModule, SocialLinkModule],
   controllers: [
     AuthAdminController,
     LocationAdminController,
     MediaAdminController,
+    SiteSettingsAdminController,
     SocialLinkAdminController,
   ],
   providers: [JwtAuthGuard, RolesGuard],
