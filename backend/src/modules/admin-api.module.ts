@@ -14,6 +14,8 @@ import { ProductCategoryAdminController } from '@/modules/product-category/produ
 import { ProductCategoryModule } from '@/modules/product-category/product-category.module';
 import { ProductAdminController } from '@/modules/product/product.admin.controller';
 import { ProductModule } from '@/modules/product/product.module';
+import { ServiceAdminController } from '@/modules/service/service.admin.controller';
+import { ServiceModule } from '@/modules/service/service.module';
 import { SiteSettingsAdminController } from '@/modules/site-settings/site-settings.admin.controller';
 import { SiteSettingsModule } from '@/modules/site-settings/site-settings.module';
 import { SocialLinkAdminController } from '@/modules/social-link/social-link.admin.controller';
@@ -27,6 +29,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
     PartnerModule,
     ProductCategoryModule,
     ProductModule,
+    ServiceModule,
     SiteSettingsModule,
     SocialLinkModule,
   ],
@@ -37,6 +40,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
     PartnerAdminController,
     ProductCategoryAdminController,
     ProductAdminController,
+    ServiceAdminController,
     SiteSettingsAdminController,
     SocialLinkAdminController,
   ],
