@@ -8,12 +8,65 @@ datasource db {
 }
 
 model Media {
-  id               Int      @id @default(autoincrement())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  originalFileName String
-  storedFileName   String
-  mimeType         String
-  byteSize         Int
-  storageKey       String   @unique
+  id                  Int           @id @default(autoincrement())
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  originalFileName    String
+  storedFileName      String
+  mimeType            String
+  byteSize            Int
+  storageKey          String        @unique
+  siteSettingsLogo    SiteSettings? @relation("SiteSettingsLogo")
+  siteSettingsFavicon SiteSettings? @relation("SiteSettingsFavicon")
+}
+
+model SiteSettings {
+  id                 Int      @id @default(autoincrement())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  companyName        String
+  companyNameEnglish String
+  companyNameArabic  String?
+  email              String
+  phone              String
+  whatsApp           String?
+  address            String?
+  logoMediaId        Int?     @unique
+  faviconMediaId     Int?     @unique
+  logo               Media?   @relation("SiteSettingsLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
+  favicon            Media?   @relation("SiteSettingsFavicon", fields: [faviconMediaId], references: [id], onDelete: SetNull)
+}
+
+model Location {
+  id            Int             @id @default(autoincrement())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  name          String
+  address       String
+  googleMapsUrl String?
+  latitude      Decimal?        @db.Decimal(10, 7)
+  longitude     Decimal?        @db.Decimal(10, 7)
+  isVisible     Boolean         @default(true)
+  displayOrder  Int             @default(0)
+  phones        LocationPhone[]
+}
+
+model LocationPhone {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  phone        String
+  displayOrder Int      @default(0)
+  locationId   Int
+  location     Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+}
+
+model SocialLink {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  platform     String
+  url          String
+  isVisible    Boolean  @default(true)
+  displayOrder Int      @default(0)
 }
