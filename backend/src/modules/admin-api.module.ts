@@ -8,17 +8,27 @@ import { LocationAdminController } from '@/modules/location/location.admin.contr
 import { LocationModule } from '@/modules/location/location.module';
 import { MediaAdminController } from '@/modules/media/media.admin.controller';
 import { MediaModule } from '@/modules/media/media.module';
+import { PartnerAdminController } from '@/modules/partner/partner.admin.controller';
+import { PartnerModule } from '@/modules/partner/partner.module';
 import { SiteSettingsAdminController } from '@/modules/site-settings/site-settings.admin.controller';
 import { SiteSettingsModule } from '@/modules/site-settings/site-settings.module';
 import { SocialLinkAdminController } from '@/modules/social-link/social-link.admin.controller';
 import { SocialLinkModule } from '@/modules/social-link/social-link.module';
 
 @Module({
-  imports: [AuthModule, LocationModule, MediaModule, SiteSettingsModule, SocialLinkModule],
+  imports: [
+    AuthModule,
+    LocationModule,
+    MediaModule,
+    PartnerModule,
+    SiteSettingsModule,
+    SocialLinkModule,
+  ],
   controllers: [
     AuthAdminController,
     LocationAdminController,
     MediaAdminController,
+    PartnerAdminController,
     SiteSettingsAdminController,
     SocialLinkAdminController,
   ],
