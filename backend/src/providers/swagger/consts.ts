@@ -1,1 +1,9 @@
 export const SWAGGER_JSON_PATH_PREFIX = 'docs-json';
+export const SWAGGER_PUBLIC_NAME = 'public';
+export const SWAGGER_ADMIN_NAME = 'admin';
+export const SWAGGER_PUBLIC_TITLE_SUFFIX = '— Public';
+export const SWAGGER_ADMIN_TITLE_SUFFIX = '— Admin';
+export const SWAGGER_PUBLIC_DESCRIPTION = 'Unauthenticated public website API';
+export const SWAGGER_ADMIN_DESCRIPTION = 'Authenticated admin dashboard API';
+export const SWAGGER_PUBLIC_JSON_PATH = `${SWAGGER_JSON_PATH_PREFIX}/${SWAGGER_PUBLIC_NAME}`;
+export const SWAGGER_ADMIN_JSON_PATH = `${SWAGGER_JSON_PATH_PREFIX}/${SWAGGER_ADMIN_NAME}`;
