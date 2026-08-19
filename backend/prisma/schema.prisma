@@ -18,6 +18,9 @@ model Media {
   storageKey          String        @unique
   siteSettingsLogo    SiteSettings? @relation("SiteSettingsLogo")
   siteSettingsFavicon SiteSettings? @relation("SiteSettingsFavicon")
+  partnerLogo         Partner?      @relation("PartnerLogo")
+  productImage        Product?      @relation("ProductImage")
+  serviceImage        Service?      @relation("ServiceImage")
 }
 
 model SiteSettings {
@@ -69,4 +72,62 @@ model SocialLink {
   url          String
   isVisible    Boolean  @default(true)
   displayOrder Int      @default(0)
+}
+
+model Partner {
+  id               Int       @id @default(autoincrement())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  name             String
+  shortDescription String
+  fullDescription  String?
+  specialization   String?
+  websiteUrl       String?
+  country          String?
+  isVisible        Boolean   @default(true)
+  displayOrder     Int       @default(0)
+  logoMediaId      Int?      @unique
+  logo             Media?    @relation("PartnerLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
+  products         Product[]
+}
+
+model ProductCategory {
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  name         String
+  description  String?
+  isVisible    Boolean   @default(true)
+  displayOrder Int       @default(0)
+  products     Product[]
+}
+
+model Product {
+  id                  Int             @id @default(autoincrement())
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  name                String
+  shortDescription    String
+  detailedDescription String?
+  manufacturer        String?
+  isVisible           Boolean         @default(true)
+  displayOrder        Int             @default(0)
+  categoryId          Int
+  partnerId           Int?
+  imageMediaId        Int?            @unique
+  category            ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  partner             Partner?        @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+  image               Media?          @relation("ProductImage", fields: [imageMediaId], references: [id], onDelete: SetNull)
+}
+
+model Service {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  title        String
+  description  String
+  isVisible    Boolean  @default(true)
+  displayOrder Int      @default(0)
+  imageMediaId Int?     @unique
+  image        Media?   @relation("ServiceImage", fields: [imageMediaId], references: [id], onDelete: SetNull)
 }
