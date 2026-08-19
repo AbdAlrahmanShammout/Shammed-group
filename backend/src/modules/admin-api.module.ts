@@ -4,6 +4,8 @@ import { AuthAdminController } from '@/authentication/auth.admin.controller';
 import { AuthModule } from '@/authentication/auth.module';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
+import { HomePageAdminController } from '@/modules/home-page/home-page.admin.controller';
+import { HomePageModule } from '@/modules/home-page/home-page.module';
 import { LocationAdminController } from '@/modules/location/location.admin.controller';
 import { LocationModule } from '@/modules/location/location.module';
 import { MediaAdminController } from '@/modules/media/media.admin.controller';
@@ -24,6 +26,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
 @Module({
   imports: [
     AuthModule,
+    HomePageModule,
     LocationModule,
     MediaModule,
     PartnerModule,
@@ -35,6 +38,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
   ],
   controllers: [
     AuthAdminController,
+    HomePageAdminController,
     LocationAdminController,
     MediaAdminController,
     PartnerAdminController,
