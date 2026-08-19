@@ -11,6 +11,18 @@
     "backend:build": "pnpm --filter backend build",
     "backend:lint": "pnpm --filter backend lint",
     "backend:test": "pnpm --filter backend test",
-    "frontend": "pnpm --filter frontend start:dev"
+    "frontend": "pnpm --filter frontend start:dev",
+    "frontend:build": "pnpm --filter frontend build",
+    "frontend:lint": "pnpm --filter frontend lint",
+    "frontend:test": "pnpm --filter frontend test"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "bcrypt",
+      "esbuild",
+      "prisma"
+    ]
   }
 }
