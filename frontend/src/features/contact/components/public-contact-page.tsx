@@ -1,5 +1,8 @@
 import type { ReactElement } from 'react';
 
+import { PageSeo } from '@/components/seo/page-seo';
+import { appPaths } from '@/config/app-paths';
+import { findPublicPageSeo } from '@/config/public-page-seo';
 import { ContactCompanyInfo } from '@/features/contact/components/contact-company-info';
 import { ContactForm } from '@/features/contact/components/contact-form';
 import { ContactLocationsList } from '@/features/contact/components/contact-locations-list';
@@ -8,12 +11,17 @@ import { useContactSiteSettingsQuery } from '@/features/contact/hooks/use-contac
 import { useContactSocialLinksQuery } from '@/features/contact/hooks/use-contact-social-links-query';
 import { usePublicLocationsQuery } from '@/features/contact/hooks/use-public-locations-query';
 
+const contactSeo = findPublicPageSeo(appPaths.contact);
+
 export function PublicContactPage(): ReactElement {
   const siteSettingsQuery = useContactSiteSettingsQuery();
   const locationsQuery = usePublicLocationsQuery();
   const socialLinksQuery = useContactSocialLinksQuery();
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-12 md:px-6">
+      {contactSeo ? (
+        <PageSeo description={contactSeo.description} path={contactSeo.path} title={contactSeo.title} />
+      ) : null}
       <h1 className="text-3xl font-medium">Contact Us</h1>
       {siteSettingsQuery.isPending ? <p role="status">Loading contact details…</p> : null}
       {siteSettingsQuery.isError ? (

@@ -1,7 +1,12 @@
 import type { ReactElement } from 'react';
 
+import { PageSeo } from '@/components/seo/page-seo';
+import { appPaths } from '@/config/app-paths';
+import { findPublicPageSeo } from '@/config/public-page-seo';
 import { AboutContentSection } from '@/features/about/components/about-content-section';
 import { usePublicAboutPageQuery } from '@/features/about/hooks/use-public-about-page-query';
+
+const aboutSeo = findPublicPageSeo(appPaths.about);
 
 export function PublicAboutPage(): ReactElement {
   const aboutPageQuery = usePublicAboutPageQuery();
@@ -22,6 +27,9 @@ export function PublicAboutPage(): ReactElement {
   const { aboutPage } = aboutPageQuery.data;
   return (
     <div>
+      {aboutSeo ? (
+        <PageSeo description={aboutSeo.description} path={aboutSeo.path} title={aboutSeo.title} />
+      ) : null}
       <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
         <h1 className="text-3xl font-medium">About Us</h1>
       </div>

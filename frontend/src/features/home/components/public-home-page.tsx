@@ -1,5 +1,8 @@
 import type { ReactElement } from 'react';
 
+import { PageSeo } from '@/components/seo/page-seo';
+import { appPaths } from '@/config/app-paths';
+import { findPublicPageSeo } from '@/config/public-page-seo';
 import { HomeAboutPreviewSection } from '@/features/home/components/home-about-preview-section';
 import { HomeContactSection } from '@/features/home/components/home-contact-section';
 import { HomeHeroSection } from '@/features/home/components/home-hero-section';
@@ -8,6 +11,8 @@ import { HomeProductsSection } from '@/features/home/components/home-products-se
 import { HomeServicesSection } from '@/features/home/components/home-services-section';
 import { HomeWhySection } from '@/features/home/components/home-why-section';
 import { usePublicHomePageQuery } from '@/features/home/hooks/use-public-home-page-query';
+
+const homeSeo = findPublicPageSeo(appPaths.home);
 
 export function PublicHomePage(): ReactElement {
   const homePageQuery = usePublicHomePageQuery();
@@ -28,6 +33,9 @@ export function PublicHomePage(): ReactElement {
   const { homePage, partners, products, services } = homePageQuery.data;
   return (
     <div>
+      {homeSeo ? (
+        <PageSeo description={homeSeo.description} path={homeSeo.path} title={homeSeo.title} />
+      ) : null}
       <HomeHeroSection homePage={homePage} />
       <HomeAboutPreviewSection homePage={homePage} />
       <HomePartnersSection homePage={homePage} partners={partners} />

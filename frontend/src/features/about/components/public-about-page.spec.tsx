@@ -53,6 +53,10 @@ describe('PublicAboutPage', () => {
   it('renders all five content blocks from the about API', async () => {
     renderPublicAboutPage();
     expect(await screen.findByRole('heading', { name: 'About Us' })).toBeInTheDocument();
+    expect(document.title).toBe('About | Shammed Group');
+    expect(document.head.querySelector('meta[name="description"]')?.getAttribute('content')).toContain(
+      'vision, mission, values',
+    );
     expect(screen.getByRole('heading', { name: 'Company Overview' })).toBeInTheDocument();
     expect(screen.getByText('Overview body from API.')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Vision' })).toBeInTheDocument();

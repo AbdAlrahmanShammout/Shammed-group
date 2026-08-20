@@ -5,10 +5,12 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
+import { seoStaticAssetsPlugin } from './vite-plugins/seo-static-assets';
+
 const VITE_DEV_SERVER_PORT = 5173;
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), seoStaticAssetsPlugin()],
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),

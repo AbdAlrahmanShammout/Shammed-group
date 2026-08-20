@@ -1,11 +1,16 @@
 import type { ReactElement } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { PageSeo } from '@/components/seo/page-seo';
+import { appPaths } from '@/config/app-paths';
+import { findPublicPageSeo } from '@/config/public-page-seo';
 import { ProductCategoryFilter } from '@/features/products/components/product-category-filter';
 import { ProductListItem } from '@/features/products/components/product-list-item';
 import { usePublicProductCategoriesQuery } from '@/features/products/hooks/use-public-product-categories-query';
 import { usePublicProductsQuery } from '@/features/products/hooks/use-public-products-query';
 import { parseCategoryIdSearchParam } from '@/features/products/lib/parse-category-id-search-param';
+
+const productsSeo = findPublicPageSeo(appPaths.products);
 
 export function PublicProductsPage(): ReactElement {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +26,13 @@ export function PublicProductsPage(): ReactElement {
   }
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:px-6">
+      {productsSeo ? (
+        <PageSeo
+          description={productsSeo.description}
+          path={productsSeo.path}
+          title={productsSeo.title}
+        />
+      ) : null}
       <h1 className="text-3xl font-medium">Products</h1>
       {categoriesQuery.isPending ? <p role="status">Loading categories…</p> : null}
       {categoriesQuery.isError ? (

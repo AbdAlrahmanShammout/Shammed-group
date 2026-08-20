@@ -2,8 +2,10 @@ import type { ReactElement } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { ApiError } from '@/api/api-error';
+import { PageSeo } from '@/components/seo/page-seo';
 import { appPaths } from '@/config/app-paths';
 import { usePublicProductQuery } from '@/features/products/hooks/use-public-product-query';
+import { createProductDetailPath } from '@/features/products/lib/create-product-detail-path';
 import { parseProductIdParam } from '@/features/products/lib/parse-product-id-param';
 
 export function PublicProductDetailPage(): ReactElement {
@@ -41,6 +43,11 @@ export function PublicProductDetailPage(): ReactElement {
   const { product } = productQuery.data;
   return (
     <article className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-12 md:px-6">
+      <PageSeo
+        description={product.shortDescription}
+        path={createProductDetailPath(product.id)}
+        title={product.name}
+      />
       <Link className="text-sm font-medium underline-offset-4 hover:underline" to={appPaths.products}>
         Back to products
       </Link>
