@@ -18,6 +18,7 @@ describe('LocationService', () => {
     latitude: 33.5138,
     longitude: 36.2765,
     isVisible: true,
+    isMapVisible: true,
     displayOrder: 0,
     phones: [
       {
@@ -65,6 +66,7 @@ describe('LocationService', () => {
     expect(locationRepository.create).toHaveBeenCalledWith(
       expect.objectContaining({
         isVisible: true,
+        isMapVisible: true,
         displayOrder: 0,
         phones: [{ phone: '+963 11 123 4567', displayOrder: 0 }],
       }),

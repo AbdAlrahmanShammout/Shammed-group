@@ -34,6 +34,7 @@ export class LocationService {
       latitude: input.latitude ?? null,
       longitude: input.longitude ?? null,
       isVisible: input.isVisible ?? true,
+      isMapVisible: input.isMapVisible ?? true,
       displayOrder: input.displayOrder ?? 0,
       phones: this.mapPhoneInputs(input.phones),
     });
@@ -92,6 +93,7 @@ export class LocationService {
       latitude: input.latitude,
       longitude: input.longitude,
       isVisible: input.isVisible,
+      isMapVisible: input.isMapVisible,
       displayOrder: input.displayOrder,
       phones: input.phones ? this.mapPhoneInputs(input.phones) : undefined,
     });

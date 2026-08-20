@@ -67,7 +67,7 @@ const PARTNERS: readonly SeedPartner[] = [
     specialization: 'Shock-wave therapy and lithotripsy',
     websiteUrl: 'https://www.storzmedical.com/en/',
     country: 'Switzerland',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 1,
   },
   {
@@ -78,7 +78,7 @@ const PARTNERS: readonly SeedPartner[] = [
       'The supplied profile describes Technix as a European producer of devices for radiography and fluoroscopy. Current relationship and territory require client confirmation.',
     specialization: 'Radiography and fluoroscopy',
     websiteUrl: 'https://www.technix.it/',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 2,
   },
   {
@@ -90,7 +90,7 @@ const PARTNERS: readonly SeedPartner[] = [
     specialization: 'Medical technology and endoscopy',
     websiteUrl: 'https://www.karlstorz.com/us/en/',
     country: 'Germany',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 3,
   },
   {
@@ -102,7 +102,7 @@ const PARTNERS: readonly SeedPartner[] = [
     specialization: 'Medical technology',
     websiteUrl: 'https://www.klsmartin.com/en-na/',
     country: 'Germany',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 4,
   },
   {
@@ -114,28 +114,28 @@ const PARTNERS: readonly SeedPartner[] = [
     specialization: 'Renal care and hemodialysis',
     websiteUrl: 'https://www.dialifegroup.com/',
     country: 'Switzerland',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 5,
   },
   {
     name: 'OES',
     shortDescription:
       'Listed in the supplied corporate deck under “Exclusive Partners.” Current relationship and company details require client confirmation.',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 6,
   },
   {
     name: 'SMD MEDICARE',
     shortDescription:
       'Listed in the supplied corporate deck under “Exclusive Partners.” Current relationship and company details require client confirmation.',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 7,
   },
   {
     name: 'Bistos',
     shortDescription:
       'Listed in the supplied corporate deck under “Exclusive Partners.” Current relationship and company details require client confirmation.',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 8,
   },
 ];
@@ -177,19 +177,141 @@ const SERVICES: readonly SeedService[] = [
   },
 ];
 
+type SeedProduct = {
+  readonly name: string;
+  readonly shortDescription: string;
+  readonly detailedDescription: string;
+  readonly manufacturer: string;
+  readonly categoryName: string;
+  readonly partnerName?: string;
+  readonly isVisible: boolean;
+  readonly displayOrder: number;
+};
+
+/** Demo catalog items for local testing and UI review — not client-confirmed products. */
+const SAMPLE_PRODUCTS: readonly SeedProduct[] = [
+  {
+    name: 'Demo Mobile C-Arm System',
+    shortDescription: 'Sample imaging system for operating-room visualization demos.',
+    detailedDescription:
+      'Placeholder product used to exercise the public catalog and home products section. Replace with confirmed equipment data before production.',
+    manufacturer: 'Demo Imaging Labs',
+    categoryName: 'Medical Equipment',
+    partnerName: 'Technix',
+    isVisible: true,
+    displayOrder: 1,
+  },
+  {
+    name: 'Demo Extracorporeal Shock Wave Unit',
+    shortDescription: 'Sample lithotripsy workstation for catalog layout testing.',
+    detailedDescription:
+      'Demo-only entry inspired by shock-wave therapy workflows. Not a real SKU and not approved for public marketing copy.',
+    manufacturer: 'Demo MedTech',
+    categoryName: 'Medical Equipment',
+    partnerName: 'STORZ Medical AG',
+    isVisible: true,
+    displayOrder: 2,
+  },
+  {
+    name: 'Demo Endoscopy Tower Kit',
+    shortDescription: 'Sample endoscopy stack for hospital project mockups.',
+    detailedDescription:
+      'Placeholder endoscopy tower used to verify category filters, product detail pages, and partner association display.',
+    manufacturer: 'Demo Scope Systems',
+    categoryName: 'Medical Equipment',
+    partnerName: 'KARL STORZ',
+    isVisible: true,
+    displayOrder: 3,
+  },
+  {
+    name: 'Demo Electrosurgery Generator',
+    shortDescription: 'Sample OR electrosurgery unit for admin and public UI checks.',
+    detailedDescription:
+      'Synthetic product record for regression testing of product forms, ordering, and visibility toggles.',
+    manufacturer: 'Demo Surgical Power',
+    categoryName: 'Medical Equipment',
+    partnerName: 'KLS Martin Group',
+    isVisible: true,
+    displayOrder: 4,
+  },
+  {
+    name: 'Demo Tablet Coating Machine',
+    shortDescription: 'Sample pharmaceutical production equipment for seed previews.',
+    detailedDescription:
+      'Demo coating line entry so the Pharmaceutical Equipment category is not empty during local development.',
+    manufacturer: 'Demo Pharma Process',
+    categoryName: 'Pharmaceutical Equipment',
+    isVisible: true,
+    displayOrder: 1,
+  },
+  {
+    name: 'Demo HPLC Quality Analyzer',
+    shortDescription: 'Sample QC instrument for pharmaceutical laboratory layouts.',
+    detailedDescription:
+      'Placeholder HPLC analyzer used to validate product detail content blocks without real client assets.',
+    manufacturer: 'Demo Lab Analytics',
+    categoryName: 'Pharmaceutical Equipment',
+    isVisible: true,
+    displayOrder: 2,
+  },
+  {
+    name: 'Demo Surgical Consumables Pack',
+    shortDescription: 'Sample OR consumables bundle for list and filter testing.',
+    detailedDescription:
+      'Generic consumables pack seeded only for development demos. Replace with confirmed supply items later.',
+    manufacturer: 'Demo Care Supplies',
+    categoryName: 'Medical Supplies and Consumables',
+    isVisible: true,
+    displayOrder: 1,
+  },
+  {
+    name: 'Demo Dialysis Consumable Set',
+    shortDescription: 'Sample renal-care consumables for catalog density checks.',
+    detailedDescription:
+      'Demo hemodialysis accessory set linked to Dialife for partner-linking UI tests when the partner is visible.',
+    manufacturer: 'Demo Renal Care',
+    categoryName: 'Medical Supplies and Consumables',
+    partnerName: 'Dialife Group',
+    isVisible: true,
+    displayOrder: 2,
+  },
+  {
+    name: 'Demo Specialty Oncology Capsule',
+    shortDescription: 'Sample specialized pharmaceutical SKU for category coverage.',
+    detailedDescription:
+      'Fictional specialty product used to populate Specialized Pharmaceutical Products during local testing.',
+    manufacturer: 'Demo Pharma Specialty',
+    categoryName: 'Specialized Pharmaceutical Products',
+    isVisible: true,
+    displayOrder: 1,
+  },
+  {
+    name: 'Demo Critical-Care Injectable',
+    shortDescription: 'Sample injectable listing for home and products page previews.',
+    detailedDescription:
+      'Hidden-by-default companion product so admins can test visibility switches against a seeded catalog.',
+    manufacturer: 'Demo Hospital Pharma',
+    categoryName: 'Specialized Pharmaceutical Products',
+    isVisible: false,
+    displayOrder: 2,
+  },
+];
+
 /**
- * Seeds confirmed CMS content from the content collection sheet.
- * Products and social links are intentionally not seeded.
+ * Seeds confirmed CMS content from the content collection sheet,
+ * plus demo products for local testing and UI review.
+ * Social links remain intentionally unseeded.
  */
 export async function executeSeed(): Promise<void> {
   const prisma = new PrismaClient();
   try {
-    await clearProductsAndSocialLinks(prisma);
+    await clearSocialLinks(prisma);
     await seedSiteSettings(prisma);
     await seedHomePage(prisma);
     await seedAboutPage(prisma);
     await seedProductCategories(prisma);
     await seedPartners(prisma);
+    await seedSampleProducts(prisma);
     await seedServices(prisma);
     await seedHeadquartersLocation(prisma);
   } finally {
@@ -197,8 +319,7 @@ export async function executeSeed(): Promise<void> {
   }
 }
 
-async function clearProductsAndSocialLinks(prisma: PrismaClient): Promise<void> {
-  await prisma.product.deleteMany();
+async function clearSocialLinks(prisma: PrismaClient): Promise<void> {
   await prisma.socialLink.deleteMany();
 }
 
@@ -347,6 +468,44 @@ async function seedServices(prisma: PrismaClient): Promise<void> {
       continue;
     }
     await prisma.service.create({ data: service });
+  }
+}
+
+async function seedSampleProducts(prisma: PrismaClient): Promise<void> {
+  const categories = await prisma.productCategory.findMany();
+  const partners = await prisma.partner.findMany();
+  const categoryIdByName = new Map(categories.map((category) => [category.name, category.id]));
+  const partnerIdByName = new Map(partners.map((partner) => [partner.name, partner.id]));
+  const keptNames = SAMPLE_PRODUCTS.map((product) => product.name);
+  await prisma.product.deleteMany({
+    where: { name: { notIn: [...keptNames] } },
+  });
+  for (const product of SAMPLE_PRODUCTS) {
+    const categoryId = categoryIdByName.get(product.categoryName);
+    if (categoryId === undefined) {
+      throw new Error(`Seed category missing for product "${product.name}": ${product.categoryName}`);
+    }
+    const partnerId =
+      product.partnerName === undefined ? null : (partnerIdByName.get(product.partnerName) ?? null);
+    if (product.partnerName !== undefined && partnerId === null) {
+      throw new Error(`Seed partner missing for product "${product.name}": ${product.partnerName}`);
+    }
+    const data = {
+      name: product.name,
+      shortDescription: product.shortDescription,
+      detailedDescription: product.detailedDescription,
+      manufacturer: product.manufacturer,
+      isVisible: product.isVisible,
+      displayOrder: product.displayOrder,
+      categoryId,
+      partnerId,
+    };
+    const existing = await prisma.product.findFirst({ where: { name: product.name } });
+    if (existing) {
+      await prisma.product.update({ where: { id: existing.id }, data });
+      continue;
+    }
+    await prisma.product.create({ data });
   }
 }
 

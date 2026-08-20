@@ -10,6 +10,7 @@ export function toLocationRequestBody(values: LocationFormValues): CreateLocatio
     latitude: hasCoordinates ? Number(values.latitude) : null,
     longitude: hasCoordinates ? Number(values.longitude) : null,
     isVisible: values.isVisible,
+    isMapVisible: values.isMapVisible,
     displayOrder: values.displayOrder === '' ? 0 : Number(values.displayOrder),
     phones: values.phones.map((phoneItem, index) => ({
       phone: phoneItem.phone,

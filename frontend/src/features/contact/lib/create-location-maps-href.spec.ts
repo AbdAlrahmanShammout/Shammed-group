@@ -10,6 +10,7 @@ const baseLocation: LocationResponse = {
   name: 'Damascus office',
   address: 'Mazzeh, Damascus',
   isVisible: true,
+  isMapVisible: true,
   displayOrder: 0,
   phones: [],
 };

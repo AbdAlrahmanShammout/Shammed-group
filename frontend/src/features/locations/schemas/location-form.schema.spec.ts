@@ -11,6 +11,7 @@ describe('locationFormSchema', () => {
       latitude: '33.5',
       longitude: '',
       isVisible: true,
+      isMapVisible: true,
       displayOrder: '0',
       phones: [{ phone: '+963' }],
     });
@@ -31,6 +32,7 @@ describe('locationFormSchema', () => {
       latitude: '33.5',
       longitude: '36.2',
       isVisible: true,
+      isMapVisible: true,
       displayOrder: '0',
       phones: [{ phone: '+963' }],
     });

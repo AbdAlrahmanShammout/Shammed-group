@@ -26,6 +26,12 @@ export class LocationResponse extends BaseModelResponseDto {
   @ApiProperty({ description: 'Whether the location is public', example: true })
   isVisible: boolean;
 
+  @ApiProperty({
+    description: 'Whether the Google Map embed is shown in the public footer',
+    example: true,
+  })
+  isMapVisible: boolean;
+
   @ApiProperty({ description: 'Sort order among locations', example: 0 })
   displayOrder: number;
 
@@ -40,6 +46,7 @@ export class LocationResponse extends BaseModelResponseDto {
     this.latitude = data.latitude ?? undefined;
     this.longitude = data.longitude ?? undefined;
     this.isVisible = data.isVisible;
+    this.isMapVisible = data.isMapVisible;
     this.displayOrder = data.displayOrder;
     this.phones = (data.phones ?? []).map((phone) => new LocationPhoneResponse(phone));
   }

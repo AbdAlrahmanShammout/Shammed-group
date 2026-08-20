@@ -8,6 +8,7 @@ import { ApiError } from '@/api/api-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { useCreateAdminLocationMutation } from '@/features/locations/hooks/use-create-admin-location-mutation';
 import { useUpdateAdminLocationMutation } from '@/features/locations/hooks/use-update-admin-location-mutation';
 import { toLocationRequestBody } from '@/features/locations/lib/to-location-request-body';
@@ -113,6 +114,7 @@ function createDefaultValues(
     latitude: location?.latitude?.toString() ?? '',
     longitude: location?.longitude?.toString() ?? '',
     isVisible: location?.isVisible ?? true,
+    isMapVisible: location?.isMapVisible ?? true,
     displayOrder: location?.displayOrder?.toString() ?? String(nextDisplayOrder),
     phones: location?.phones.map((phoneItem) => ({ phone: phoneItem.phone })) ?? [{ phone: '' }],
   };
@@ -244,10 +246,34 @@ export function LocationForm({
         </div>
       </div>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
-        Visible on the public site
-      </label>
+      <div className="flex flex-col gap-3">
+        <div className="flex h-9 items-center gap-2 rounded-md border px-2">
+          <Switch
+            checked={form.watch('isVisible')}
+            disabled={isPending}
+            id="locationIsVisible"
+            onCheckedChange={(isVisible) => {
+              form.setValue('isVisible', isVisible, { shouldDirty: true });
+            }}
+          />
+          <Label className="cursor-pointer text-sm font-normal" htmlFor="locationIsVisible">
+            Visible on the public site
+          </Label>
+        </div>
+        <div className="flex h-9 items-center gap-2 rounded-md border px-2">
+          <Switch
+            checked={form.watch('isMapVisible')}
+            disabled={isPending}
+            id="locationIsMapVisible"
+            onCheckedChange={(isMapVisible) => {
+              form.setValue('isMapVisible', isMapVisible, { shouldDirty: true });
+            }}
+          />
+          <Label className="cursor-pointer text-sm font-normal" htmlFor="locationIsMapVisible">
+            Show Google Map embed in the footer
+          </Label>
+        </div>
+      </div>
       <fieldset className="flex flex-col gap-3">
         <legend className="text-sm font-medium">Phone numbers</legend>
         <p className="text-sm text-muted-foreground">Drag phones to change their display order.</p>

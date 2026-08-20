@@ -32,6 +32,7 @@ const mockLocations = {
       address: '2 Branch Road',
       googleMapsUrl: 'https://maps.google.com/?q=example',
       isVisible: true,
+      isMapVisible: true,
       displayOrder: 0,
       phones: [{ id: 1, phone: '+10000000002', displayOrder: 0 }],
     },

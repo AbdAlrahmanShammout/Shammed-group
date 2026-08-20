@@ -28,6 +28,40 @@ export const mockPublicSocialLinks = {
   total: 1,
 };
 
+export const mockPublicLocations = {
+  locations: [
+    {
+      id: 1,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+      name: 'Damascus Headquarters',
+      address: '1 Example Street',
+      googleMapsUrl: 'https://www.google.com/maps?q=33.52353,36.29287',
+      latitude: 33.52353,
+      longitude: 36.29287,
+      isVisible: true,
+      isMapVisible: true,
+      displayOrder: 1,
+      phones: [],
+    },
+    {
+      id: 2,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+      name: 'Damascus Second Branch',
+      address: '2 Branch Road',
+      googleMapsUrl: 'https://www.google.com/maps?q=33.52178,36.29788',
+      latitude: 33.52178,
+      longitude: 36.29788,
+      isVisible: true,
+      isMapVisible: true,
+      displayOrder: 2,
+      phones: [],
+    },
+  ],
+  total: 2,
+};
+
 export const mockPublicHomePage = {
   homePage: {
     id: 1,
@@ -140,6 +174,12 @@ export function createPublicChromeFetchMock(
     }
     if (url === `${appEnv.apiBaseUrl}/social-link`) {
       return new Response(JSON.stringify(mockPublicSocialLinks), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    if (url === `${appEnv.apiBaseUrl}/location`) {
+      return new Response(JSON.stringify(mockPublicLocations), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
       });

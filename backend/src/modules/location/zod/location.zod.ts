@@ -28,6 +28,7 @@ export const LocationZodSchema = BaseZodSchema.extend({
   latitude: ZodNumberNullable,
   longitude: ZodNumberNullable,
   isVisible: ZodBoolean,
+  isMapVisible: ZodBoolean,
   displayOrder: ZodNumber,
   phones: (z.any().nullish() as z.ZodType<LocationPhoneZodType[] | null | undefined>).optional(),
 });

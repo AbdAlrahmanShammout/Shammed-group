@@ -66,6 +66,14 @@ export class CreateLocationRequestDto {
   @IsBoolean()
   isVisible?: boolean;
 
+  @ApiPropertyOptional({
+    description: 'Whether the Google Map embed is shown in the public footer',
+    example: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isMapVisible?: boolean;
+
   @ApiPropertyOptional({ description: 'Sort order among locations', example: 0 })
   @IsOptional()
   @IsInt()

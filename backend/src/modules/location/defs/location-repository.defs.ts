@@ -12,6 +12,7 @@ export type CreateLocationRepoInput = {
   readonly latitude: number | null;
   readonly longitude: number | null;
   readonly isVisible: boolean;
+  readonly isMapVisible: boolean;
   readonly displayOrder: number;
   readonly phones: readonly LocationPhoneRepoInput[];
 };
@@ -24,6 +25,7 @@ export type UpdateLocationRepoInput = {
   readonly latitude?: number | null;
   readonly longitude?: number | null;
   readonly isVisible?: boolean;
+  readonly isMapVisible?: boolean;
   readonly displayOrder?: number;
   readonly phones?: readonly LocationPhoneRepoInput[];
 };

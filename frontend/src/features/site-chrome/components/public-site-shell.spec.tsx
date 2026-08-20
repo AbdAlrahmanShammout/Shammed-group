@@ -1,5 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -35,6 +36,7 @@ describe('PublicSiteShell', () => {
     vi.unstubAllGlobals();
   });
   it('renders nav links and footer contact details from the public APIs', async () => {
+    const user = userEvent.setup();
     renderPublicHome();
     const primaryNav = screen.getByRole('navigation', { name: 'Primary' });
     expect(within(primaryNav).getByRole('link', { name: 'Home' })).toBeInTheDocument();
@@ -53,6 +55,18 @@ describe('PublicSiteShell', () => {
     expect(screen.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute(
       'href',
       'https://www.linkedin.com/example',
+    );
+    expect(
+      await screen.findByTitle('Google Map for Damascus Headquarters'),
+    ).toHaveAttribute(
+      'src',
+      'https://maps.google.com/maps?q=33.52353,36.29287&z=15&output=embed',
+    );
+    const secondBranchTab = await screen.findByRole('tab', { name: 'Damascus Second Branch' });
+    await user.click(secondBranchTab);
+    expect(screen.getByTitle('Google Map for Damascus Second Branch')).toHaveAttribute(
+      'src',
+      'https://maps.google.com/maps?q=33.52178,36.29788&z=15&output=embed',
     );
   });
   it('keeps navigation when site settings fail and does not invent an email', async () => {

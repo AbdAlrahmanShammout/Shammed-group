@@ -19,6 +19,7 @@ export type LocationResponse = {
   readonly latitude?: number;
   readonly longitude?: number;
   readonly isVisible: boolean;
+  readonly isMapVisible: boolean;
   readonly displayOrder: number;
   readonly phones: readonly LocationPhoneResponse[];
 };
@@ -44,6 +45,7 @@ export type CreateLocationRequestDto = {
   readonly latitude?: number | null;
   readonly longitude?: number | null;
   readonly isVisible?: boolean;
+  readonly isMapVisible?: boolean;
   readonly displayOrder?: number;
   readonly phones: readonly LocationPhoneRequestDto[];
 };
@@ -55,6 +57,7 @@ export type UpdateLocationRequestDto = {
   readonly latitude?: number | null;
   readonly longitude?: number | null;
   readonly isVisible?: boolean;
+  readonly isMapVisible?: boolean;
   readonly displayOrder?: number;
   readonly phones?: readonly LocationPhoneRequestDto[];
 };

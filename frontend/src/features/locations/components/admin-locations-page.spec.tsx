@@ -17,6 +17,7 @@ const mockLocations = {
       name: 'Damascus office',
       address: 'Mazzeh',
       isVisible: true,
+      isMapVisible: true,
       displayOrder: 0,
       phones: [{ id: 1, phone: '+963', displayOrder: 0 }],
     },

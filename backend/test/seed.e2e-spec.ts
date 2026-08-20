@@ -21,7 +21,7 @@ describe('Seed (e2e)', () => {
     await configsModule.close();
   });
 
-  it('is idempotent and seeds confirmed content without products or social links', async () => {
+  it('is idempotent and seeds confirmed content with demo products', async () => {
     await executeSeed();
     await executeSeed();
     const [
@@ -44,7 +44,9 @@ describe('Seed (e2e)', () => {
       prisma.partner.findMany({
         orderBy: { displayOrder: 'asc' },
       }),
-      prisma.product.findMany(),
+      prisma.product.findMany({
+        orderBy: [{ categoryId: 'asc' }, { displayOrder: 'asc' }],
+      }),
       prisma.service.findMany({
         orderBy: { displayOrder: 'asc' },
       }),
@@ -80,17 +82,21 @@ describe('Seed (e2e)', () => {
     ]);
     expect(partners).toHaveLength(8);
     expect(partners.every((partner) => partner.isVisible === false)).toBe(true);
-    expect(products).toHaveLength(0);
+    expect(products).toHaveLength(10);
+    expect(products.filter((product) => product.isVisible)).toHaveLength(9);
+    expect(products.every((product) => product.name.startsWith('Demo '))).toBe(true);
     expect(services).toHaveLength(5);
     expect(socialLinks).toHaveLength(0);
-    expect(locations).toHaveLength(1);
-    expect(locations[0]).toEqual(
+    const headquarters = locations.find(
+      (location) => location.name === 'Shammed Group Headquarters — Damascus',
+    );
+    expect(headquarters).toEqual(
       expect.objectContaining({
         name: 'Shammed Group Headquarters — Damascus',
         isVisible: true,
       }),
     );
-    expect(locations[0]?.phones.map((phone) => phone.phone)).toEqual([
+    expect(headquarters?.phones.map((phone) => phone.phone)).toEqual([
       '+963 11 44699200',
       '+963 11 44699201',
     ]);

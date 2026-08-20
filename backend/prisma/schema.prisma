@@ -54,6 +54,7 @@ model Location {
   latitude      Decimal?        @db.Decimal(10, 7)
   longitude     Decimal?        @db.Decimal(10, 7)
   isVisible     Boolean         @default(true)
+  isMapVisible  Boolean         @default(true)
   displayOrder  Int             @default(0)
   phones        LocationPhone[]
 }

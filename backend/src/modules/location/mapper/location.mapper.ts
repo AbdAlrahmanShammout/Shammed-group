@@ -14,6 +14,7 @@ export class LocationMapper {
       latitude: LocationMapper.toOptionalNumber(schema.latitude),
       longitude: LocationMapper.toOptionalNumber(schema.longitude),
       isVisible: schema.isVisible,
+      isMapVisible: schema.isMapVisible,
       displayOrder: schema.displayOrder,
       phones: schema.phones?.map((phone) => LocationMapper.toPhoneEntity(phone)),
     });

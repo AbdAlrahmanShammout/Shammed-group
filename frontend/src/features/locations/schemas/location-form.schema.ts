@@ -12,6 +12,7 @@ export const locationFormSchema = z
     latitude: z.string().trim(),
     longitude: z.string().trim(),
     isVisible: z.boolean(),
+    isMapVisible: z.boolean(),
     displayOrder: z.string().trim(),
     phones: z.array(locationPhoneSchema).min(1, 'At least one phone number is required'),
   })

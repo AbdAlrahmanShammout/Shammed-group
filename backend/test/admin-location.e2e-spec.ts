@@ -57,6 +57,7 @@ describe('Admin location (e2e)', () => {
         latitude: 33.5138,
         longitude: 36.2765,
         isVisible: true,
+        isMapVisible: true,
       }),
     );
     expect(actual.body.location.phones).toHaveLength(1);

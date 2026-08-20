@@ -32,6 +32,7 @@ export class LocationPrismaRepository implements LocationRepository {
         latitude: input.latitude,
         longitude: input.longitude,
         isVisible: input.isVisible,
+        isMapVisible: input.isMapVisible,
         displayOrder: input.displayOrder,
         phones: {
           create: input.phones.map((phone) => ({
@@ -126,6 +127,9 @@ export class LocationPrismaRepository implements LocationRepository {
     }
     if (input.isVisible !== undefined) {
       data.isVisible = input.isVisible;
+    }
+    if (input.isMapVisible !== undefined) {
+      data.isMapVisible = input.isMapVisible;
     }
     if (input.displayOrder !== undefined) {
       data.displayOrder = input.displayOrder;

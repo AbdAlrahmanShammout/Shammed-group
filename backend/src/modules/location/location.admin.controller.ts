@@ -52,6 +52,7 @@ export class LocationAdminController {
       latitude: requestDto.latitude,
       longitude: requestDto.longitude,
       isVisible: requestDto.isVisible,
+      isMapVisible: requestDto.isMapVisible,
       displayOrder: requestDto.displayOrder,
       phones: requestDto.phones.map((phone) => ({
         phone: phone.phone,
@@ -98,6 +99,7 @@ export class LocationAdminController {
       latitude: requestDto.latitude,
       longitude: requestDto.longitude,
       isVisible: requestDto.isVisible,
+      isMapVisible: requestDto.isMapVisible,
       displayOrder: requestDto.displayOrder,
       phones: requestDto.phones?.map((phone) => ({
         phone: phone.phone,

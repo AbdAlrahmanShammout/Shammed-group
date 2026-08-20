@@ -5,8 +5,10 @@ import { PublicFooter } from '@/components/layout/public-footer';
 import { PublicHeader } from '@/components/layout/public-header';
 import { appPaths } from '@/config/app-paths';
 import { publicNavItems } from '@/config/public-nav-items';
+import { usePublicLocationsQuery } from '@/features/site-chrome/hooks/use-public-locations-query';
 import { usePublicSiteSettingsQuery } from '@/features/site-chrome/hooks/use-public-site-settings-query';
 import { usePublicSocialLinksQuery } from '@/features/site-chrome/hooks/use-public-social-links-query';
+import { createLocationMapsEmbedUrl } from '@/lib/create-location-maps-embed-url';
 import { createPublicMediaUrl } from '@/lib/create-public-media-url';
 
 function applyDocumentFavicon(faviconMediaId: number | undefined): void {
@@ -27,8 +29,19 @@ function applyDocumentFavicon(faviconMediaId: number | undefined): void {
 export function PublicSiteShell(): ReactElement {
   const siteSettingsQuery = usePublicSiteSettingsQuery();
   const socialLinksQuery = usePublicSocialLinksQuery();
+  const locationsQuery = usePublicLocationsQuery();
   const siteSettings = siteSettingsQuery.data?.siteSettings;
   const socialLinks = socialLinksQuery.data?.socialLinks ?? [];
+  const mapLocations = (locationsQuery.data?.locations ?? []).flatMap((location) => {
+    if (!location.isMapVisible) {
+      return [];
+    }
+    const embedUrl = createLocationMapsEmbedUrl(location);
+    if (!embedUrl) {
+      return [];
+    }
+    return [{ id: location.id, name: location.name, embedUrl }];
+  });
   useEffect(() => {
     applyDocumentFavicon(siteSettings?.faviconMediaId);
   }, [siteSettings?.faviconMediaId]);
@@ -59,6 +72,7 @@ export function PublicSiteShell(): ReactElement {
         isSettingsError={siteSettingsQuery.isError}
         isSettingsPending={siteSettingsQuery.isPending}
         logoMediaId={siteSettings?.logoMediaId}
+        mapLocations={mapLocations}
         navItems={publicNavItems}
         phone={siteSettings?.phone}
         socialLinks={socialLinks}

@@ -1,5 +1,6 @@
 import { useState, type ReactElement } from 'react';
 
+import { AdminMapEmbedSwitch } from '@/components/layout/admin-map-embed-switch';
 import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
 import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
@@ -20,6 +21,7 @@ export function AdminLocationsPage(): ReactElement {
   const [isCreating, setIsCreating] = useState(false);
   const [locationPendingDelete, setLocationPendingDelete] = useState<LocationResponse | null>(null);
   const [visibilityPendingId, setVisibilityPendingId] = useState<number | null>(null);
+  const [mapVisibilityPendingId, setMapVisibilityPendingId] = useState<number | null>(null);
   const orderedList = useOrderedAdminList({
     items: locationsQuery.data?.locations,
     onPersist: async (patches) => {
@@ -47,6 +49,20 @@ export function AdminLocationsPage(): ReactElement {
       setVisibilityPendingId(null);
     }
   }
+  async function executeMapVisibilityChange(input: {
+    readonly locationId: number;
+    readonly isMapVisible: boolean;
+  }): Promise<void> {
+    setMapVisibilityPendingId(input.locationId);
+    try {
+      await updateMutation.mutateAsync({
+        locationId: input.locationId,
+        body: { isMapVisible: input.isMapVisible },
+      });
+    } finally {
+      setMapVisibilityPendingId(null);
+    }
+  }
   if (locationsQuery.isPending) {
     return (
       <div className="flex flex-col gap-4">
@@ -71,7 +87,8 @@ export function AdminLocationsPage(): ReactElement {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-medium">Locations</h1>
         <p className="text-muted-foreground">
-          Manage branch addresses, phones, and map details. Drag the list to set display order.
+          Manage branch addresses, phones, and map details. Use Map on/off to control the footer
+          Google Map embed. Drag the list to set display order.
         </p>
       </div>
       {editingLocation || isCreating ? (
@@ -120,11 +137,31 @@ export function AdminLocationsPage(): ReactElement {
                     <div className="flex flex-wrap items-center gap-2">
                       <AdminVisibilitySwitch
                         checked={location.isVisible}
-                        disabled={visibilityPendingId === location.id || orderedList.isSaving}
+                        disabled={
+                          visibilityPendingId === location.id ||
+                          mapVisibilityPendingId === location.id ||
+                          orderedList.isSaving
+                        }
                         entityLabel={location.name}
                         itemId={location.id}
                         onCheckedChange={(isVisible) => {
                           void executeVisibilityChange({ locationId: location.id, isVisible });
+                        }}
+                      />
+                      <AdminMapEmbedSwitch
+                        checked={location.isMapVisible}
+                        disabled={
+                          visibilityPendingId === location.id ||
+                          mapVisibilityPendingId === location.id ||
+                          orderedList.isSaving
+                        }
+                        entityLabel={location.name}
+                        itemId={location.id}
+                        onCheckedChange={(isMapVisible) => {
+                          void executeMapVisibilityChange({
+                            locationId: location.id,
+                            isMapVisible,
+                          });
                         }}
                       />
                       <Button

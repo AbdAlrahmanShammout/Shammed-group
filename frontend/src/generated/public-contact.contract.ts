@@ -19,6 +19,7 @@ export type LocationResponse = {
   readonly latitude?: number;
   readonly longitude?: number;
   readonly isVisible: boolean;
+  readonly isMapVisible: boolean;
   readonly displayOrder: number;
   readonly phones: readonly LocationPhoneResponse[];
 };

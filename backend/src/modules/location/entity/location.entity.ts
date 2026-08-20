@@ -9,6 +9,7 @@ export class LocationEntity extends BaseEntity {
   latitude!: number | null;
   longitude!: number | null;
   isVisible!: boolean;
+  isMapVisible!: boolean;
   displayOrder!: number;
   phones?: LocationPhoneEntity[];
 
