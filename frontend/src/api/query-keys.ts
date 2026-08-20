@@ -9,5 +9,6 @@ export const queryKeys = {
     socialLinks: () => ['public', 'social-links'] as const,
     homePage: () => ['public', 'home-page'] as const,
     aboutPage: () => ['public', 'about-page'] as const,
+    partners: () => ['public', 'partners'] as const,
   },
 };

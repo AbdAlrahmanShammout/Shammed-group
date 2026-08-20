@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 
-import { PublicPageHeading } from '@/components/layout/public-page-heading';
+import { PublicPartnersPage } from '@/features/partners/components/public-partners-page';
 
 export function PartnersPage(): ReactElement {
-  return <PublicPageHeading title="Partners" />;
+  return <PublicPartnersPage />;
 }
