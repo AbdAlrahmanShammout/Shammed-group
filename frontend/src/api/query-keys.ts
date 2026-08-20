@@ -14,6 +14,7 @@ export const queryKeys = {
     partners: () => ['admin', 'partners'] as const,
     productCategories: () => ['admin', 'product-categories'] as const,
     products: () => ['admin', 'products'] as const,
+    services: () => ['admin', 'services'] as const,
   },
   public: {
     siteSettings: () => ['public', 'site-settings'] as const,

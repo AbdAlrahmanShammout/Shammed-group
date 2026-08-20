@@ -6,7 +6,6 @@ import { AdminLoginRoute } from '@/app/admin-login-route';
 import { AdminShellRoute } from '@/app/admin-shell-route';
 import { GuestAdminRoute } from '@/app/guest-admin-route';
 import { RequireAdminSession } from '@/app/require-admin-session';
-import { AdminPlaceholderPage } from '@/components/layout/admin-placeholder-page';
 import { appPaths } from '@/config/app-paths';
 import { PublicSiteShell } from '@/features/site-chrome/components/public-site-shell';
 import { AboutPage } from '@/pages/about-page';
@@ -15,6 +14,7 @@ import { AdminContactInformationPage } from '@/pages/admin-contact-information-p
 import { AdminLocationsPage } from '@/pages/admin-locations-page';
 import { AdminPartnersPage } from '@/pages/admin-partners-page';
 import { AdminProductsPage } from '@/pages/admin-products-page';
+import { AdminServicesPage } from '@/pages/admin-services-page';
 import { AdminSocialLinksPage } from '@/pages/admin-social-links-page';
 import { AdminWebsiteAboutPage } from '@/pages/admin-website-about-page';
 import { AdminWebsiteHomePage } from '@/pages/admin-website-home-page';
@@ -50,10 +50,7 @@ export function AppRoutes(): ReactElement {
           <Route element={<AdminCategoriesPage />} path={appPaths.adminCatalogCategories} />
           <Route element={<AdminProductsPage />} path={appPaths.adminCatalogProducts} />
           <Route element={<AdminPartnersPage />} path={appPaths.adminCompanyPartners} />
-          <Route
-            element={<AdminPlaceholderPage title="Services" />}
-            path={appPaths.adminCompanyServices}
-          />
+          <Route element={<AdminServicesPage />} path={appPaths.adminCompanyServices} />
           <Route element={<AdminLocationsPage />} path={appPaths.adminContactLocations} />
           <Route
             element={<AdminContactInformationPage />}
