@@ -14,5 +14,6 @@ export const queryKeys = {
     products: (filters: { readonly categoryId?: number } = {}) =>
       ['public', 'products', filters] as const,
     product: (productId: number) => ['public', 'product', productId] as const,
+    services: () => ['public', 'services'] as const,
   },
 };
