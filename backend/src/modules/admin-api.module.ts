@@ -5,6 +5,7 @@ import { AuthModule } from '@/authentication/auth.module';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { AboutPageAdminController } from '@/modules/about-page/about-page.admin.controller';
+import { ContactInquiryModule } from '@/modules/contact-inquiry/contact-inquiry.module';
 import { AboutPageModule } from '@/modules/about-page/about-page.module';
 import { DashboardAdminController } from '@/modules/dashboard/dashboard.admin.controller';
 import { DashboardModule } from '@/modules/dashboard/dashboard.module';
@@ -31,6 +32,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
   imports: [
     AuthModule,
     AboutPageModule,
+    ContactInquiryModule,
     DashboardModule,
     HomePageModule,
     LocationModule,

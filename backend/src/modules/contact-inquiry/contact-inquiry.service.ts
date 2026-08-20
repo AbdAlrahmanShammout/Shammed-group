@@ -1,8 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { SmtpConfigService } from '@/config/smtp/smtp-config.service';
 import { CONTACT_INQUIRY_EMAIL_SUBJECT_PREFIX } from '@/modules/contact-inquiry/consts';
-import { CreateContactInquiryServiceInput } from '@/modules/contact-inquiry/defs/contact-inquiry-service.defs';
+import {
+  ContactInquiryPage,
+  CreateContactInquiryServiceInput,
+  ListContactInquiriesServiceInput,
+} from '@/modules/contact-inquiry/defs/contact-inquiry-service.defs';
 import { ContactInquiryEntity } from '@/modules/contact-inquiry/entity/contact-inquiry.entity';
 import { EmailDeliveryStatus } from '@/modules/contact-inquiry/enum/general.enum';
 import { ContactInquiryRepository } from '@/modules/contact-inquiry/repository/contact-inquiry.repository';
@@ -40,6 +44,67 @@ export class ContactInquiryService {
     } catch (error) {
       this.logger.error(
         `Failed to deliver contact inquiry ${inquiry.id}`,
+        error instanceof Error ? error.stack : undefined,
+      );
+      return this.contactInquiryRepository.update({
+        id: inquiry.id,
+        emailDeliveryStatus: EmailDeliveryStatus.FAILED,
+      });
+    }
+    return this.contactInquiryRepository.update({
+      id: inquiry.id,
+      emailDeliveryStatus: EmailDeliveryStatus.SENT,
+      emailDeliveredAt: new Date(),
+    });
+  }
+
+  async listContactInquiries(input: ListContactInquiriesServiceInput): Promise<ContactInquiryPage> {
+    const [inquiries, total] = await Promise.all([
+      this.contactInquiryRepository.findMany({
+        limit: input.limit,
+        offset: input.offset,
+        status: input.status as EmailDeliveryStatus | undefined,
+      }),
+      this.contactInquiryRepository.count(input.status),
+    ]);
+    return { inquiries, total };
+  }
+
+  async getContactInquiry(id: number): Promise<ContactInquiryEntity> {
+    const inquiry = await this.contactInquiryRepository.findById(id);
+    if (!inquiry) {
+      throw new NotFoundException(`Contact inquiry ${id} not found`);
+    }
+    return inquiry;
+  }
+
+  async resendNotification(id: number): Promise<ContactInquiryEntity> {
+    const inquiry = await this.getContactInquiry(id);
+    await this.contactInquiryRepository.update({
+      id: inquiry.id,
+      emailDeliveryStatus: EmailDeliveryStatus.PENDING,
+      emailDeliveredAt: null,
+    });
+    try {
+      await this.smtpManagerService.sendMail({
+        to: this.smtpConfigService.contactEmail,
+        from: this.smtpConfigService.from,
+        replyTo: inquiry.email,
+        subject: `${CONTACT_INQUIRY_EMAIL_SUBJECT_PREFIX}${inquiry.subject}`,
+        text: this.composeNotificationText(
+          {
+            fullName: inquiry.fullName,
+            email: inquiry.email,
+            phone: inquiry.phone ?? undefined,
+            subject: inquiry.subject,
+            message: inquiry.message,
+          },
+          inquiry.createdAt,
+        ),
+      });
+    } catch (error) {
+      this.logger.error(
+        `Failed to resend contact inquiry ${inquiry.id}`,
         error instanceof Error ? error.stack : undefined,
       );
       return this.contactInquiryRepository.update({

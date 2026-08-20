@@ -31,6 +31,7 @@ export const adminNavGroups: readonly AdminNavGroup[] = [
   {
     label: 'Contact',
     items: [
+      { label: 'Inquiries', path: appPaths.adminContactInquiries },
       { label: 'Locations', path: appPaths.adminContactLocations },
       { label: 'Contact Information', path: appPaths.adminContactInformation },
       { label: 'Social Media', path: appPaths.adminContactSocial },

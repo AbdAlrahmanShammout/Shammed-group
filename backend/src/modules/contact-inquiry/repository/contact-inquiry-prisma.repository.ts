@@ -4,6 +4,7 @@ import type { Prisma } from '@prisma/client';
 import { TransactionContext } from '@/common/base/transaction-context';
 import {
   CreateContactInquiryRepoInput,
+  FindContactInquiriesRepoInput,
   UpdateContactInquiryRepoInput,
 } from '@/modules/contact-inquiry/defs/contact-inquiry-repository.defs';
 import { ContactInquiryEntity } from '@/modules/contact-inquiry/entity/contact-inquiry.entity';
@@ -42,6 +43,22 @@ export class ContactInquiryPrismaRepository implements ContactInquiryRepository 
       return null;
     }
     return ContactInquiryMapper.toEntity(result);
+  }
+
+  async findMany(input: FindContactInquiriesRepoInput): Promise<ContactInquiryEntity[]> {
+    const where = input.status ? { emailDeliveryStatus: input.status } : {};
+    const results = await this.prismaProviderService.contactInquiry.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      take: input.limit,
+      skip: input.offset,
+    });
+    return results.map((r) => ContactInquiryMapper.toEntity(r));
+  }
+
+  async count(status?: string): Promise<number> {
+    const where = status ? { emailDeliveryStatus: status as Prisma.EnumEmailDeliveryStatusFilter } : {};
+    return this.prismaProviderService.contactInquiry.count({ where });
   }
 
   async update(

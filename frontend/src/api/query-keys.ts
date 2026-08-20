@@ -17,6 +17,11 @@ export const queryKeys = {
     services: () => ['admin', 'services'] as const,
     media: (params: { readonly limit: number; readonly offset: number }) =>
       ['admin', 'media', params] as const,
+    contactInquiries: (params: {
+      readonly limit: number;
+      readonly offset: number;
+      readonly status?: string;
+    }) => ['admin', 'contact-inquiries', params] as const,
   },
   public: {
     siteSettings: () => ['public', 'site-settings'] as const,

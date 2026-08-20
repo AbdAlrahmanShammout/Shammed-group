@@ -16,6 +16,7 @@ import { AdminPartnersPage } from '@/pages/admin-partners-page';
 import { AdminProductsPage } from '@/pages/admin-products-page';
 import { AdminServicesPage } from '@/pages/admin-services-page';
 import { AdminMediaPage } from '@/pages/admin-media-page';
+import AdminContactInquiriesPageRoute from '@/pages/admin-contact-inquiries-page';
 import { AdminSocialLinksPage } from '@/pages/admin-social-links-page';
 import { AdminWebsiteAboutPage } from '@/pages/admin-website-about-page';
 import { AdminWebsiteHomePage } from '@/pages/admin-website-home-page';
@@ -59,6 +60,7 @@ export function AppRoutes(): ReactElement {
           />
           <Route element={<AdminSocialLinksPage />} path={appPaths.adminContactSocial} />
           <Route element={<AdminMediaPage />} path={appPaths.adminMedia} />
+          <Route element={<AdminContactInquiriesPageRoute />} path={appPaths.adminContactInquiries} />
         </Route>
       </Route>
     </Routes>

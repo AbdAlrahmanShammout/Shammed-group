@@ -14,3 +14,9 @@ export type UpdateContactInquiryRepoInput = {
   readonly emailDeliveryStatus?: EmailDeliveryStatus;
   readonly emailDeliveredAt?: Date | null;
 };
+
+export type FindContactInquiriesRepoInput = {
+  readonly limit: number;
+  readonly offset: number;
+  readonly status?: EmailDeliveryStatus;
+};
