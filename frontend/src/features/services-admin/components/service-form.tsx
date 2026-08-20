@@ -25,22 +25,28 @@ const textareaClassName = cn(
 );
 
 type ServiceFormProps = {
+  readonly nextDisplayOrder?: number;
   readonly onCancel?: () => void;
   readonly onSaved?: () => void;
   readonly service?: ServiceResponse;
 };
 
-function createDefaultValues(service?: ServiceResponse): ServiceFormValues {
+function createDefaultValues(service?: ServiceResponse, nextDisplayOrder = 0): ServiceFormValues {
   return {
     title: service?.title ?? '',
     description: service?.description ?? '',
     isVisible: service?.isVisible ?? true,
-    displayOrder: service?.displayOrder?.toString() ?? '0',
+    displayOrder: service?.displayOrder?.toString() ?? String(nextDisplayOrder),
     imageMediaId: service?.imageMediaId?.toString() ?? '',
   };
 }
 
-export function ServiceForm({ onCancel, onSaved, service }: ServiceFormProps): ReactElement {
+export function ServiceForm({
+  nextDisplayOrder = 0,
+  onCancel,
+  onSaved,
+  service,
+}: ServiceFormProps): ReactElement {
   const [isSuccess, setIsSuccess] = useState(false);
   const [imageFileName, setImageFileName] = useState(service?.image?.originalFileName ?? '');
   const createMutation = useCreateAdminServiceMutation();
@@ -48,12 +54,12 @@ export function ServiceForm({ onCancel, onSaved, service }: ServiceFormProps): R
   const isPending = createMutation.isPending || updateMutation.isPending;
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceFormSchema),
-    defaultValues: createDefaultValues(service),
+    defaultValues: createDefaultValues(service, nextDisplayOrder),
   });
   useEffect(() => {
-    form.reset(createDefaultValues(service));
+    form.reset(createDefaultValues(service, nextDisplayOrder));
     setImageFileName(service?.image?.originalFileName ?? '');
-  }, [form, service]);
+  }, [form, nextDisplayOrder, service]);
   const serverError =
     createMutation.error instanceof ApiError
       ? createMutation.error.message
@@ -124,20 +130,7 @@ export function ServiceForm({ onCancel, onSaved, service }: ServiceFormProps): R
           </p>
         ) : null}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="serviceDisplayOrder">Display order</Label>
-        <Input
-          disabled={isPending}
-          id="serviceDisplayOrder"
-          inputMode="numeric"
-          {...form.register('displayOrder')}
-        />
-        {form.formState.errors.displayOrder ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.displayOrder.message}
-          </p>
-        ) : null}
-      </div>
+
       <label className="flex items-center gap-2 text-sm">
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site

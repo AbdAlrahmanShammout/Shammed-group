@@ -25,31 +25,40 @@ const textareaClassName = cn(
 
 type CategoryFormProps = {
   readonly category?: ProductCategoryResponse;
+  readonly nextDisplayOrder?: number;
   readonly onCancel?: () => void;
   readonly onSaved?: () => void;
 };
 
-function createDefaultValues(category?: ProductCategoryResponse): CategoryFormValues {
+function createDefaultValues(
+  category?: ProductCategoryResponse,
+  nextDisplayOrder = 0,
+): CategoryFormValues {
   return {
     name: category?.name ?? '',
     description: category?.description ?? '',
     isVisible: category?.isVisible ?? true,
-    displayOrder: category?.displayOrder?.toString() ?? '0',
+    displayOrder: category?.displayOrder?.toString() ?? String(nextDisplayOrder),
   };
 }
 
-export function CategoryForm({ category, onCancel, onSaved }: CategoryFormProps): ReactElement {
+export function CategoryForm({
+  category,
+  nextDisplayOrder = 0,
+  onCancel,
+  onSaved,
+}: CategoryFormProps): ReactElement {
   const [isSuccess, setIsSuccess] = useState(false);
   const createMutation = useCreateAdminProductCategoryMutation();
   const updateMutation = useUpdateAdminProductCategoryMutation();
   const isPending = createMutation.isPending || updateMutation.isPending;
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryFormSchema),
-    defaultValues: createDefaultValues(category),
+    defaultValues: createDefaultValues(category, nextDisplayOrder),
   });
   useEffect(() => {
-    form.reset(createDefaultValues(category));
-  }, [category, form]);
+    form.reset(createDefaultValues(category, nextDisplayOrder));
+  }, [category, form, nextDisplayOrder]);
   const serverError =
     createMutation.error instanceof ApiError
       ? createMutation.error.message
@@ -110,20 +119,7 @@ export function CategoryForm({ category, onCancel, onSaved }: CategoryFormProps)
           {...form.register('description')}
         />
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="categoryDisplayOrder">Display order</Label>
-        <Input
-          disabled={isPending}
-          id="categoryDisplayOrder"
-          inputMode="numeric"
-          {...form.register('displayOrder')}
-        />
-        {form.formState.errors.displayOrder ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.displayOrder.message}
-          </p>
-        ) : null}
-      </div>
+
       <label className="flex items-center gap-2 text-sm">
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site

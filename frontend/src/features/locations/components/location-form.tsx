@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Reorder, useDragControls } from 'framer-motion';
+import { GripVertical } from 'lucide-react';
 import { useEffect, useState, type ReactElement } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, type UseFormRegisterReturn } from 'react-hook-form';
 
 import { ApiError } from '@/api/api-error';
 import { Button } from '@/components/ui/button';
@@ -22,13 +24,88 @@ const textareaClassName = cn(
   'aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20',
 );
 
+type LocationPhoneReorderItemProps = {
+  readonly canRemove: boolean;
+  readonly field: { readonly id: string };
+  readonly index: number;
+  readonly isPending: boolean;
+  readonly onRemove: () => void;
+  readonly phoneError?: string;
+  readonly registerPhone: UseFormRegisterReturn;
+};
+function LocationPhoneReorderItem({
+  canRemove,
+  field,
+  index,
+  isPending,
+  onRemove,
+  phoneError,
+  registerPhone,
+}: LocationPhoneReorderItemProps): ReactElement {
+  const dragControls = useDragControls();
+  return (
+    <Reorder.Item
+      className="list-none"
+      dragControls={dragControls}
+      dragListener={false}
+      value={field}
+    >
+      <div className="flex flex-col gap-2">
+        <Label htmlFor={`location-phone-${index}`}>
+          Phone {index + 1} <span aria-hidden="true">*</span>
+        </Label>
+        <div className="flex gap-2">
+          <button
+            aria-label={`Drag to reorder phone ${index + 1}`}
+            className={cn(
+              'inline-flex size-9 shrink-0 cursor-grab items-center justify-center rounded-md text-muted-foreground',
+              'hover:bg-accent hover:text-accent-foreground active:cursor-grabbing',
+              'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
+              isPending && 'pointer-events-none opacity-50',
+            )}
+            disabled={isPending}
+            onPointerDown={(event) => {
+              if (isPending) {
+                return;
+              }
+              dragControls.start(event);
+            }}
+            type="button"
+          >
+            <GripVertical aria-hidden="true" className="size-4" />
+          </button>
+          <Input
+            aria-invalid={Boolean(phoneError)}
+            aria-required="true"
+            disabled={isPending}
+            id={`location-phone-${index}`}
+            {...registerPhone}
+          />
+          <Button disabled={isPending || !canRemove} onClick={onRemove} type="button" variant="outline">
+            Remove
+          </Button>
+        </div>
+        {phoneError ? (
+          <p className="text-sm text-destructive" role="alert">
+            {phoneError}
+          </p>
+        ) : null}
+      </div>
+    </Reorder.Item>
+  );
+}
+
 type LocationFormProps = {
   readonly location?: LocationResponse;
+  readonly nextDisplayOrder?: number;
   readonly onCancel?: () => void;
   readonly onSaved?: () => void;
 };
 
-function createDefaultValues(location?: LocationResponse): LocationFormValues {
+function createDefaultValues(
+  location?: LocationResponse,
+  nextDisplayOrder = 0,
+): LocationFormValues {
   return {
     name: location?.name ?? '',
     address: location?.address ?? '',
@@ -36,24 +113,29 @@ function createDefaultValues(location?: LocationResponse): LocationFormValues {
     latitude: location?.latitude?.toString() ?? '',
     longitude: location?.longitude?.toString() ?? '',
     isVisible: location?.isVisible ?? true,
-    displayOrder: location?.displayOrder?.toString() ?? '0',
+    displayOrder: location?.displayOrder?.toString() ?? String(nextDisplayOrder),
     phones: location?.phones.map((phoneItem) => ({ phone: phoneItem.phone })) ?? [{ phone: '' }],
   };
 }
 
-export function LocationForm({ location, onCancel, onSaved }: LocationFormProps): ReactElement {
+export function LocationForm({
+  location,
+  nextDisplayOrder = 0,
+  onCancel,
+  onSaved,
+}: LocationFormProps): ReactElement {
   const [isSuccess, setIsSuccess] = useState(false);
   const createMutation = useCreateAdminLocationMutation();
   const updateMutation = useUpdateAdminLocationMutation();
   const isPending = createMutation.isPending || updateMutation.isPending;
   const form = useForm<LocationFormValues>({
     resolver: zodResolver(locationFormSchema),
-    defaultValues: createDefaultValues(location),
+    defaultValues: createDefaultValues(location, nextDisplayOrder),
   });
   const phonesFieldArray = useFieldArray({ control: form.control, name: 'phones' });
   useEffect(() => {
-    form.reset(createDefaultValues(location));
-  }, [form, location]);
+    form.reset(createDefaultValues(location, nextDisplayOrder));
+  }, [form, location, nextDisplayOrder]);
   const serverError =
     createMutation.error instanceof ApiError
       ? createMutation.error.message
@@ -74,7 +156,7 @@ export function LocationForm({ location, onCancel, onSaved }: LocationFormProps)
         });
       } else {
         await createMutation.mutateAsync(body);
-        form.reset(createDefaultValues());
+        form.reset(createDefaultValues(undefined, nextDisplayOrder));
       }
       setIsSuccess(true);
       onSaved?.();
@@ -161,55 +243,41 @@ export function LocationForm({ location, onCancel, onSaved }: LocationFormProps)
           ) : null}
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="locationDisplayOrder">Display order</Label>
-        <Input
-          disabled={isPending}
-          id="locationDisplayOrder"
-          inputMode="numeric"
-          {...form.register('displayOrder')}
-        />
-        {form.formState.errors.displayOrder ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.displayOrder.message}
-          </p>
-        ) : null}
-      </div>
+
       <label className="flex items-center gap-2 text-sm">
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site
       </label>
       <fieldset className="flex flex-col gap-3">
         <legend className="text-sm font-medium">Phone numbers</legend>
-        {phonesFieldArray.fields.map((field, index) => (
-          <div className="flex flex-col gap-2" key={field.id}>
-            <Label htmlFor={`location-phone-${index}`}>
-              Phone {index + 1} <span aria-hidden="true">*</span>
-            </Label>
-            <div className="flex gap-2">
-              <Input
-                aria-invalid={Boolean(form.formState.errors.phones?.[index]?.phone)}
-                aria-required="true"
-                disabled={isPending}
-                id={`location-phone-${index}`}
-                {...form.register(`phones.${index}.phone`)}
-              />
-              <Button
-                disabled={isPending || phonesFieldArray.fields.length <= 1}
-                onClick={() => phonesFieldArray.remove(index)}
-                type="button"
-                variant="outline"
-              >
-                Remove
-              </Button>
-            </div>
-            {form.formState.errors.phones?.[index]?.phone ? (
-              <p className="text-sm text-destructive" role="alert">
-                {form.formState.errors.phones[index]?.phone?.message}
-              </p>
-            ) : null}
-          </div>
-        ))}
+        <p className="text-sm text-muted-foreground">Drag phones to change their display order.</p>
+        <Reorder.Group
+          axis="y"
+          className="flex flex-col gap-3"
+          onReorder={(nextFields) => {
+            const currentPhones = form.getValues('phones');
+            const phoneByFieldId = new Map(
+              phonesFieldArray.fields.map((field, index) => [field.id, currentPhones[index]]),
+            );
+            phonesFieldArray.replace(
+              nextFields.map((field) => phoneByFieldId.get(field.id) ?? { phone: '' }),
+            );
+          }}
+          values={phonesFieldArray.fields}
+        >
+          {phonesFieldArray.fields.map((field, index) => (
+            <LocationPhoneReorderItem
+              canRemove={phonesFieldArray.fields.length > 1}
+              field={field}
+              index={index}
+              isPending={isPending}
+              key={field.id}
+              onRemove={() => phonesFieldArray.remove(index)}
+              phoneError={form.formState.errors.phones?.[index]?.phone?.message}
+              registerPhone={form.register(`phones.${index}.phone`)}
+            />
+          ))}
+        </Reorder.Group>
         {form.formState.errors.phones?.root ? (
           <p className="text-sm text-destructive" role="alert">
             {form.formState.errors.phones.root.message}

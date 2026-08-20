@@ -30,12 +30,13 @@ const selectClassName =
   'h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50';
 
 type ProductFormProps = {
+  readonly nextDisplayOrder?: number;
   readonly onCancel?: () => void;
   readonly onSaved?: () => void;
   readonly product?: ProductResponse;
 };
 
-function createDefaultValues(product?: ProductResponse): ProductFormValues {
+function createDefaultValues(product?: ProductResponse, nextDisplayOrder = 0): ProductFormValues {
   return {
     name: product?.name ?? '',
     shortDescription: product?.shortDescription ?? '',
@@ -44,12 +45,17 @@ function createDefaultValues(product?: ProductResponse): ProductFormValues {
     categoryId: product?.categoryId?.toString() ?? '',
     partnerId: product?.partnerId?.toString() ?? '',
     isVisible: product?.isVisible ?? true,
-    displayOrder: product?.displayOrder?.toString() ?? '0',
+    displayOrder: product?.displayOrder?.toString() ?? String(nextDisplayOrder),
     imageMediaId: product?.imageMediaId?.toString() ?? '',
   };
 }
 
-export function ProductForm({ onCancel, onSaved, product }: ProductFormProps): ReactElement {
+export function ProductForm({
+  nextDisplayOrder = 0,
+  onCancel,
+  onSaved,
+  product,
+}: ProductFormProps): ReactElement {
   const [isSuccess, setIsSuccess] = useState(false);
   const [imageFileName, setImageFileName] = useState(product?.image?.originalFileName ?? '');
   const categoriesQuery = useAdminProductCategoriesForSelectQuery();
@@ -59,12 +65,12 @@ export function ProductForm({ onCancel, onSaved, product }: ProductFormProps): R
   const isPending = createMutation.isPending || updateMutation.isPending;
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
-    defaultValues: createDefaultValues(product),
+    defaultValues: createDefaultValues(product, nextDisplayOrder),
   });
   useEffect(() => {
-    form.reset(createDefaultValues(product));
+    form.reset(createDefaultValues(product, nextDisplayOrder));
     setImageFileName(product?.image?.originalFileName ?? '');
-  }, [form, product]);
+  }, [form, nextDisplayOrder, product]);
   const serverError =
     createMutation.error instanceof ApiError
       ? createMutation.error.message
@@ -192,20 +198,7 @@ export function ProductForm({ onCancel, onSaved, product }: ProductFormProps): R
         </select>
         <p className="text-sm text-muted-foreground">Optional. Lists partners from the admin API.</p>
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="productDisplayOrder">Display order</Label>
-        <Input
-          disabled={isPending}
-          id="productDisplayOrder"
-          inputMode="numeric"
-          {...form.register('displayOrder')}
-        />
-        {form.formState.errors.displayOrder ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.displayOrder.message}
-          </p>
-        ) : null}
-      </div>
+
       <label className="flex items-center gap-2 text-sm">
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site

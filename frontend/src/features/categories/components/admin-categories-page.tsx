@@ -1,13 +1,17 @@
 import { useState, type ReactElement } from 'react';
 
 import { ApiError } from '@/api/api-error';
+import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
+import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
 import { CategoryForm } from '@/features/categories/components/category-form';
 import { CategoryReplacementDialog } from '@/features/categories/components/category-replacement-dialog';
 import { useAdminProductCategoriesQuery } from '@/features/categories/hooks/use-admin-product-categories-query';
 import { useDeleteAdminProductCategoryMutation } from '@/features/categories/hooks/use-delete-admin-product-category-mutation';
+import { useUpdateAdminProductCategoryMutation } from '@/features/categories/hooks/use-update-admin-product-category-mutation';
 import type { ProductCategoryResponse } from '@/generated/admin-product-category.contract';
+import { getNextDisplayOrder } from '@/lib/get-next-display-order';
 
 const OCCUPIED_CATEGORY_CODE = 'PRODUCT_CATEGORY_OCCUPIED';
 const LAST_OCCUPIED_CATEGORY_CODE = 'PRODUCT_CATEGORY_LAST_OCCUPIED';
@@ -15,6 +19,7 @@ const LAST_OCCUPIED_CATEGORY_CODE = 'PRODUCT_CATEGORY_LAST_OCCUPIED';
 export function AdminCategoriesPage(): ReactElement {
   const categoriesQuery = useAdminProductCategoriesQuery();
   const deleteMutation = useDeleteAdminProductCategoryMutation();
+  const updateMutation = useUpdateAdminProductCategoryMutation();
   const [editingCategory, setEditingCategory] = useState<ProductCategoryResponse | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [categoryPendingDelete, setCategoryPendingDelete] = useState<ProductCategoryResponse | null>(
@@ -23,6 +28,19 @@ export function AdminCategoriesPage(): ReactElement {
   const [categoryNeedingReplacement, setCategoryNeedingReplacement] =
     useState<ProductCategoryResponse | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const orderedList = useOrderedAdminList({
+    items: categoriesQuery.data?.productCategories,
+    onPersist: async (patches) => {
+      await Promise.all(
+        patches.map((patch) =>
+          updateMutation.mutateAsync({
+            categoryId: patch.id,
+            body: { displayOrder: patch.displayOrder },
+          }),
+        ),
+      );
+    },
+  });
   async function executeDelete(input: {
     readonly category: ProductCategoryResponse;
     readonly replacementCategoryId?: number;
@@ -78,13 +96,14 @@ export function AdminCategoriesPage(): ReactElement {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-medium">Categories</h1>
         <p className="text-muted-foreground">
-          Manage product categories. Deleting a category that still has products requires choosing a
-          replacement.
+          Manage product categories. Drag the list to set display order. Deleting a category that
+          still has products requires choosing a replacement.
         </p>
       </div>
       {editingCategory || isCreating ? (
         <CategoryForm
           category={editingCategory ?? undefined}
+          nextDisplayOrder={getNextDisplayOrder(productCategories)}
           onCancel={() => {
             setEditingCategory(null);
             setIsCreating(false);
@@ -110,9 +129,15 @@ export function AdminCategoriesPage(): ReactElement {
           {productCategories.length === 0 ? (
             <p role="status">No categories yet. Add the first product category.</p>
           ) : (
-            <ul className="flex flex-col gap-4">
-              {productCategories.map((category) => (
-                <li className="flex flex-col gap-2 border-t pt-4" key={category.id}>
+            <>
+              <AdminReorderableList
+                disabled={orderedList.isSaving}
+                getItemLabel={(category) => category.name}
+                items={orderedList.orderedItems}
+                onReorder={(nextItems) => {
+                  void orderedList.reorder(nextItems);
+                }}
+                renderItem={(category) => (
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex flex-col gap-1">
                       <p className="font-medium">{category.name}</p>
@@ -120,7 +145,7 @@ export function AdminCategoriesPage(): ReactElement {
                         <p className="text-sm text-muted-foreground">{category.description}</p>
                       ) : null}
                       <p className="text-sm text-muted-foreground">
-                        {category.isVisible ? 'Visible' : 'Hidden'} · order {category.displayOrder}
+                        {category.isVisible ? 'Visible' : 'Hidden'}
                       </p>
                     </div>
                     <div className="flex gap-2">
@@ -148,9 +173,19 @@ export function AdminCategoriesPage(): ReactElement {
                       </Button>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                )}
+              />
+              {orderedList.isSaving ? (
+                <p className="text-sm text-muted-foreground" role="status">
+                  Saving order…
+                </p>
+              ) : null}
+              {orderedList.error ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {orderedList.error}
+                </p>
+              ) : null}
+            </>
           )}
         </>
       )}

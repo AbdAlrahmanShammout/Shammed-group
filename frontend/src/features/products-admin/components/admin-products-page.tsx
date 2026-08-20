@@ -1,18 +1,36 @@
 import { useState, type ReactElement } from 'react';
 
+import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
+import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
 import { ProductForm } from '@/features/products-admin/components/product-form';
 import { useAdminProductsQuery } from '@/features/products-admin/hooks/use-admin-products-query';
 import { useDeleteAdminProductMutation } from '@/features/products-admin/hooks/use-delete-admin-product-mutation';
+import { useUpdateAdminProductMutation } from '@/features/products-admin/hooks/use-update-admin-product-mutation';
 import type { ProductResponse } from '@/generated/admin-product.contract';
+import { getNextDisplayOrder } from '@/lib/get-next-display-order';
 
 export function AdminProductsPage(): ReactElement {
   const productsQuery = useAdminProductsQuery();
   const deleteMutation = useDeleteAdminProductMutation();
+  const updateMutation = useUpdateAdminProductMutation();
   const [editingProduct, setEditingProduct] = useState<ProductResponse | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [productPendingDelete, setProductPendingDelete] = useState<ProductResponse | null>(null);
+  const orderedList = useOrderedAdminList({
+    items: productsQuery.data?.products,
+    onPersist: async (patches) => {
+      await Promise.all(
+        patches.map((patch) =>
+          updateMutation.mutateAsync({
+            productId: patch.id,
+            body: { displayOrder: patch.displayOrder },
+          }),
+        ),
+      );
+    },
+  });
   if (productsQuery.isPending) {
     return (
       <div className="flex flex-col gap-4">
@@ -37,11 +55,13 @@ export function AdminProductsPage(): ReactElement {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-medium">Products</h1>
         <p className="text-muted-foreground">
-          Manage product catalog entries, category assignment, visibility, and images.
+          Manage product catalog entries, category assignment, visibility, and images. Drag the list
+          to set display order.
         </p>
       </div>
       {editingProduct || isCreating ? (
         <ProductForm
+          nextDisplayOrder={getNextDisplayOrder(products)}
           onCancel={() => {
             setEditingProduct(null);
             setIsCreating(false);
@@ -68,16 +88,21 @@ export function AdminProductsPage(): ReactElement {
           {products.length === 0 ? (
             <p role="status">No products yet. Add the first catalog product.</p>
           ) : (
-            <ul className="flex flex-col gap-4">
-              {products.map((product) => (
-                <li className="flex flex-col gap-2 border-t pt-4" key={product.id}>
+            <>
+              <AdminReorderableList
+                disabled={orderedList.isSaving}
+                getItemLabel={(product) => product.name}
+                items={orderedList.orderedItems}
+                onReorder={(nextItems) => {
+                  void orderedList.reorder(nextItems);
+                }}
+                renderItem={(product) => (
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex flex-col gap-1">
                       <p className="font-medium">{product.name}</p>
                       <p className="text-sm text-muted-foreground">{product.shortDescription}</p>
                       <p className="text-sm text-muted-foreground">
-                        {product.category.name} · {product.isVisible ? 'Visible' : 'Hidden'} · order{' '}
-                        {product.displayOrder}
+                        {product.category.name} · {product.isVisible ? 'Visible' : 'Hidden'}
                         {product.partner ? ` · ${product.partner.name}` : ''}
                       </p>
                     </div>
@@ -103,9 +128,19 @@ export function AdminProductsPage(): ReactElement {
                       </Button>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                )}
+              />
+              {orderedList.isSaving ? (
+                <p className="text-sm text-muted-foreground" role="status">
+                  Saving order…
+                </p>
+              ) : null}
+              {orderedList.error ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {orderedList.error}
+                </p>
+              ) : null}
+            </>
           )}
         </>
       )}

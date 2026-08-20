@@ -1,18 +1,36 @@
 import { useState, type ReactElement } from 'react';
 
+import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
+import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
 import { ServiceForm } from '@/features/services-admin/components/service-form';
 import { useAdminServicesQuery } from '@/features/services-admin/hooks/use-admin-services-query';
 import { useDeleteAdminServiceMutation } from '@/features/services-admin/hooks/use-delete-admin-service-mutation';
+import { useUpdateAdminServiceMutation } from '@/features/services-admin/hooks/use-update-admin-service-mutation';
 import type { ServiceResponse } from '@/generated/admin-service.contract';
+import { getNextDisplayOrder } from '@/lib/get-next-display-order';
 
 export function AdminServicesPage(): ReactElement {
   const servicesQuery = useAdminServicesQuery();
   const deleteMutation = useDeleteAdminServiceMutation();
+  const updateMutation = useUpdateAdminServiceMutation();
   const [editingService, setEditingService] = useState<ServiceResponse | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [servicePendingDelete, setServicePendingDelete] = useState<ServiceResponse | null>(null);
+  const orderedList = useOrderedAdminList({
+    items: servicesQuery.data?.services,
+    onPersist: async (patches) => {
+      await Promise.all(
+        patches.map((patch) =>
+          updateMutation.mutateAsync({
+            serviceId: patch.id,
+            body: { displayOrder: patch.displayOrder },
+          }),
+        ),
+      );
+    },
+  });
   if (servicesQuery.isPending) {
     return (
       <div className="flex flex-col gap-4">
@@ -37,11 +55,13 @@ export function AdminServicesPage(): ReactElement {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-medium">Services</h1>
         <p className="text-muted-foreground">
-          Manage company services as free-form CMS entries with visibility, order, and images.
+          Manage company services as free-form CMS entries with visibility and images. Drag the list
+          to set display order.
         </p>
       </div>
       {editingService || isCreating ? (
         <ServiceForm
+          nextDisplayOrder={getNextDisplayOrder(services)}
           onCancel={() => {
             setEditingService(null);
             setIsCreating(false);
@@ -68,15 +88,21 @@ export function AdminServicesPage(): ReactElement {
           {services.length === 0 ? (
             <p role="status">No services yet. Add the first service offering.</p>
           ) : (
-            <ul className="flex flex-col gap-4">
-              {services.map((service) => (
-                <li className="flex flex-col gap-2 border-t pt-4" key={service.id}>
+            <>
+              <AdminReorderableList
+                disabled={orderedList.isSaving}
+                getItemLabel={(service) => service.title}
+                items={orderedList.orderedItems}
+                onReorder={(nextItems) => {
+                  void orderedList.reorder(nextItems);
+                }}
+                renderItem={(service) => (
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex flex-col gap-1">
                       <p className="font-medium">{service.title}</p>
                       <p className="text-sm text-muted-foreground">{service.description}</p>
                       <p className="text-sm text-muted-foreground">
-                        {service.isVisible ? 'Visible' : 'Hidden'} · order {service.displayOrder}
+                        {service.isVisible ? 'Visible' : 'Hidden'}
                       </p>
                     </div>
                     <div className="flex gap-2">
@@ -101,9 +127,19 @@ export function AdminServicesPage(): ReactElement {
                       </Button>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                )}
+              />
+              {orderedList.isSaving ? (
+                <p className="text-sm text-muted-foreground" role="status">
+                  Saving order…
+                </p>
+              ) : null}
+              {orderedList.error ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {orderedList.error}
+                </p>
+              ) : null}
+            </>
           )}
         </>
       )}

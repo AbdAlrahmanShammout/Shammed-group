@@ -15,21 +15,26 @@ import {
 import type { SocialLinkResponse } from '@/generated/admin-social-link.contract';
 
 type SocialLinkFormProps = {
+  readonly nextDisplayOrder?: number;
   readonly onCancel?: () => void;
   readonly onSaved?: () => void;
   readonly socialLink?: SocialLinkResponse;
 };
 
-function createDefaultValues(socialLink?: SocialLinkResponse): SocialLinkFormValues {
+function createDefaultValues(
+  socialLink?: SocialLinkResponse,
+  nextDisplayOrder = 0,
+): SocialLinkFormValues {
   return {
     platform: socialLink?.platform ?? '',
     url: socialLink?.url ?? '',
     isVisible: socialLink?.isVisible ?? true,
-    displayOrder: socialLink?.displayOrder?.toString() ?? '0',
+    displayOrder: socialLink?.displayOrder?.toString() ?? String(nextDisplayOrder),
   };
 }
 
 export function SocialLinkForm({
+  nextDisplayOrder = 0,
   onCancel,
   onSaved,
   socialLink,
@@ -40,11 +45,11 @@ export function SocialLinkForm({
   const isPending = createMutation.isPending || updateMutation.isPending;
   const form = useForm<SocialLinkFormValues>({
     resolver: zodResolver(socialLinkFormSchema),
-    defaultValues: createDefaultValues(socialLink),
+    defaultValues: createDefaultValues(socialLink, nextDisplayOrder),
   });
   useEffect(() => {
-    form.reset(createDefaultValues(socialLink));
-  }, [form, socialLink]);
+    form.reset(createDefaultValues(socialLink, nextDisplayOrder));
+  }, [form, nextDisplayOrder, socialLink]);
   const serverError =
     createMutation.error instanceof ApiError
       ? createMutation.error.message
@@ -64,7 +69,7 @@ export function SocialLinkForm({
         await updateMutation.mutateAsync({ socialLinkId: socialLink.id, body });
       } else {
         await createMutation.mutateAsync(body);
-        form.reset(createDefaultValues());
+        form.reset(createDefaultValues(undefined, nextDisplayOrder));
       }
       setIsSuccess(true);
       onSaved?.();
@@ -117,20 +122,7 @@ export function SocialLinkForm({
           </p>
         ) : null}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="socialDisplayOrder">Display order</Label>
-        <Input
-          disabled={isPending}
-          id="socialDisplayOrder"
-          inputMode="numeric"
-          {...form.register('displayOrder')}
-        />
-        {form.formState.errors.displayOrder ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.displayOrder.message}
-          </p>
-        ) : null}
-      </div>
+
       <label className="flex items-center gap-2 text-sm">
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site

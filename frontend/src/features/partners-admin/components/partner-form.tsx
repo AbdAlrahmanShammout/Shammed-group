@@ -25,12 +25,16 @@ const textareaClassName = cn(
 );
 
 type PartnerFormProps = {
+  readonly nextDisplayOrder?: number;
   readonly onCancel?: () => void;
   readonly onSaved?: () => void;
   readonly partner?: PartnerResponse;
 };
 
-function createDefaultValues(partner?: PartnerResponse): PartnerFormValues {
+function createDefaultValues(
+  partner?: PartnerResponse,
+  nextDisplayOrder = 0,
+): PartnerFormValues {
   return {
     name: partner?.name ?? '',
     shortDescription: partner?.shortDescription ?? '',
@@ -39,12 +43,17 @@ function createDefaultValues(partner?: PartnerResponse): PartnerFormValues {
     websiteUrl: partner?.websiteUrl ?? '',
     country: partner?.country ?? '',
     isVisible: partner?.isVisible ?? true,
-    displayOrder: partner?.displayOrder?.toString() ?? '0',
+    displayOrder: partner?.displayOrder?.toString() ?? String(nextDisplayOrder),
     logoMediaId: partner?.logoMediaId?.toString() ?? '',
   };
 }
 
-export function PartnerForm({ onCancel, onSaved, partner }: PartnerFormProps): ReactElement {
+export function PartnerForm({
+  nextDisplayOrder = 0,
+  onCancel,
+  onSaved,
+  partner,
+}: PartnerFormProps): ReactElement {
   const [isSuccess, setIsSuccess] = useState(false);
   const [logoFileName, setLogoFileName] = useState(partner?.logo?.originalFileName ?? '');
   const createMutation = useCreateAdminPartnerMutation();
@@ -52,12 +61,12 @@ export function PartnerForm({ onCancel, onSaved, partner }: PartnerFormProps): R
   const isPending = createMutation.isPending || updateMutation.isPending;
   const form = useForm<PartnerFormValues>({
     resolver: zodResolver(partnerFormSchema),
-    defaultValues: createDefaultValues(partner),
+    defaultValues: createDefaultValues(partner, nextDisplayOrder),
   });
   useEffect(() => {
-    form.reset(createDefaultValues(partner));
+    form.reset(createDefaultValues(partner, nextDisplayOrder));
     setLogoFileName(partner?.logo?.originalFileName ?? '');
-  }, [form, partner]);
+  }, [form, nextDisplayOrder, partner]);
   const serverError =
     createMutation.error instanceof ApiError
       ? createMutation.error.message
@@ -154,20 +163,7 @@ export function PartnerForm({ onCancel, onSaved, partner }: PartnerFormProps): R
         <Label htmlFor="country">Country</Label>
         <Input disabled={isPending} id="country" {...form.register('country')} />
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="partnerDisplayOrder">Display order</Label>
-        <Input
-          disabled={isPending}
-          id="partnerDisplayOrder"
-          inputMode="numeric"
-          {...form.register('displayOrder')}
-        />
-        {form.formState.errors.displayOrder ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.displayOrder.message}
-          </p>
-        ) : null}
-      </div>
+
       <label className="flex items-center gap-2 text-sm">
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site

@@ -93,6 +93,8 @@ describe('AdminPartnersPage', () => {
     const user = userEvent.setup();
     renderPage();
     expect(await screen.findByText('Acme Pharma')).toBeInTheDocument();
+    expect(screen.getByText('Drag items to change display order.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Drag to reorder Acme Pharma' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Add partner' }));
     await user.type(screen.getByLabelText(/^Name/), 'New Partner');
     await user.type(screen.getByLabelText(/^Short description/), 'New short description');
@@ -108,6 +110,7 @@ describe('AdminPartnersPage', () => {
       return String(call[0]) === `${appEnv.apiBaseUrl}/admin/partner` && call[1]?.method === 'POST';
     });
     expect(createCall?.[1]?.body).toContain('"isVisible":false');
+    expect(createCall?.[1]?.body).toContain('"displayOrder":1');
   });
 
   it('requires confirmation before deleting a partner', async () => {
