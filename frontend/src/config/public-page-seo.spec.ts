@@ -21,6 +21,6 @@ describe('publicPageSeoCatalog', () => {
   });
 
   it('finds SEO metadata by path', () => {
-    expect(findPublicPageSeo(appPaths.about)?.title).toBe('About');
+    expect(findPublicPageSeo(appPaths.about)?.title).toBe('About Shammed Group');
   });
 });

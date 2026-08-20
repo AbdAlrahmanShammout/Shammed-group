@@ -20,6 +20,7 @@ const mockVisiblePartners = {
       country: 'Germany',
       isVisible: true,
       displayOrder: 0,
+      logoMediaId: 31,
     },
   ],
   total: 1,
@@ -59,8 +60,12 @@ describe('PublicPartnersPage', () => {
     renderPublicPartnersPage();
     expect(await screen.findByRole('heading', { name: 'Partners' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Visible Partner' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Visible Partner logo' })).toHaveAttribute(
+      'src',
+      `${appEnv.apiBaseUrl}/media/31`,
+    );
     expect(screen.getByText('Shown on partners page')).toBeInTheDocument();
-    expect(screen.getByText('Specialization: Oncology')).toBeInTheDocument();
+    expect(screen.getByText('Oncology')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Visit website/ })).toHaveAttribute(
       'href',
       'https://www.visible-partner.example',

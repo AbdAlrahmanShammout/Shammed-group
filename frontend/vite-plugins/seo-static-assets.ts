@@ -17,44 +17,44 @@ const PRERENDER_ROUTES: readonly SeoPrerenderRoute[] = [
   {
     path: '/',
     outputDirectory: '.',
-    title: 'Home',
+    title: 'Medical Equipment and Pharmaceutical Services in Syria',
     description:
-      'Shammed Group supplies pharmaceutical and healthcare products through trusted regional partners.',
+      'Shammed Group distributes and services medical equipment, pharmaceutical equipment, medical supplies, and specialized pharmaceutical products across Syria.',
   },
   {
     path: '/about',
     outputDirectory: 'about',
-    title: 'About',
+    title: 'About Shammed Group',
     description:
-      'Learn about Shammed Group’s vision, mission, values, and capabilities in healthcare distribution.',
+      'Learn about Shammed Group, established in Damascus in 2005 to distribute and service medical equipment and support pharmaceutical operations in Syria.',
   },
   {
     path: '/partners',
     outputDirectory: 'partners',
-    title: 'Partners',
+    title: 'Shammed Group Partners',
     description:
-      'Explore Shammed Group’s partner network across pharmaceutical and healthcare markets.',
+      "Explore the international medical-equipment and pharmaceutical organizations named in Shammed Group's supplied company materials. Current relationships require confirmation.",
   },
   {
     path: '/products',
     outputDirectory: 'products',
-    title: 'Products',
+    title: 'Medical and Pharmaceutical Solutions',
     description:
-      'Browse Shammed Group’s product catalog by category, including manufacturer and partner details.',
+      "Discover Shammed Group's medical equipment, pharmaceutical equipment, medical supplies, consumables, and specialized pharmaceutical products for the Syrian healthcare market.",
   },
   {
     path: '/services',
     outputDirectory: 'services',
-    title: 'Services',
+    title: 'Shammed Group Services',
     description:
-      'Review Shammed Group services spanning distribution, logistics, and healthcare support.',
+      'From distribution and turnkey project planning to installation, maintenance, and after-sales support, Shammed Group serves healthcare organizations in Syria.',
   },
   {
     path: '/contact',
     outputDirectory: 'contact',
-    title: 'Contact',
+    title: 'Contact Shammed Group in Syria',
     description:
-      'Contact Shammed Group by email, phone, location, or the online inquiry form.',
+      'Contact Shammed Group in Damascus about medical equipment, pharmaceutical solutions, technical service, and healthcare distribution support.',
   },
 ];
 

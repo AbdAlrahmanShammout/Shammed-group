@@ -4,6 +4,7 @@ import { AdminReorderableList } from '@/components/layout/admin-reorderable-list
 import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
+import { AdminListMediaThumb } from '@/components/media/admin-list-media-thumb';
 import { Button } from '@/components/ui/button';
 import { ProductForm } from '@/features/products-admin/components/product-form';
 import { useAdminProductsQuery } from '@/features/products-admin/hooks/use-admin-products-query';
@@ -114,13 +115,16 @@ export function AdminProductsPage(): ReactElement {
                 }}
                 renderItem={(product) => (
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="flex flex-col gap-1">
-                      <p className="font-medium">{product.name}</p>
-                      <p className="text-sm text-muted-foreground">{product.shortDescription}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {product.category.name}
-                        {product.partner ? ` · ${product.partner.name}` : ''}
-                      </p>
+                    <div className="flex min-w-0 flex-1 items-start gap-3">
+                      <AdminListMediaThumb alt={product.name} mediaId={product.imageMediaId} />
+                      <div className="flex min-w-0 flex-col gap-1">
+                        <p className="font-medium">{product.name}</p>
+                        <p className="text-sm text-muted-foreground">{product.shortDescription}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {product.category.name}
+                          {product.partner ? ` · ${product.partner.name}` : ''}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <AdminVisibilitySwitch

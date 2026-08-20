@@ -21,17 +21,16 @@ type UseOrderedAdminListResult<T extends { readonly id: number; readonly display
 
 /**
  * Keeps a sorted admin list in sync and persists displayOrder changes after drag-and-drop.
+ * Refreshes row payloads (including isVisible) from the server while preserving local order.
  */
 export function useOrderedAdminList<T extends { readonly id: number; readonly displayOrder: number }>(
   input: UseOrderedAdminListInput<T>,
 ): UseOrderedAdminListResult<T> {
   const sourceItems = (input.items ?? EMPTY_ADMIN_LIST_ITEMS) as readonly T[];
-  const itemsSignature = sourceItems
-    .map((item) => `${item.id}:${item.displayOrder}`)
-    .join('|');
+  const itemsSignature = sourceItems.map((item) => JSON.stringify(item)).join('|');
   const sortedItems = useMemo(
     () => sortByDisplayOrder(sourceItems),
-    // Signature captures id/order content so temporary empty-array identities do not reset state.
+    // Signature captures full row content so visibility and other field updates sync into the list.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional signature dependency
     [itemsSignature],
   );
@@ -39,7 +38,16 @@ export function useOrderedAdminList<T extends { readonly id: number; readonly di
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
-    setOrderedItems(sortedItems);
+    setOrderedItems((previousItems) => {
+      const sourceById = new Map(sortedItems.map((item) => [item.id, item]));
+      const hasSameMembership =
+        previousItems.length === sortedItems.length &&
+        previousItems.every((item) => sourceById.has(item.id));
+      if (!hasSameMembership) {
+        return sortedItems;
+      }
+      return previousItems.map((item) => sourceById.get(item.id) ?? item);
+    });
   }, [sortedItems]);
   async function reorder(nextItems: T[]): Promise<void> {
     const previousItems = orderedItems;

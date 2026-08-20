@@ -18,6 +18,7 @@ const mockPartners = {
       shortDescription: 'Distribution partner',
       isVisible: true,
       displayOrder: 0,
+      logoMediaId: 31,
     },
   ],
   total: 1,
@@ -33,14 +34,17 @@ function renderPage(): void {
 }
 
 describe('AdminPartnersPage', () => {
+  let partnersState: typeof mockPartners;
+
   beforeEach(() => {
+    partnersState = structuredClone(mockPartners);
     sessionTokenStore.set('input-token');
     vi.stubGlobal(
       'fetch',
       vi.fn(async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
         const url = String(input);
         if (url.startsWith(`${appEnv.apiBaseUrl}/admin/partner`) && (!init || init.method === 'GET')) {
-          return new Response(JSON.stringify(mockPartners), {
+          return new Response(JSON.stringify(partnersState), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
           });
@@ -63,12 +67,21 @@ describe('AdminPartnersPage', () => {
         }
         if (url === `${appEnv.apiBaseUrl}/admin/partner/3` && init?.method === 'PATCH') {
           const body = JSON.parse(String(init.body)) as { isVisible?: boolean };
+          const currentPartner = partnersState.partners[0];
+          if (!currentPartner) {
+            return new Response('Not found', { status: 404 });
+          }
+          const updatedPartner = {
+            ...currentPartner,
+            isVisible: body.isVisible ?? currentPartner.isVisible,
+          };
+          partnersState = {
+            partners: [updatedPartner],
+            total: 1,
+          };
           return new Response(
             JSON.stringify({
-              partner: {
-                ...mockPartners.partners[0],
-                isVisible: body.isVisible ?? false,
-              },
+              partner: updatedPartner,
             }),
             { status: 200, headers: { 'Content-Type': 'application/json' } },
           );
@@ -117,6 +130,10 @@ describe('AdminPartnersPage', () => {
     const user = userEvent.setup();
     renderPage();
     expect(await screen.findByText('Acme Pharma')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Acme Pharma logo' })).toHaveAttribute(
+      'src',
+      `${appEnv.apiBaseUrl}/media/31`,
+    );
     await user.click(screen.getByRole('switch', { name: /Hide Acme Pharma on the public site/i }));
     await vi.waitFor(() => {
       expect(vi.mocked(fetch)).toHaveBeenCalledWith(
@@ -128,6 +145,8 @@ describe('AdminPartnersPage', () => {
       return String(call[0]) === `${appEnv.apiBaseUrl}/admin/partner/3` && call[1]?.method === 'PATCH';
     });
     expect(patchCall?.[1]?.body).toContain('"isVisible":false');
+    expect(await screen.findByRole('switch', { name: /Show Acme Pharma on the public site/i })).toBeInTheDocument();
+    expect(screen.getByText('Hidden')).toBeInTheDocument();
   });
 
   it('requires confirmation before deleting a partner', async () => {

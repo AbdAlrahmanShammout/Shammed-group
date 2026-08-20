@@ -1,14 +1,14 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('critical public journeys', () => {
-  test('browses products by category from seeded catalog data', async ({ page }) => {
+  test('shows product categories with an empty catalog when no products are seeded', async ({
+    page,
+  }) => {
     await page.goto('/products');
     await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Pharmaceutical Products' })).toBeVisible();
-    await page.getByRole('button', { name: 'Pharmaceutical Products' }).click();
+    await expect(page.getByRole('button', { name: 'Medical Equipment' })).toBeVisible();
+    await page.getByRole('button', { name: 'Medical Equipment' }).click();
     await expect(page).toHaveURL(/categoryId=/);
-    await expect(page.getByRole('heading', { name: 'Placeholder Product' })).toBeVisible();
-    await page.getByRole('button', { name: 'Medical Devices & Supplies' }).click();
     await expect(page.getByRole('status')).toContainText(
       'No products are available for this selection.',
     );

@@ -9,6 +9,7 @@ coverage
 .idea
 .vscode
 backend/storage
+backend/tmp
 frontend/playwright-report
 frontend/test-results
 frontend/blob-report

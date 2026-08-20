@@ -4,6 +4,7 @@ import { AdminReorderableList } from '@/components/layout/admin-reorderable-list
 import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
+import { AdminListMediaThumb } from '@/components/media/admin-list-media-thumb';
 import { Button } from '@/components/ui/button';
 import { PartnerForm } from '@/features/partners-admin/components/partner-form';
 import { useAdminPartnersQuery } from '@/features/partners-admin/hooks/use-admin-partners-query';
@@ -110,9 +111,16 @@ export function AdminPartnersPage(): ReactElement {
                 }}
                 renderItem={(partner) => (
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="flex flex-col gap-1">
-                      <p className="font-medium">{partner.name}</p>
-                      <p className="text-sm text-muted-foreground">{partner.shortDescription}</p>
+                    <div className="flex min-w-0 flex-1 items-start gap-3">
+                      <AdminListMediaThumb
+                        alt={`${partner.name} logo`}
+                        mediaId={partner.logoMediaId}
+                        objectFit="contain"
+                      />
+                      <div className="flex min-w-0 flex-col gap-1">
+                        <p className="font-medium">{partner.name}</p>
+                        <p className="text-sm text-muted-foreground">{partner.shortDescription}</p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <AdminVisibilitySwitch

@@ -47,6 +47,10 @@ describe('PublicHomePage', () => {
     );
     expect(screen.getByRole('link', { name: 'Read more' })).toHaveAttribute('href', '/about');
     expect(screen.getByRole('heading', { name: 'Visible Partner' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Visible Partner logo' })).toHaveAttribute(
+      'src',
+      `${appEnv.apiBaseUrl}/media/31`,
+    );
     expect(screen.getByRole('heading', { name: 'Visible Product' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Visible Service' })).toBeInTheDocument();
     expect(screen.queryByText('Hidden Partner')).not.toBeInTheDocument();

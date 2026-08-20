@@ -67,6 +67,7 @@ export const mockPublicHomePage = {
       websiteUrl: 'https://www.visible-partner.example',
       isVisible: true,
       displayOrder: 0,
+      logoMediaId: 31,
     },
   ],
   products: [
