@@ -15,14 +15,5 @@
     "frontend:build": "pnpm --filter frontend build",
     "frontend:lint": "pnpm --filter frontend lint",
     "frontend:test": "pnpm --filter frontend test"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@prisma/client",
-      "@prisma/engines",
-      "bcrypt",
-      "esbuild",
-      "prisma"
-    ]
   }
 }
