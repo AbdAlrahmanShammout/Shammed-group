@@ -14,6 +14,7 @@ import { AdminCategoriesPage } from '@/pages/admin-categories-page';
 import { AdminContactInformationPage } from '@/pages/admin-contact-information-page';
 import { AdminLocationsPage } from '@/pages/admin-locations-page';
 import { AdminPartnersPage } from '@/pages/admin-partners-page';
+import { AdminProductsPage } from '@/pages/admin-products-page';
 import { AdminSocialLinksPage } from '@/pages/admin-social-links-page';
 import { AdminWebsiteAboutPage } from '@/pages/admin-website-about-page';
 import { AdminWebsiteHomePage } from '@/pages/admin-website-home-page';
@@ -47,10 +48,7 @@ export function AppRoutes(): ReactElement {
           <Route element={<AdminWebsiteAboutPage />} path={appPaths.adminWebsiteAbout} />
           <Route element={<AdminWebsiteSettingsPage />} path={appPaths.adminWebsiteSettings} />
           <Route element={<AdminCategoriesPage />} path={appPaths.adminCatalogCategories} />
-          <Route
-            element={<AdminPlaceholderPage title="Products" />}
-            path={appPaths.adminCatalogProducts}
-          />
+          <Route element={<AdminProductsPage />} path={appPaths.adminCatalogProducts} />
           <Route element={<AdminPartnersPage />} path={appPaths.adminCompanyPartners} />
           <Route
             element={<AdminPlaceholderPage title="Services" />}
