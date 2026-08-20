@@ -10,6 +10,7 @@ import { AdminPlaceholderPage } from '@/components/layout/admin-placeholder-page
 import { appPaths } from '@/config/app-paths';
 import { PublicSiteShell } from '@/features/site-chrome/components/public-site-shell';
 import { AboutPage } from '@/pages/about-page';
+import { AdminCategoriesPage } from '@/pages/admin-categories-page';
 import { AdminContactInformationPage } from '@/pages/admin-contact-information-page';
 import { AdminLocationsPage } from '@/pages/admin-locations-page';
 import { AdminPartnersPage } from '@/pages/admin-partners-page';
@@ -45,10 +46,7 @@ export function AppRoutes(): ReactElement {
           <Route element={<AdminWebsiteHomePage />} path={appPaths.adminWebsiteHome} />
           <Route element={<AdminWebsiteAboutPage />} path={appPaths.adminWebsiteAbout} />
           <Route element={<AdminWebsiteSettingsPage />} path={appPaths.adminWebsiteSettings} />
-          <Route
-            element={<AdminPlaceholderPage title="Categories" />}
-            path={appPaths.adminCatalogCategories}
-          />
+          <Route element={<AdminCategoriesPage />} path={appPaths.adminCatalogCategories} />
           <Route
             element={<AdminPlaceholderPage title="Products" />}
             path={appPaths.adminCatalogProducts}

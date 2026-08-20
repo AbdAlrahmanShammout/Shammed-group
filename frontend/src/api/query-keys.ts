@@ -12,6 +12,7 @@ export const queryKeys = {
     homePage: () => ['admin', 'home-page'] as const,
     aboutPage: () => ['admin', 'about-page'] as const,
     partners: () => ['admin', 'partners'] as const,
+    productCategories: () => ['admin', 'product-categories'] as const,
   },
   public: {
     siteSettings: () => ['public', 'site-settings'] as const,
