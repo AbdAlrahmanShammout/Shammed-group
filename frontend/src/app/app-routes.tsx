@@ -10,6 +10,10 @@ import { AdminPlaceholderPage } from '@/components/layout/admin-placeholder-page
 import { appPaths } from '@/config/app-paths';
 import { PublicSiteShell } from '@/features/site-chrome/components/public-site-shell';
 import { AboutPage } from '@/pages/about-page';
+import { AdminContactInformationPage } from '@/pages/admin-contact-information-page';
+import { AdminLocationsPage } from '@/pages/admin-locations-page';
+import { AdminSocialLinksPage } from '@/pages/admin-social-links-page';
+import { AdminWebsiteSettingsPage } from '@/pages/admin-website-settings-page';
 import { ContactPage } from '@/pages/contact-page';
 import { HomePage } from '@/pages/home-page';
 import { PartnersPage } from '@/pages/partners-page';
@@ -43,10 +47,7 @@ export function AppRoutes(): ReactElement {
             element={<AdminPlaceholderPage title="About Us" />}
             path={appPaths.adminWebsiteAbout}
           />
-          <Route
-            element={<AdminPlaceholderPage title="Settings" />}
-            path={appPaths.adminWebsiteSettings}
-          />
+          <Route element={<AdminWebsiteSettingsPage />} path={appPaths.adminWebsiteSettings} />
           <Route
             element={<AdminPlaceholderPage title="Categories" />}
             path={appPaths.adminCatalogCategories}
@@ -63,18 +64,12 @@ export function AppRoutes(): ReactElement {
             element={<AdminPlaceholderPage title="Services" />}
             path={appPaths.adminCompanyServices}
           />
+          <Route element={<AdminLocationsPage />} path={appPaths.adminContactLocations} />
           <Route
-            element={<AdminPlaceholderPage title="Locations" />}
-            path={appPaths.adminContactLocations}
-          />
-          <Route
-            element={<AdminPlaceholderPage title="Contact Information" />}
+            element={<AdminContactInformationPage />}
             path={appPaths.adminContactInformation}
           />
-          <Route
-            element={<AdminPlaceholderPage title="Social Media" />}
-            path={appPaths.adminContactSocial}
-          />
+          <Route element={<AdminSocialLinksPage />} path={appPaths.adminContactSocial} />
         </Route>
       </Route>
     </Routes>

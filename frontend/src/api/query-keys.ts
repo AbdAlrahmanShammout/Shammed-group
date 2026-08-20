@@ -6,6 +6,9 @@ export const queryKeys = {
     dashboard: {
       statistics: () => ['admin', 'dashboard', 'statistics'] as const,
     },
+    siteSettings: () => ['admin', 'site-settings'] as const,
+    locations: () => ['admin', 'locations'] as const,
+    socialLinks: () => ['admin', 'social-links'] as const,
   },
   public: {
     siteSettings: () => ['public', 'site-settings'] as const,
