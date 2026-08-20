@@ -1,14 +1,15 @@
 import type { ReactElement } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
-import { RootPage } from '@/pages/root-page';
+import { AppRoutes } from '@/app/app-routes';
+import { AuthSessionProvider } from '@/app/auth-session-provider';
 
 export function AppRouter(): ReactElement {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<RootPage />} path="/" />
-      </Routes>
+      <AuthSessionProvider>
+        <AppRoutes />
+      </AuthSessionProvider>
     </BrowserRouter>
   );
 }
