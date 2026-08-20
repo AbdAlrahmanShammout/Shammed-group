@@ -10,6 +10,7 @@ export const queryKeys = {
     locations: () => ['admin', 'locations'] as const,
     socialLinks: () => ['admin', 'social-links'] as const,
     homePage: () => ['admin', 'home-page'] as const,
+    aboutPage: () => ['admin', 'about-page'] as const,
   },
   public: {
     siteSettings: () => ['public', 'site-settings'] as const,

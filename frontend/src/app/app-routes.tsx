@@ -13,6 +13,7 @@ import { AboutPage } from '@/pages/about-page';
 import { AdminContactInformationPage } from '@/pages/admin-contact-information-page';
 import { AdminLocationsPage } from '@/pages/admin-locations-page';
 import { AdminSocialLinksPage } from '@/pages/admin-social-links-page';
+import { AdminWebsiteAboutPage } from '@/pages/admin-website-about-page';
 import { AdminWebsiteHomePage } from '@/pages/admin-website-home-page';
 import { AdminWebsiteSettingsPage } from '@/pages/admin-website-settings-page';
 import { ContactPage } from '@/pages/contact-page';
@@ -41,10 +42,7 @@ export function AppRoutes(): ReactElement {
         <Route element={<AdminShellRoute />}>
           <Route element={<AdminHomeRoute />} path={appPaths.adminHome} />
           <Route element={<AdminWebsiteHomePage />} path={appPaths.adminWebsiteHome} />
-          <Route
-            element={<AdminPlaceholderPage title="About Us" />}
-            path={appPaths.adminWebsiteAbout}
-          />
+          <Route element={<AdminWebsiteAboutPage />} path={appPaths.adminWebsiteAbout} />
           <Route element={<AdminWebsiteSettingsPage />} path={appPaths.adminWebsiteSettings} />
           <Route
             element={<AdminPlaceholderPage title="Categories" />}
