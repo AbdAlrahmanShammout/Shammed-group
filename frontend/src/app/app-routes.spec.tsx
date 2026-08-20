@@ -6,8 +6,38 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { sessionTokenStore } from '@/api/session-token-store';
 import { AppRoutes } from '@/app/app-routes';
 import { AuthSessionProvider } from '@/app/auth-session-provider';
+import { appEnv } from '@/config/env';
 import { appPaths } from '@/config/app-paths';
 import { createQueryClient } from '@/config/query-client';
+
+function createAdminFetchMock(): typeof fetch {
+  return vi.fn(async (input: RequestInfo | URL): Promise<Response> => {
+    const url = String(input);
+    if (url === `${appEnv.apiBaseUrl}/admin/auth/me`) {
+      return new Response(JSON.stringify({ id: 1, role: 'admin' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    if (url === `${appEnv.apiBaseUrl}/admin/dashboard`) {
+      return new Response(
+        JSON.stringify({
+          statistics: {
+            products: { total: 1, visible: 1, hidden: 0 },
+            categories: { total: 1, visible: 1, hidden: 0 },
+            partners: { total: 1, visible: 1, hidden: 0 },
+            services: { total: 1, visible: 1, hidden: 0 },
+          },
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    }
+    return new Response('Not found', { status: 404 });
+  });
+}
 
 function renderAdminRoute(path: string): void {
   const queryClient = createQueryClient();
@@ -24,15 +54,7 @@ function renderAdminRoute(path: string): void {
 
 describe('admin session routes', () => {
   beforeEach(() => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ id: 1, role: 'admin' }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        }),
-      ),
-    );
+    vi.stubGlobal('fetch', createAdminFetchMock());
   });
 
   afterEach(() => {
@@ -51,16 +73,16 @@ describe('admin session routes', () => {
     expect(screen.queryByRole('button', { name: 'Sign out' })).not.toBeInTheDocument();
   });
 
-  it('keeps a signed-in caller out of the login page', () => {
+  it('keeps a signed-in caller out of the login page', async () => {
     sessionTokenStore.set('input-token');
     renderAdminRoute(appPaths.adminLogin);
-    expect(screen.getByRole('heading', { name: 'Overview' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Overview' })).toBeInTheDocument();
   });
 
-  it('shows admin chrome to signed-in callers', () => {
+  it('shows admin chrome to signed-in callers', async () => {
     sessionTokenStore.set('input-token');
     renderAdminRoute(appPaths.adminHome);
-    expect(screen.getByRole('navigation', { name: 'Admin' })).toBeInTheDocument();
+    expect(await screen.findByRole('navigation', { name: 'Admin' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Overview' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Home Page' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Categories' })).toBeInTheDocument();

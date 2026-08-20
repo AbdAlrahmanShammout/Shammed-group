@@ -3,6 +3,9 @@ export const queryKeys = {
     auth: {
       session: () => ['admin', 'auth', 'session'] as const,
     },
+    dashboard: {
+      statistics: () => ['admin', 'dashboard', 'statistics'] as const,
+    },
   },
   public: {
     siteSettings: () => ['public', 'site-settings'] as const,
