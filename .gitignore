@@ -9,3 +9,6 @@ coverage
 .idea
 .vscode
 backend/storage
+frontend/playwright-report
+frontend/test-results
+frontend/blob-report
