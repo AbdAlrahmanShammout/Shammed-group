@@ -45,10 +45,28 @@ describe('admin session routes', () => {
     expect(screen.getByRole('heading', { name: 'Admin sign in' })).toBeInTheDocument();
   });
 
+  it('does not show admin chrome to unsigned callers', () => {
+    renderAdminRoute(appPaths.adminHome);
+    expect(screen.queryByRole('navigation', { name: 'Admin' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Sign out' })).not.toBeInTheDocument();
+  });
+
   it('keeps a signed-in caller out of the login page', () => {
     sessionTokenStore.set('input-token');
     renderAdminRoute(appPaths.adminLogin);
-    expect(screen.getByRole('heading', { name: 'Admin' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Overview' })).toBeInTheDocument();
+  });
+
+  it('shows admin chrome to signed-in callers', () => {
+    sessionTokenStore.set('input-token');
+    renderAdminRoute(appPaths.adminHome);
+    expect(screen.getByRole('navigation', { name: 'Admin' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Overview' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Home Page' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Categories' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Partners' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Social Media' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument();
   });
 
   it('does not wrap admin routes in the public site chrome', () => {

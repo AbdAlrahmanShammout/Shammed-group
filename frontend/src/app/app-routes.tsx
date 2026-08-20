@@ -3,8 +3,10 @@ import { Route, Routes } from 'react-router-dom';
 
 import { AdminHomeRoute } from '@/app/admin-home-route';
 import { AdminLoginRoute } from '@/app/admin-login-route';
+import { AdminShellRoute } from '@/app/admin-shell-route';
 import { GuestAdminRoute } from '@/app/guest-admin-route';
 import { RequireAdminSession } from '@/app/require-admin-session';
+import { AdminPlaceholderPage } from '@/components/layout/admin-placeholder-page';
 import { appPaths } from '@/config/app-paths';
 import { PublicSiteShell } from '@/features/site-chrome/components/public-site-shell';
 import { AboutPage } from '@/pages/about-page';
@@ -31,7 +33,49 @@ export function AppRoutes(): ReactElement {
         <Route element={<AdminLoginRoute />} path={appPaths.adminLogin} />
       </Route>
       <Route element={<RequireAdminSession />}>
-        <Route element={<AdminHomeRoute />} path={appPaths.adminHome} />
+        <Route element={<AdminShellRoute />}>
+          <Route element={<AdminHomeRoute />} path={appPaths.adminHome} />
+          <Route
+            element={<AdminPlaceholderPage title="Home Page" />}
+            path={appPaths.adminWebsiteHome}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="About Us" />}
+            path={appPaths.adminWebsiteAbout}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="Settings" />}
+            path={appPaths.adminWebsiteSettings}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="Categories" />}
+            path={appPaths.adminCatalogCategories}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="Products" />}
+            path={appPaths.adminCatalogProducts}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="Partners" />}
+            path={appPaths.adminCompanyPartners}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="Services" />}
+            path={appPaths.adminCompanyServices}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="Locations" />}
+            path={appPaths.adminContactLocations}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="Contact Information" />}
+            path={appPaths.adminContactInformation}
+          />
+          <Route
+            element={<AdminPlaceholderPage title="Social Media" />}
+            path={appPaths.adminContactSocial}
+          />
+        </Route>
       </Route>
     </Routes>
   );
