@@ -14,6 +14,9 @@ import { DatabaseConfigService } from '@/config/database/database-config.service
 import jwtConfigs from '@/config/jwt/jwt-configs';
 import { jwtConfigSchema } from '@/config/jwt/jwt-config.schema';
 import { JwtConfigService } from '@/config/jwt/jwt-config.service';
+import smtpConfigs from '@/config/smtp/smtp-configs';
+import { smtpConfigSchema } from '@/config/smtp/smtp-config.schema';
+import { SmtpConfigService } from '@/config/smtp/smtp-config.service';
 import storageConfigs from '@/config/storage/storage-configs';
 import { storageConfigSchema } from '@/config/storage/storage-config.schema';
 import { StorageConfigService } from '@/config/storage/storage-config.service';
@@ -32,6 +35,7 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
         ...authConfigs,
         ...databaseConfigs,
         ...jwtConfigs,
+        ...smtpConfigs,
         ...storageConfigs,
         ...swaggerConfigs,
       ],
@@ -40,6 +44,7 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
         ...authConfigSchema,
         ...databaseConfigSchema,
         ...jwtConfigSchema,
+        ...smtpConfigSchema,
         ...storageConfigSchema,
         ...swaggerConfigSchema,
       }),
@@ -51,6 +56,7 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
     AuthConfigService,
     DatabaseConfigService,
     JwtConfigService,
+    SmtpConfigService,
     StorageConfigService,
     SwaggerConfigService,
   ],
@@ -59,6 +65,7 @@ import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
     AuthConfigService,
     DatabaseConfigService,
     JwtConfigService,
+    SmtpConfigService,
     StorageConfigService,
     SwaggerConfigService,
   ],
