@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 
+import { AboutPagePublicController } from '@/modules/about-page/about-page.public.controller';
+import { AboutPageModule } from '@/modules/about-page/about-page.module';
 import { HomePagePublicController } from '@/modules/home-page/home-page.public.controller';
 import { HomePageModule } from '@/modules/home-page/home-page.module';
 import { LocationPublicController } from '@/modules/location/location.public.controller';
@@ -19,6 +21,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
 
 @Module({
   imports: [
+    AboutPageModule,
     HomePageModule,
     LocationModule,
     PartnerModule,
@@ -29,6 +32,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
     SocialLinkModule,
   ],
   controllers: [
+    AboutPagePublicController,
     HomePagePublicController,
     LocationPublicController,
     PartnerPublicController,
