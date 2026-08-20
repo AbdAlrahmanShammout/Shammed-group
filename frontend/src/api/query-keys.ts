@@ -10,5 +10,8 @@ export const queryKeys = {
     homePage: () => ['public', 'home-page'] as const,
     aboutPage: () => ['public', 'about-page'] as const,
     partners: () => ['public', 'partners'] as const,
+    productCategories: () => ['public', 'product-categories'] as const,
+    products: (filters: { readonly categoryId?: number } = {}) =>
+      ['public', 'products', filters] as const,
   },
 };
