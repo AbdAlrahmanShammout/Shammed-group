@@ -34,7 +34,7 @@ type PublicFooterProps = {
   readonly isSettingsError?: boolean;
 };
 
-const footerHeadingClassName = 'flex min-h-9 items-center text-sm font-medium text-foreground';
+const footerHeadingClassName = 'flex min-h-9 items-center text-sm font-medium text-primary-foreground';
 
 export function PublicFooter({
   companyName,
@@ -56,7 +56,7 @@ export function PublicFooter({
     : mapLocations[0]?.id;
   const activeLocation = mapLocations.find((location) => location.id === activeLocationId);
   return (
-    <footer className="w-full border-t bg-background">
+    <footer className="w-full bg-primary text-primary-foreground">
       <div className="grid w-full grid-cols-1 gap-6 px-4 py-8 sm:px-6 md:grid-cols-3 md:items-start md:gap-6 lg:gap-8 lg:px-8 xl:px-12">
         <section aria-label="Office locations map" className="flex min-w-0 flex-col gap-3">
           <div className={footerHeadingClassName}>
@@ -76,8 +76,8 @@ export function PublicFooter({
                         'max-w-full truncate rounded-md border px-2.5 py-1 text-left text-xs transition-colors',
                         focusRingClassName,
                         isSelected
-                          ? 'border-foreground bg-foreground text-background'
-                          : 'border-border bg-background text-muted-foreground hover:text-foreground',
+                          ? 'border-primary-foreground/50 bg-primary-foreground/20 text-primary-foreground'
+                          : 'border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground',
                       )}
                       id={`footer-map-tab-${location.id}`}
                       key={location.id}
@@ -98,7 +98,7 @@ export function PublicFooter({
             )}
           </div>
           {mapLocations.length === 0 ? (
-            <p className="text-sm text-muted-foreground" role="status">
+            <p className="text-sm text-primary-foreground/60" role="status">
               Map locations are not available yet.
             </p>
           ) : null}
@@ -124,7 +124,7 @@ export function PublicFooter({
         </section>
         <div
           aria-label="Contact"
-          className="flex min-w-0 flex-col gap-3 text-sm text-muted-foreground"
+          className="flex min-w-0 flex-col gap-3 text-sm text-primary-foreground/70"
           role="region"
         >
           <Link
@@ -151,7 +151,7 @@ export function PublicFooter({
             <div className="flex flex-col gap-2">
               {email ? (
                 <a
-                  className={cn('break-all hover:text-foreground', focusRingClassName)}
+                  className={cn('break-all transition-colors hover:text-primary-foreground', focusRingClassName)}
                   href={`mailto:${email}`}
                 >
                   {email}
@@ -159,7 +159,7 @@ export function PublicFooter({
               ) : null}
               {phone ? (
                 <a
-                  className={cn('hover:text-foreground', focusRingClassName)}
+                  className={cn('transition-colors hover:text-primary-foreground', focusRingClassName)}
                   href={`tel:${phone}`}
                 >
                   {phone}
@@ -206,9 +206,9 @@ export function PublicFooter({
                 <NavLink
                   className={({ isActive }) =>
                     cn(
-                      'text-sm text-muted-foreground hover:text-foreground',
+                      'text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground',
                       focusRingClassName,
-                      isActive && 'font-medium text-foreground',
+                      isActive && 'font-medium text-primary-foreground',
                     )
                   }
                   to={item.path}
@@ -221,7 +221,7 @@ export function PublicFooter({
         </nav>
       </div>
       {companyName ? (
-        <p className="w-full border-t px-4 py-4 text-center text-sm text-muted-foreground sm:px-6 lg:px-8 xl:px-12">
+        <p className="w-full border-t border-primary-foreground/15 px-4 py-4 text-center text-sm text-primary-foreground/50 sm:px-6 lg:px-8 xl:px-12">
           © {copyrightYear} {companyName}
         </p>
       ) : null}

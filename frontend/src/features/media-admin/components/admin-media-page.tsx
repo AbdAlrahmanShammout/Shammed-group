@@ -1,4 +1,4 @@
-import { Trash2, Image, RefreshCw } from 'lucide-react';
+import { Trash2, Image } from 'lucide-react';
 import { useState, type ReactElement } from 'react';
 
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';

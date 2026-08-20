@@ -20,7 +20,7 @@ export function HomePartnersSection({ homePage, partners }: HomePartnersSectionP
   return (
     <section
       aria-labelledby="home-partners-title"
-      className="border-b bg-[linear-gradient(180deg,oklch(0.985_0.004_240)_0%,oklch(0.99_0_0)_100%)]"
+      className="border-b bg-[linear-gradient(180deg,#F5F7FA_0%,#FFFFFF_100%)]"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 md:px-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">

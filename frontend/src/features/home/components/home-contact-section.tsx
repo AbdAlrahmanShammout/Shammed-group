@@ -20,7 +20,7 @@ export function HomeContactSection({ homePage }: HomeContactSectionProps): React
   return (
     <section
       aria-labelledby="home-contact-title"
-      className="border-t bg-[linear-gradient(180deg,oklch(0.985_0.004_240)_0%,oklch(0.99_0_0)_100%)]"
+      className="border-t bg-[linear-gradient(180deg,#F5F7FA_0%,#FFFFFF_100%)]"
     >
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-12 md:px-6">
         <div className="flex flex-col gap-6">

@@ -30,7 +30,7 @@ function ServiceMedia({ alt, className, mediaId }: ServiceMediaProps): ReactElem
     return (
       <div
         className={cn(
-          'flex items-center justify-center bg-[radial-gradient(circle_at_top,oklch(0.9_0.01_200),oklch(0.95_0_0)_70%)] text-sm text-muted-foreground',
+          'flex items-center justify-center bg-[radial-gradient(circle_at_top,#D9DEE8,#E8ECF7_70%)] text-sm text-muted-foreground',
           className,
         )}
       >
@@ -52,7 +52,7 @@ export function HomeServicesSection({ homePage, services }: HomeServicesSectionP
   return (
     <section
       aria-labelledby="home-services-title"
-      className="border-b bg-[linear-gradient(160deg,oklch(0.22_0.02_240)_0%,oklch(0.28_0.025_220)_45%,oklch(0.24_0.02_250)_100%)] text-background"
+      className="border-b bg-[linear-gradient(160deg,#181E40_0%,#2C3470_45%,#181E40_100%)] text-background"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-20 md:px-6">
         <div className="flex flex-col gap-6 border-b border-background/15 pb-10 md:flex-row md:items-end md:justify-between">

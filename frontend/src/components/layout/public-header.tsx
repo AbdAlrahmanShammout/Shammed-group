@@ -34,7 +34,7 @@ export function PublicHeader({
     triggerRef: menuButtonRef,
   });
   return (
-    <header className="border-b bg-background">
+    <header className="bg-primary text-primary-foreground">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link
           aria-busy={isSettingsPending}
@@ -50,7 +50,7 @@ export function PublicHeader({
               mediaId={logoMediaId}
             />
           ) : (
-            <span className="text-lg font-medium">{companyName ?? 'Home'}</span>
+            <span className="text-lg font-medium text-primary-foreground">{companyName ?? 'Home'}</span>
           )}
         </Link>
         <nav aria-label="Primary" className="hidden md:block">
@@ -60,9 +60,9 @@ export function PublicHeader({
                 <NavLink
                   className={({ isActive }) =>
                     cn(
-                      'text-sm text-muted-foreground hover:text-foreground',
+                      'text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground',
                       focusRingClassName,
-                      isActive && 'font-medium text-foreground',
+                      isActive && 'font-medium text-primary-foreground',
                     )
                   }
                   to={item.path}
@@ -76,7 +76,7 @@ export function PublicHeader({
         <Button
           aria-controls="mobile-navigation"
           aria-expanded={isMobileMenuOpen}
-          className="md:hidden"
+          className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground md:hidden"
           onClick={() => setIsMobileMenuOpen((open) => !open)}
           ref={menuButtonRef}
           size="icon"
@@ -90,7 +90,7 @@ export function PublicHeader({
       {isMobileMenuOpen ? (
         <nav
           aria-label="Mobile"
-          className="border-t px-4 py-4 md:hidden"
+          className="border-t border-primary-foreground/15 px-4 py-4 md:hidden"
           id="mobile-navigation"
           ref={mobileNavRef}
         >
@@ -100,9 +100,9 @@ export function PublicHeader({
                 <NavLink
                   className={({ isActive }) =>
                     cn(
-                      'text-sm text-muted-foreground hover:text-foreground',
+                      'text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground',
                       focusRingClassName,
-                      isActive && 'font-medium text-foreground',
+                      isActive && 'font-medium text-primary-foreground',
                     )
                   }
                   onClick={() => setIsMobileMenuOpen(false)}

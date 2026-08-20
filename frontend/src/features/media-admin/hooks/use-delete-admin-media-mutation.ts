@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { queryKeys } from '@/api/query-keys';
 import { deleteAdminMedia } from '@/features/media-admin/api/media.api';
 
 export function useDeleteAdminMediaMutation() {

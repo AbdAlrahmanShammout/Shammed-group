@@ -13,7 +13,7 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
   return (
     <section
       aria-labelledby="home-hero-title"
-      className="relative isolate overflow-hidden border-b bg-[radial-gradient(circle_at_top_left,_oklch(0.97_0.01_240)_0%,_oklch(0.99_0_0)_45%,_oklch(0.96_0.02_200)_100%)]"
+      className="relative isolate overflow-hidden border-b bg-[radial-gradient(circle_at_top_left,#E8ECF7_0%,#FFFFFF_45%,#F5F7FA_100%)]"
     >
       {heroImageMediaId ? (
         <div aria-hidden="true" className="absolute inset-0 -z-10">

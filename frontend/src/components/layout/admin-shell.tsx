@@ -30,8 +30,8 @@ export function AdminShell({ onSignOut }: AdminShellProps): ReactElement {
         Skip to content
       </a>
       <aside className="hidden w-64 shrink-0 border-r md:block">
-        <div className="border-b px-4 py-4">
-          <p className="text-lg font-medium">Admin</p>
+        <div className="border-b bg-primary px-4 py-4">
+          <p className="text-lg font-medium text-primary-foreground">Admin</p>
         </div>
         <AdminSidebar navGroups={adminNavGroups} />
       </aside>

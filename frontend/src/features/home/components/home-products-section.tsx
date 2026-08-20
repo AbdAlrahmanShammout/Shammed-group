@@ -26,7 +26,7 @@ function ProductMedia({ alt, className, mediaId }: ProductMediaProps): ReactElem
     return (
       <div
         className={cn(
-          'flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,oklch(0.93_0.01_230),oklch(0.97_0_0)_72%)] px-6 text-center text-sm text-muted-foreground',
+          'flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,#E8ECF7,#F5F7FA_72%)] px-6 text-center text-sm text-muted-foreground',
           className,
         )}
       >
@@ -132,7 +132,7 @@ function ProductTile({
               </p>
             )}
           </div>
-          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-primary">
             View product
             <ArrowUpRight
               aria-hidden="true"
@@ -151,7 +151,7 @@ export function HomeProductsSection({ homePage, products }: HomeProductsSectionP
   return (
     <section
       aria-labelledby="home-products-title"
-      className="border-b bg-[linear-gradient(180deg,oklch(0.99_0_0)_0%,oklch(0.975_0.006_230)_55%,oklch(0.99_0_0)_100%)]"
+      className="border-b bg-[linear-gradient(180deg,#FFFFFF_0%,#E8ECF7_55%,#FFFFFF_100%)]"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 md:px-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
