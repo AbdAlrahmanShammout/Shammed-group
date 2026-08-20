@@ -17,6 +17,7 @@ const mockAboutPage = {
     mission: 'Mission body from API.',
     values: 'Values body from API.',
     capabilities: 'Capabilities body from API.',
+    overviewImageMediaId: 38,
   },
 };
 
@@ -53,9 +54,13 @@ describe('PublicAboutPage', () => {
   it('renders all five content blocks from the about API', async () => {
     renderPublicAboutPage();
     expect(await screen.findByRole('heading', { name: 'About Us' })).toBeInTheDocument();
-    expect(document.title).toBe('About | Shammed Group');
+    expect(document.title).toBe('About Shammed Group | Shammed Group');
     expect(document.head.querySelector('meta[name="description"]')?.getAttribute('content')).toContain(
-      'vision, mission, values',
+      'established in Damascus in 2005',
+    );
+    expect(screen.getByRole('img', { name: 'Shammed Group team' })).toHaveAttribute(
+      'src',
+      `${appEnv.apiBaseUrl}/media/38`,
     );
     expect(screen.getByRole('heading', { name: 'Company Overview' })).toBeInTheDocument();
     expect(screen.getByText('Overview body from API.')).toBeInTheDocument();

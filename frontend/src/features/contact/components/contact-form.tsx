@@ -19,7 +19,12 @@ const textareaClassName = cn(
   'aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20',
 );
 
-export function ContactForm(): ReactElement {
+type ContactFormProps = {
+  readonly className?: string;
+  readonly fieldIdPrefix?: string;
+};
+
+export function ContactForm({ className, fieldIdPrefix = '' }: ContactFormProps): ReactElement {
   const [isSuccess, setIsSuccess] = useState(false);
   const createInquiryMutation = useCreateContactInquiryMutation();
   const form = useForm<ContactFormValues>({
@@ -34,6 +39,9 @@ export function ContactForm(): ReactElement {
   });
   const serverError =
     createInquiryMutation.error instanceof ApiError ? createInquiryMutation.error.message : null;
+  function createFieldId(fieldName: string): string {
+    return `${fieldIdPrefix}${fieldName}`;
+  }
   async function onSubmit(values: ContactFormValues): Promise<void> {
     setIsSuccess(false);
     try {
@@ -59,9 +67,13 @@ export function ContactForm(): ReactElement {
     }
   }
   return (
-    <form className="flex max-w-xl flex-col gap-4" noValidate onSubmit={form.handleSubmit(onSubmit)}>
+    <form
+      className={cn('flex w-full max-w-xl flex-col gap-4', className)}
+      noValidate
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
       <div className="flex flex-col gap-2">
-        <Label htmlFor="fullName">
+        <Label htmlFor={createFieldId('fullName')}>
           Full Name <span aria-hidden="true">*</span>
         </Label>
         <Input
@@ -69,7 +81,7 @@ export function ContactForm(): ReactElement {
           aria-required="true"
           autoComplete="name"
           disabled={createInquiryMutation.isPending}
-          id="fullName"
+          id={createFieldId('fullName')}
           {...form.register('fullName')}
         />
         {form.formState.errors.fullName ? (
@@ -78,50 +90,52 @@ export function ContactForm(): ReactElement {
           </p>
         ) : null}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="email">
-          Email <span aria-hidden="true">*</span>
-        </Label>
-        <Input
-          aria-invalid={Boolean(form.formState.errors.email)}
-          aria-required="true"
-          autoComplete="email"
-          disabled={createInquiryMutation.isPending}
-          id="email"
-          type="email"
-          {...form.register('email')}
-        />
-        {form.formState.errors.email ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.email.message}
-          </p>
-        ) : null}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor={createFieldId('email')}>
+            Email <span aria-hidden="true">*</span>
+          </Label>
+          <Input
+            aria-invalid={Boolean(form.formState.errors.email)}
+            aria-required="true"
+            autoComplete="email"
+            disabled={createInquiryMutation.isPending}
+            id={createFieldId('email')}
+            type="email"
+            {...form.register('email')}
+          />
+          {form.formState.errors.email ? (
+            <p className="text-sm text-destructive" role="alert">
+              {form.formState.errors.email.message}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor={createFieldId('phone')}>Phone Number</Label>
+          <Input
+            aria-invalid={Boolean(form.formState.errors.phone)}
+            autoComplete="tel"
+            disabled={createInquiryMutation.isPending}
+            id={createFieldId('phone')}
+            type="tel"
+            {...form.register('phone')}
+          />
+          {form.formState.errors.phone ? (
+            <p className="text-sm text-destructive" role="alert">
+              {form.formState.errors.phone.message}
+            </p>
+          ) : null}
+        </div>
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="phone">Phone Number</Label>
-        <Input
-          aria-invalid={Boolean(form.formState.errors.phone)}
-          autoComplete="tel"
-          disabled={createInquiryMutation.isPending}
-          id="phone"
-          type="tel"
-          {...form.register('phone')}
-        />
-        {form.formState.errors.phone ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.phone.message}
-          </p>
-        ) : null}
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="subject">
+        <Label htmlFor={createFieldId('subject')}>
           Subject <span aria-hidden="true">*</span>
         </Label>
         <Input
           aria-invalid={Boolean(form.formState.errors.subject)}
           aria-required="true"
           disabled={createInquiryMutation.isPending}
-          id="subject"
+          id={createFieldId('subject')}
           {...form.register('subject')}
         />
         {form.formState.errors.subject ? (
@@ -131,7 +145,7 @@ export function ContactForm(): ReactElement {
         ) : null}
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="message">
+        <Label htmlFor={createFieldId('message')}>
           Message <span aria-hidden="true">*</span>
         </Label>
         <textarea
@@ -139,7 +153,7 @@ export function ContactForm(): ReactElement {
           aria-required="true"
           className={textareaClassName}
           disabled={createInquiryMutation.isPending}
-          id="message"
+          id={createFieldId('message')}
           {...form.register('message')}
         />
         {form.formState.errors.message ? (

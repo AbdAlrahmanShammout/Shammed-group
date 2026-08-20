@@ -110,6 +110,7 @@ export const mockPublicHomePage = {
       description: 'Shown on home',
       isVisible: true,
       displayOrder: 0,
+      imageMediaId: 28,
     },
   ],
 };

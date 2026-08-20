@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import { useEffect, type ReactElement } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { PublicFooter } from '@/components/layout/public-footer';
@@ -7,12 +7,31 @@ import { appPaths } from '@/config/app-paths';
 import { publicNavItems } from '@/config/public-nav-items';
 import { usePublicSiteSettingsQuery } from '@/features/site-chrome/hooks/use-public-site-settings-query';
 import { usePublicSocialLinksQuery } from '@/features/site-chrome/hooks/use-public-social-links-query';
+import { createPublicMediaUrl } from '@/lib/create-public-media-url';
+
+function applyDocumentFavicon(faviconMediaId: number | undefined): void {
+  const existing = document.head.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+  existing.forEach((element) => {
+    element.remove();
+  });
+  if (faviconMediaId === undefined) {
+    return;
+  }
+  const iconLink = document.createElement('link');
+  iconLink.rel = 'icon';
+  iconLink.type = 'image/png';
+  iconLink.href = createPublicMediaUrl(faviconMediaId);
+  document.head.appendChild(iconLink);
+}
 
 export function PublicSiteShell(): ReactElement {
   const siteSettingsQuery = usePublicSiteSettingsQuery();
   const socialLinksQuery = usePublicSocialLinksQuery();
   const siteSettings = siteSettingsQuery.data?.siteSettings;
   const socialLinks = socialLinksQuery.data?.socialLinks ?? [];
+  useEffect(() => {
+    applyDocumentFavicon(siteSettings?.faviconMediaId);
+  }, [siteSettings?.faviconMediaId]);
   return (
     <div className="flex min-h-svh flex-col">
       <a
@@ -25,6 +44,7 @@ export function PublicSiteShell(): ReactElement {
         companyName={siteSettings?.companyName}
         homePath={appPaths.home}
         isSettingsPending={siteSettingsQuery.isPending}
+        logoMediaId={siteSettings?.logoMediaId}
         navItems={publicNavItems}
       />
       <main className="flex-1" id="main-content">
@@ -38,6 +58,7 @@ export function PublicSiteShell(): ReactElement {
         homePath={appPaths.home}
         isSettingsError={siteSettingsQuery.isError}
         isSettingsPending={siteSettingsQuery.isPending}
+        logoMediaId={siteSettings?.logoMediaId}
         navItems={publicNavItems}
         phone={siteSettings?.phone}
         socialLinks={socialLinks}

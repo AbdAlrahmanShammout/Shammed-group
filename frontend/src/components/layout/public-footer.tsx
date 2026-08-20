@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 import type { PublicNavItem } from '@/components/layout/public-nav-item';
+import { PublicMediaImage } from '@/components/media/public-media-image';
 import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
 import { cn } from '@/lib/utils';
 
@@ -18,6 +19,7 @@ type PublicFooterProps = {
   readonly email?: string;
   readonly phone?: string;
   readonly address?: string;
+  readonly logoMediaId?: number;
   readonly socialLinks: readonly PublicFooterSocialLink[];
   readonly copyrightYear: number;
   readonly isSettingsPending?: boolean;
@@ -31,6 +33,7 @@ export function PublicFooter({
   email,
   phone,
   address,
+  logoMediaId,
   socialLinks,
   copyrightYear,
   isSettingsPending = false,
@@ -40,8 +43,20 @@ export function PublicFooter({
     <footer className="border-t bg-background">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 md:grid-cols-3 md:px-6">
         <section>
-          <Link className={cn('text-lg font-medium', focusRingClassName)} to={homePath}>
-            {companyName ?? 'Home'}
+          <Link
+            aria-label={companyName ?? 'Home'}
+            className={cn('inline-flex items-center', focusRingClassName)}
+            to={homePath}
+          >
+            {logoMediaId !== undefined ? (
+              <PublicMediaImage
+                alt={companyName ? `${companyName} logo` : 'Company logo'}
+                className="h-16 w-auto max-w-[18rem] object-contain md:h-20"
+                mediaId={logoMediaId}
+              />
+            ) : (
+              <span className="text-lg font-medium">{companyName ?? 'Home'}</span>
+            )}
           </Link>
         </section>
         <nav aria-label="Footer">

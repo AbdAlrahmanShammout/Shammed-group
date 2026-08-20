@@ -31,6 +31,23 @@ describe('PublicHomePage', () => {
             headers: { 'Content-Type': 'application/json' },
           });
         }
+        if (url === `${appEnv.apiBaseUrl}/site-settings`) {
+          return new Response(
+            JSON.stringify({
+              siteSettings: {
+                id: 1,
+                createdAt: '2026-01-01T00:00:00.000Z',
+                updatedAt: '2026-01-01T00:00:00.000Z',
+                companyName: 'Example Company',
+                companyNameEnglish: 'Example Company',
+                email: 'contact@example.test',
+                phone: '+10000000000',
+                address: '1 Example Street',
+              },
+            }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } },
+          );
+        }
         return new Response('Not found', { status: 404 });
       }),
     );
@@ -53,6 +70,10 @@ describe('PublicHomePage', () => {
     );
     expect(screen.getByRole('heading', { name: 'Visible Product' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Visible Service' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Visible Service' })).toHaveAttribute(
+      'src',
+      `${appEnv.apiBaseUrl}/media/28`,
+    );
     expect(screen.queryByText('Hidden Partner')).not.toBeInTheDocument();
     expect(screen.queryByText('Hidden Product')).not.toBeInTheDocument();
     expect(screen.queryByText('Hidden Service')).not.toBeInTheDocument();
@@ -69,6 +90,11 @@ describe('PublicHomePage', () => {
       'src',
       `${appEnv.apiBaseUrl}/media/${mockPublicHomePage.homePage.aboutPreviewImageMediaId}`,
     );
+    expect(screen.getByRole('heading', { name: mockPublicHomePage.homePage.contactSectionTitle })).toBeInTheDocument();
+    expect(screen.getByLabelText(/Full Name/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Email/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Send message' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /View locations/ })).toHaveAttribute('href', '/contact');
   });
   it('does not invent catalog rows that the API omitted', async () => {
     vi.stubGlobal(

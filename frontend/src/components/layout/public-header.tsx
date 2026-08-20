@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 
 import type { PublicNavItem } from '@/components/layout/public-nav-item';
+import { PublicMediaImage } from '@/components/media/public-media-image';
 import { Button } from '@/components/ui/button';
 import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
 import { useMobileNavAccessibility } from '@/lib/a11y/use-mobile-nav-accessibility';
@@ -12,6 +13,7 @@ type PublicHeaderProps = {
   readonly companyName?: string;
   readonly homePath: string;
   readonly isSettingsPending?: boolean;
+  readonly logoMediaId?: number;
   readonly navItems: readonly PublicNavItem[];
 };
 
@@ -19,6 +21,7 @@ export function PublicHeader({
   companyName,
   homePath,
   isSettingsPending = false,
+  logoMediaId,
   navItems,
 }: PublicHeaderProps): ReactElement {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -32,13 +35,23 @@ export function PublicHeader({
   });
   return (
     <header className="border-b bg-background">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link
           aria-busy={isSettingsPending}
-          className={cn('text-lg font-medium', focusRingClassName)}
+          aria-label={companyName ?? 'Home'}
+          className={cn('inline-flex items-center gap-3', focusRingClassName)}
           to={homePath}
         >
-          {companyName ?? 'Home'}
+          {logoMediaId !== undefined ? (
+            <PublicMediaImage
+              alt={companyName ? `${companyName} logo` : 'Company logo'}
+              className="h-10 w-auto max-w-[11rem] object-contain md:h-11"
+              loading="eager"
+              mediaId={logoMediaId}
+            />
+          ) : (
+            <span className="text-lg font-medium">{companyName ?? 'Home'}</span>
+          )}
         </Link>
         <nav aria-label="Primary" className="hidden md:block">
           <ul className="flex items-center gap-6">

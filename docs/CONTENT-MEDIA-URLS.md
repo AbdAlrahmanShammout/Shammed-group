@@ -7,9 +7,9 @@ Assets were **downloaded locally**, uploaded to `POST /admin/media`, and attache
 | Asset | Local media ID | Attached to |
 |-------|----------------|-------------|
 | Home hero | `25` | Home → `heroImageMediaId` |
-| Home About preview | `26` | Home → `aboutPreviewImageMediaId` (+ Turnkey service image) |
+| Home About preview | `38` | Home → `aboutPreviewImageMediaId` (client team photo) |
 | Home Why | `27` | Home → `whyImageMediaId` (+ Installation service image) |
-| About overview | `28` | About → `overviewImageMediaId` (+ Medical Equipment Distribution service image) |
+| About overview | `38` | About → `overviewImageMediaId` (client team photo) |
 | Service — Pharmaceutical Equipment and Distribution | `29` | Service image |
 | Service — Operation Supplies and Medical Consumables | `30` | Service image |
 | Partner — STORZ Medical AG logo | `31` | Partner `logoMediaId` |
@@ -17,10 +17,12 @@ Assets were **downloaded locally**, uploaded to `POST /admin/media`, and attache
 | Partner — KARL STORZ logo | `33` | Partner `logoMediaId` |
 | Partner — KLS Martin Group logo | `34` | Partner `logoMediaId` |
 | Partner — Dialife Group logo | `35` | Partner `logoMediaId` |
+| Company logo | `36` | Settings → `logoMediaId` |
+| Favicon | `37` | Settings → `faviconMediaId` |
 
-Files were stored under the backend storage root via the media upload API. Working copies used for import: `backend/tmp/content-media/` (SVG partner logos converted to PNG because CMS accepts JPEG/PNG/WebP only).
+Files were stored under the backend storage root via the media upload API.
 
-Still missing (no upload): company logo, favicon, OES / SMD MEDICARE / Bistos logos.
+Still missing (no upload): OES / SMD MEDICARE / Bistos logos.
 
 Re-run importer (if needed):
 

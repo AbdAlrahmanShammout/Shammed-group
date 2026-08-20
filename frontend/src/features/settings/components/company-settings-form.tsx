@@ -59,6 +59,30 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
       : updateMutation.error instanceof ApiError
         ? updateMutation.error.message
         : null;
+  async function persistMediaField(input: {
+    readonly field: 'logoMediaId' | 'faviconMediaId';
+    readonly mediaId: string;
+    readonly fileName: string;
+  }): Promise<void> {
+    form.setValue(input.field, input.mediaId, { shouldDirty: true });
+    if (input.field === 'logoMediaId') {
+      setLogoFileName(input.fileName);
+    } else {
+      setFaviconFileName(input.fileName);
+    }
+    if (!siteSettings) {
+      return;
+    }
+    setIsSuccess(false);
+    try {
+      await updateMutation.mutateAsync({
+        [input.field]: toOptionalMediaId(input.mediaId),
+      });
+      setIsSuccess(true);
+    } catch {
+      // Surface via updateMutation.error / serverError below.
+    }
+  }
   async function onSubmit(values: CompanySettingsFormValues): Promise<void> {
     setIsSuccess(false);
     const logoMediaId = toOptionalMediaId(values.logoMediaId);
@@ -161,12 +185,18 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
         label="Company logo"
         mediaId={form.watch('logoMediaId')}
         onClear={() => {
-          form.setValue('logoMediaId', '');
-          setLogoFileName('');
+          void persistMediaField({
+            field: 'logoMediaId',
+            mediaId: '',
+            fileName: '',
+          });
         }}
         onUploaded={({ mediaId, fileName }) => {
-          form.setValue('logoMediaId', mediaId);
-          setLogoFileName(fileName);
+          void persistMediaField({
+            field: 'logoMediaId',
+            mediaId,
+            fileName,
+          });
         }}
       />
       <AdminMediaUploadField
@@ -176,14 +206,29 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
         label="Favicon"
         mediaId={form.watch('faviconMediaId')}
         onClear={() => {
-          form.setValue('faviconMediaId', '');
-          setFaviconFileName('');
+          void persistMediaField({
+            field: 'faviconMediaId',
+            mediaId: '',
+            fileName: '',
+          });
         }}
         onUploaded={({ mediaId, fileName }) => {
-          form.setValue('faviconMediaId', mediaId);
-          setFaviconFileName(fileName);
+          void persistMediaField({
+            field: 'faviconMediaId',
+            mediaId,
+            fileName,
+          });
         }}
       />
+      {siteSettings ? (
+        <p className="text-xs text-muted-foreground">
+          Logo and favicon apply to the public site as soon as you upload or remove them.
+        </p>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          Create settings first, then logo and favicon uploads apply immediately.
+        </p>
+      )}
       {serverError ? (
         <p className="text-sm text-destructive" role="alert">
           {serverError}
