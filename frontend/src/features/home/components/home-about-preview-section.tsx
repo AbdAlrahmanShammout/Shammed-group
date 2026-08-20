@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 
+import { PublicMediaImage } from '@/components/media/public-media-image';
 import { HomeCtaLink } from '@/features/home/components/home-cta-link';
 import type { HomePageResponse } from '@/generated/public-home.contract';
 
@@ -15,6 +16,13 @@ export function HomeAboutPreviewSection({ homePage }: HomeAboutPreviewSectionPro
           {homePage.aboutPreviewTitle}
         </h2>
         <p className="max-w-3xl text-muted-foreground">{homePage.aboutPreviewDescription}</p>
+        {homePage.aboutPreviewImageMediaId ? (
+          <PublicMediaImage
+            alt={homePage.aboutPreviewTitle}
+            className="max-h-[28rem] w-full rounded-md"
+            mediaId={homePage.aboutPreviewImageMediaId}
+          />
+        ) : null}
         <div>
           <HomeCtaLink href={homePage.aboutPreviewCtaUrl} variant="outline">
             {homePage.aboutPreviewCtaText}

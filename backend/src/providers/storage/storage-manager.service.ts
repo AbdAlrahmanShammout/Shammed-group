@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, unlink, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { Injectable } from '@nestjs/common';
@@ -27,6 +27,26 @@ export class StorageManagerService {
       byteSize: input.content.byteLength,
       storageKey: storedFileName,
     };
+  }
+
+  async readFile(storageKey: string): Promise<Buffer> {
+    const destinationPath = path.join(this.storageConfigService.rootPath, storageKey);
+    try {
+      return await readFile(destinationPath);
+    } catch (error) {
+      if (this.isMissingFileError(error)) {
+        throw new DependencyFailureException({
+          message: 'Stored media file is missing',
+          code: 'STORAGE_READ_MISSING',
+          userFriendly: true,
+        });
+      }
+      throw new DependencyFailureException({
+        message: 'Failed to read the stored file',
+        code: 'STORAGE_READ_FAILED',
+        userFriendly: true,
+      });
+    }
   }
 
   async deleteFile(storageKey: string): Promise<void> {

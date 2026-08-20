@@ -3,10 +3,10 @@ import { useEffect, useState, type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ApiError } from '@/api/api-error';
+import { AdminMediaUploadField } from '@/components/media/admin-media-upload-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MediaUploadField } from '@/features/home-admin/components/media-upload-field';
 import { useCreateAdminHomePageMutation } from '@/features/home-admin/hooks/use-create-admin-home-page-mutation';
 import { useUpdateAdminHomePageMutation } from '@/features/home-admin/hooks/use-update-admin-home-page-mutation';
 import { toCreateHomePageRequest } from '@/features/home-admin/lib/to-create-home-page-request';
@@ -142,7 +142,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             </p>
           ) : null}
         </div>
-        <MediaUploadField
+        <AdminMediaUploadField
           disabled={isPending}
           fileName={heroFileName}
           inputId="heroImageUpload"
@@ -265,7 +265,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             </p>
           ) : null}
         </div>
-        <MediaUploadField
+        <AdminMediaUploadField
           disabled={isPending}
           fileName={aboutFileName}
           inputId="aboutPreviewImageUpload"
@@ -417,7 +417,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             </p>
           ) : null}
         </div>
-        <MediaUploadField
+        <AdminMediaUploadField
           disabled={isPending}
           fileName={whyFileName}
           inputId="whyImageUpload"

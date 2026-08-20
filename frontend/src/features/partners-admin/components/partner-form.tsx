@@ -6,7 +6,7 @@ import { ApiError } from '@/api/api-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MediaUploadField } from '@/features/partners-admin/components/media-upload-field';
+import { AdminMediaUploadField } from '@/components/media/admin-media-upload-field';
 import { useCreateAdminPartnerMutation } from '@/features/partners-admin/hooks/use-create-admin-partner-mutation';
 import { useUpdateAdminPartnerMutation } from '@/features/partners-admin/hooks/use-update-admin-partner-mutation';
 import { toCreatePartnerRequest } from '@/features/partners-admin/lib/to-create-partner-request';
@@ -172,7 +172,7 @@ export function PartnerForm({ onCancel, onSaved, partner }: PartnerFormProps): R
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site
       </label>
-      <MediaUploadField
+      <AdminMediaUploadField
         disabled={isPending}
         fileName={logoFileName}
         inputId="partnerLogoUpload"

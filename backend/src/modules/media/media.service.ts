@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
 import { ResourceNotFoundException } from '@/common/exceptions/resource-not-found.exception';
-import type { CreateMediaServiceInput } from '@/modules/media/defs/media-service.defs';
+import type {
+  CreateMediaServiceInput,
+  MediaFileContent,
+} from '@/modules/media/defs/media-service.defs';
 import { MediaEntity } from '@/modules/media/entity/media.entity';
 import { MediaRepository } from '@/modules/media/repository/media.repository';
 import { StorageManagerService } from '@/providers/storage/storage-manager.service';
@@ -43,6 +46,16 @@ export class MediaService {
       throw new ResourceNotFoundException('Media', id);
     }
     return media;
+  }
+
+  async getMediaFileContent(id: number): Promise<MediaFileContent> {
+    const media = await this.getMediaById(id);
+    const content = await this.storageManagerService.readFile(media.storageKey);
+    return {
+      originalFileName: media.originalFileName,
+      mimeType: media.mimeType,
+      content,
+    };
   }
 
   private async deleteStoredFileBestEffort(storageKey: string): Promise<void> {

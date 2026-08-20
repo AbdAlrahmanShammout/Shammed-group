@@ -6,7 +6,7 @@ import { ApiError } from '@/api/api-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MediaUploadField } from '@/features/products-admin/components/media-upload-field';
+import { AdminMediaUploadField } from '@/components/media/admin-media-upload-field';
 import { useAdminPartnersForSelectQuery } from '@/features/products-admin/hooks/use-admin-partners-for-select-query';
 import { useAdminProductCategoriesForSelectQuery } from '@/features/products-admin/hooks/use-admin-product-categories-for-select-query';
 import { useCreateAdminProductMutation } from '@/features/products-admin/hooks/use-create-admin-product-mutation';
@@ -210,7 +210,7 @@ export function ProductForm({ onCancel, onSaved, product }: ProductFormProps): R
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site
       </label>
-      <MediaUploadField
+      <AdminMediaUploadField
         disabled={isPending}
         fileName={imageFileName}
         inputId="productImageUpload"

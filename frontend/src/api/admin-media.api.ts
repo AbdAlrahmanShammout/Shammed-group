@@ -3,6 +3,9 @@ import type { CreateMediaResponseDto } from '@/generated/admin-media.contract';
 
 const ADMIN_MEDIA_PATH = '/admin/media';
 
+/**
+ * Uploads an image file to POST /admin/media.
+ */
 export async function uploadAdminMedia(file: File): Promise<CreateMediaResponseDto> {
   const formData = new FormData();
   formData.append('file', file);

@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 
+import { PublicMediaImage } from '@/components/media/public-media-image';
 import type { HomePageResponse } from '@/generated/public-home.contract';
 
 type HomeWhySectionProps = {
@@ -14,6 +15,13 @@ export function HomeWhySection({ homePage }: HomeWhySectionProps): ReactElement 
           {homePage.whyTitle}
         </h2>
         <p className="max-w-3xl text-muted-foreground">{homePage.whyDescription}</p>
+        {homePage.whyImageMediaId ? (
+          <PublicMediaImage
+            alt={homePage.whyTitle}
+            className="max-h-[28rem] w-full rounded-md"
+            mediaId={homePage.whyImageMediaId}
+          />
+        ) : null}
       </div>
     </section>
   );

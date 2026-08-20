@@ -57,6 +57,14 @@ describe('PublicHomePage', () => {
       'https://www.visible-partner.example',
     );
     expect(screen.getByText('Partner: Visible Partner')).toBeInTheDocument();
+    const heroImage = document.querySelector(
+      `img[src="${appEnv.apiBaseUrl}/media/${mockPublicHomePage.homePage.heroImageMediaId}"]`,
+    );
+    expect(heroImage).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: mockPublicHomePage.homePage.aboutPreviewTitle })).toHaveAttribute(
+      'src',
+      `${appEnv.apiBaseUrl}/media/${mockPublicHomePage.homePage.aboutPreviewImageMediaId}`,
+    );
   });
   it('does not invent catalog rows that the API omitted', async () => {
     vi.stubGlobal(

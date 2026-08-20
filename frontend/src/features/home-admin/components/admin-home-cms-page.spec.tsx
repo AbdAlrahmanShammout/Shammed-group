@@ -112,7 +112,11 @@ describe('AdminHomeCmsPage', () => {
     expect(await screen.findByLabelText('Hero image')).toBeInTheDocument();
     const file = new File(['image-bytes'], 'hero.png', { type: 'image/png' });
     await user.upload(screen.getByLabelText('Hero image'), file);
-    expect(await screen.findByText(/Media ID 42/)).toBeInTheDocument();
+    expect(await screen.findByText('hero.png')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'hero.png' })).toHaveAttribute(
+      'src',
+      `${appEnv.apiBaseUrl}/media/42`,
+    );
     expect(vi.mocked(fetch)).toHaveBeenCalledWith(
       `${appEnv.apiBaseUrl}/admin/media`,
       expect.objectContaining({ method: 'POST' }),

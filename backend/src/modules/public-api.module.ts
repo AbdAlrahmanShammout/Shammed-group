@@ -8,6 +8,8 @@ import { HomePagePublicController } from '@/modules/home-page/home-page.public.c
 import { HomePageModule } from '@/modules/home-page/home-page.module';
 import { LocationPublicController } from '@/modules/location/location.public.controller';
 import { LocationModule } from '@/modules/location/location.module';
+import { MediaPublicController } from '@/modules/media/media.public.controller';
+import { MediaModule } from '@/modules/media/media.module';
 import { PartnerPublicController } from '@/modules/partner/partner.public.controller';
 import { PartnerModule } from '@/modules/partner/partner.module';
 import { ProductCategoryPublicController } from '@/modules/product-category/product-category.public.controller';
@@ -27,6 +29,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
     ContactInquiryModule,
     HomePageModule,
     LocationModule,
+    MediaModule,
     PartnerModule,
     ProductCategoryModule,
     ProductModule,
@@ -39,6 +42,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
     ContactInquiryPublicController,
     HomePagePublicController,
     LocationPublicController,
+    MediaPublicController,
     PartnerPublicController,
     ProductCategoryPublicController,
     ProductPublicController,

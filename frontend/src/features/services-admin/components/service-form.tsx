@@ -6,7 +6,7 @@ import { ApiError } from '@/api/api-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MediaUploadField } from '@/features/services-admin/components/media-upload-field';
+import { AdminMediaUploadField } from '@/components/media/admin-media-upload-field';
 import { useCreateAdminServiceMutation } from '@/features/services-admin/hooks/use-create-admin-service-mutation';
 import { useUpdateAdminServiceMutation } from '@/features/services-admin/hooks/use-update-admin-service-mutation';
 import { toCreateServiceRequest } from '@/features/services-admin/lib/to-create-service-request';
@@ -142,7 +142,7 @@ export function ServiceForm({ onCancel, onSaved, service }: ServiceFormProps): R
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site
       </label>
-      <MediaUploadField
+      <AdminMediaUploadField
         disabled={isPending}
         fileName={imageFileName}
         inputId="serviceImageUpload"

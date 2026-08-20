@@ -29,7 +29,7 @@ describe('MediaService', () => {
   });
   let mediaService: MediaService;
   let mediaRepository: { create: jest.Mock; findById: jest.Mock };
-  let storageManagerService: { storeFile: jest.Mock; deleteFile: jest.Mock };
+  let storageManagerService: { storeFile: jest.Mock; deleteFile: jest.Mock; readFile: jest.Mock };
 
   beforeEach(async () => {
     mediaRepository = {
@@ -39,6 +39,7 @@ describe('MediaService', () => {
     storageManagerService = {
       storeFile: jest.fn().mockResolvedValue(inputStoredFile),
       deleteFile: jest.fn().mockResolvedValue(undefined),
+      readFile: jest.fn().mockResolvedValue(inputContent),
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -110,5 +111,15 @@ describe('MediaService', () => {
   it('throws ResourceNotFoundException when the media row is missing', async () => {
     mediaRepository.findById.mockResolvedValue(null);
     await expect(mediaService.getMediaById(99)).rejects.toBeInstanceOf(ResourceNotFoundException);
+  });
+
+  it('returns media file content by id', async () => {
+    const actual = await mediaService.getMediaFileContent(1);
+    expect(actual).toEqual({
+      originalFileName: expectedMedia.originalFileName,
+      mimeType: expectedMedia.mimeType,
+      content: inputContent,
+    });
+    expect(storageManagerService.readFile).toHaveBeenCalledWith(expectedMedia.storageKey);
   });
 });

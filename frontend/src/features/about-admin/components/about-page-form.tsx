@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { ApiError } from '@/api/api-error';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { MediaUploadField } from '@/features/about-admin/components/media-upload-field';
+import { AdminMediaUploadField } from '@/components/media/admin-media-upload-field';
 import { useCreateAdminAboutPageMutation } from '@/features/about-admin/hooks/use-create-admin-about-page-mutation';
 import { useUpdateAdminAboutPageMutation } from '@/features/about-admin/hooks/use-update-admin-about-page-mutation';
 import { toCreateAboutPageRequest } from '@/features/about-admin/lib/to-create-about-page-request';
@@ -134,7 +134,7 @@ export function AboutPageForm({ aboutPage }: AboutPageFormProps): ReactElement {
         name="overview"
         register={form.register}
       />
-      <MediaUploadField
+      <AdminMediaUploadField
         disabled={isPending}
         fileName={overviewFileName}
         inputId="overviewImageUpload"

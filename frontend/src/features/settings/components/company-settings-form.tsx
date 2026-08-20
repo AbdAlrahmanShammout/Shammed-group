@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ApiError } from '@/api/api-error';
+import { AdminMediaUploadField } from '@/components/media/admin-media-upload-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,6 +22,8 @@ type CompanySettingsFormProps = {
 
 export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps): ReactElement {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [logoFileName, setLogoFileName] = useState('');
+  const [faviconFileName, setFaviconFileName] = useState('');
   const createMutation = useCreateAdminSiteSettingsMutation();
   const updateMutation = useUpdateAdminSiteSettingsMutation();
   const isPending = createMutation.isPending || updateMutation.isPending;
@@ -47,6 +50,8 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
       logoMediaId: siteSettings.logoMediaId?.toString() ?? '',
       faviconMediaId: siteSettings.faviconMediaId?.toString() ?? '',
     });
+    setLogoFileName(siteSettings.logo?.originalFileName ?? '');
+    setFaviconFileName(siteSettings.favicon?.originalFileName ?? '');
   }, [form, siteSettings]);
   const serverError =
     createMutation.error instanceof ApiError
@@ -149,22 +154,36 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
           </p>
         ) : null}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="logoMediaId">Logo media ID</Label>
-        <Input disabled={isPending} id="logoMediaId" inputMode="numeric" {...form.register('logoMediaId')} />
-        <p className="text-sm text-muted-foreground">
-          Optional. Upload media first, then enter the media ID. Public image URLs are not available yet.
-        </p>
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="faviconMediaId">Favicon media ID</Label>
-        <Input
-          disabled={isPending}
-          id="faviconMediaId"
-          inputMode="numeric"
-          {...form.register('faviconMediaId')}
-        />
-      </div>
+      <AdminMediaUploadField
+        disabled={isPending}
+        fileName={logoFileName}
+        inputId="logoImageUpload"
+        label="Company logo"
+        mediaId={form.watch('logoMediaId')}
+        onClear={() => {
+          form.setValue('logoMediaId', '');
+          setLogoFileName('');
+        }}
+        onUploaded={({ mediaId, fileName }) => {
+          form.setValue('logoMediaId', mediaId);
+          setLogoFileName(fileName);
+        }}
+      />
+      <AdminMediaUploadField
+        disabled={isPending}
+        fileName={faviconFileName}
+        inputId="faviconImageUpload"
+        label="Favicon"
+        mediaId={form.watch('faviconMediaId')}
+        onClear={() => {
+          form.setValue('faviconMediaId', '');
+          setFaviconFileName('');
+        }}
+        onUploaded={({ mediaId, fileName }) => {
+          form.setValue('faviconMediaId', mediaId);
+          setFaviconFileName(fileName);
+        }}
+      />
       {serverError ? (
         <p className="text-sm text-destructive" role="alert">
           {serverError}

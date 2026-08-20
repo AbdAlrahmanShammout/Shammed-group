@@ -98,4 +98,15 @@ describe('StorageManagerService', () => {
   it('ignores deletion of a missing file', async () => {
     await expect(storageManagerService.deleteFile('missing.png')).resolves.toBeUndefined();
   });
+
+  it('reads a stored file by storage key', async () => {
+    const inputContent = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
+    const storedFile = await storageManagerService.storeFile({
+      originalFileName: 'logo.png',
+      mimeType: 'image/png',
+      content: inputContent,
+    });
+    const actual = await storageManagerService.readFile(storedFile.storageKey);
+    expect(actual.equals(inputContent)).toBe(true);
+  });
 });
