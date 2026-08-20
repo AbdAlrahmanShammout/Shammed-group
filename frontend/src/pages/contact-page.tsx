@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 
-import { PublicPageHeading } from '@/components/layout/public-page-heading';
+import { PublicContactPage } from '@/features/contact/components/public-contact-page';
 
 export function ContactPage(): ReactElement {
-  return <PublicPageHeading title="Contact Us" />;
+  return <PublicContactPage />;
 }

@@ -15,5 +15,6 @@ export const queryKeys = {
       ['public', 'products', filters] as const,
     product: (productId: number) => ['public', 'product', productId] as const,
     services: () => ['public', 'services'] as const,
+    locations: () => ['public', 'locations'] as const,
   },
 };
