@@ -36,4 +36,8 @@ export const adminNavGroups: readonly AdminNavGroup[] = [
       { label: 'Social Media', path: appPaths.adminContactSocial },
     ],
   },
+  {
+    label: 'System',
+    items: [{ label: 'Media Library', path: appPaths.adminMedia }],
+  },
 ] as const;

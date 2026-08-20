@@ -15,6 +15,8 @@ export const queryKeys = {
     productCategories: () => ['admin', 'product-categories'] as const,
     products: () => ['admin', 'products'] as const,
     services: () => ['admin', 'services'] as const,
+    media: (params: { readonly limit: number; readonly offset: number }) =>
+      ['admin', 'media', params] as const,
   },
   public: {
     siteSettings: () => ['public', 'site-settings'] as const,

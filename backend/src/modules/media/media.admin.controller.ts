@@ -1,11 +1,13 @@
 import {
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -24,7 +26,9 @@ import { Role } from '@/authentication/enum/role.enum';
 import { Roles } from '@/common/decorators/route/roles.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
+import { GetMediaListRequestDto } from '@/modules/media/dto/request/get-media-list-request.dto';
 import { CreateMediaResponseDto } from '@/modules/media/dto/response/create-media-response.dto';
+import { GetMediaListResponseDto } from '@/modules/media/dto/response/get-media-list-response.dto';
 import { MediaFileRequiredException } from '@/modules/media/exceptions/media-file-required.exception';
 import { MediaService } from '@/modules/media/media.service';
 import type { UploadedMediaFile } from '@/modules/media/types/uploaded-media-file.type';
@@ -36,6 +40,16 @@ import type { UploadedMediaFile } from '@/modules/media/types/uploaded-media-fil
 @ApiBearerAuth()
 export class MediaAdminController {
   constructor(private readonly mediaService: MediaService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'List all media records, newest first' })
+  @ApiResponse({ status: HttpStatus.OK, type: GetMediaListResponseDto })
+  async getMediaList(@Query() query: GetMediaListRequestDto): Promise<GetMediaListResponseDto> {
+    const limit = query.limit ?? 50;
+    const offset = query.offset ?? 0;
+    const page = await this.mediaService.getMediaList(limit, offset);
+    return new GetMediaListResponseDto(page.entities, page.total);
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))

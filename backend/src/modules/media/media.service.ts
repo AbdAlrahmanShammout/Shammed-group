@@ -58,6 +58,13 @@ export class MediaService {
     };
   }
 
+  async getMediaList(
+    limit: number,
+    offset: number,
+  ): Promise<{ readonly entities: import('./entity/media.entity').MediaEntity[]; readonly total: number }> {
+    return this.mediaRepository.findAll(limit, offset);
+  }
+
   async deleteMedia(id: number): Promise<void> {
     const media = await this.getMediaById(id);
     await this.mediaRepository.deleteById(id);

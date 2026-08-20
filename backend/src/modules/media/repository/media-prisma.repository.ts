@@ -39,6 +39,19 @@ export class MediaPrismaRepository implements MediaRepository {
     return MediaMapper.toEntity(result);
   }
 
+  async findAll(limit: number, offset: number): Promise<{ entities: MediaEntity[]; total: number }> {
+    const [results, total] = await Promise.all([
+      this.prismaProviderService.media.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: offset,
+        include: mediaDetailsInclude,
+      }),
+      this.prismaProviderService.media.count(),
+    ]);
+    return { entities: results.map(MediaMapper.toEntity), total };
+  }
+
   async deleteById(id: number): Promise<void> {
     await this.prismaProviderService.media.delete({ where: { id } });
   }
