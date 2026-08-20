@@ -5,4 +5,6 @@ import { MediaEntity } from '@/modules/media/entity/media.entity';
 export abstract class MediaRepository {
   abstract create(input: CreateMediaRepoInput, context?: TransactionContext): Promise<MediaEntity>;
   abstract findById(id: number): Promise<MediaEntity | null>;
+  abstract deleteById(id: number): Promise<void>;
+  abstract findUnreferenced(): Promise<MediaEntity[]>;
 }

@@ -38,4 +38,26 @@ export class MediaPrismaRepository implements MediaRepository {
     }
     return MediaMapper.toEntity(result);
   }
+
+  async deleteById(id: number): Promise<void> {
+    await this.prismaProviderService.media.delete({ where: { id } });
+  }
+
+  async findUnreferenced(): Promise<MediaEntity[]> {
+    const results = await this.prismaProviderService.media.findMany({
+      where: {
+        siteSettingsLogo: null,
+        siteSettingsFavicon: null,
+        partnerLogo: null,
+        productImage: null,
+        serviceImage: null,
+        homePageHeroImage: null,
+        homePageAboutImage: null,
+        homePageWhyImage: null,
+        aboutPageOverviewImage: null,
+      },
+      include: mediaDetailsInclude,
+    });
+    return results.map(MediaMapper.toEntity);
+  }
 }

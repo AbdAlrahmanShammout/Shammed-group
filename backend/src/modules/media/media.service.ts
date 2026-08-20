@@ -58,6 +58,21 @@ export class MediaService {
     };
   }
 
+  async deleteMedia(id: number): Promise<void> {
+    const media = await this.getMediaById(id);
+    await this.mediaRepository.deleteById(id);
+    await this.deleteStoredFileBestEffort(media.storageKey);
+  }
+
+  async deleteUnreferencedMedia(): Promise<{ readonly deletedCount: number }> {
+    const unreferenced = await this.mediaRepository.findUnreferenced();
+    for (const media of unreferenced) {
+      await this.mediaRepository.deleteById(media.id);
+      await this.deleteStoredFileBestEffort(media.storageKey);
+    }
+    return { deletedCount: unreferenced.length };
+  }
+
   private async deleteStoredFileBestEffort(storageKey: string): Promise<void> {
     try {
       await this.storageManagerService.deleteFile(storageKey);

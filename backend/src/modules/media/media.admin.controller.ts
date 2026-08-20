@@ -1,6 +1,10 @@
 import {
   Controller,
+  Delete,
+  HttpCode,
   HttpStatus,
+  Param,
+  ParseIntPipe,
   Post,
   UploadedFile,
   UseGuards,
@@ -59,5 +63,21 @@ export class MediaAdminController {
       content: file.buffer,
     });
     return new CreateMediaResponseDto(media);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a media record and its stored file' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Deleted' })
+  async deleteMedia(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.mediaService.deleteMedia(id);
+  }
+
+  @Delete()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete all unreferenced (orphaned) media records and their files' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Orphaned media purged' })
+  async deleteUnreferencedMedia(): Promise<void> {
+    await this.mediaService.deleteUnreferencedMedia();
   }
 }

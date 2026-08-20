@@ -298,14 +298,13 @@ const SAMPLE_PRODUCTS: readonly SeedProduct[] = [
 ];
 
 /**
- * Seeds confirmed CMS content from the content collection sheet,
- * plus demo products for local testing and UI review.
- * Social links remain intentionally unseeded.
+ * Seeds all confirmed CMS content: text data, locations, social links,
+ * and demo products for local testing and UI review.
+ * Media attachments (images) are handled separately by `pnpm restore`.
  */
 export async function executeSeed(): Promise<void> {
   const prisma = new PrismaClient();
   try {
-    await clearSocialLinks(prisma);
     await seedSiteSettings(prisma);
     await seedHomePage(prisma);
     await seedAboutPage(prisma);
@@ -313,15 +312,13 @@ export async function executeSeed(): Promise<void> {
     await seedPartners(prisma);
     await seedSampleProducts(prisma);
     await seedServices(prisma);
-    await seedHeadquartersLocation(prisma);
+    await seedLocations(prisma);
+    await seedSocialLinks(prisma);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-async function clearSocialLinks(prisma: PrismaClient): Promise<void> {
-  await prisma.socialLink.deleteMany();
-}
 
 async function seedSiteSettings(prisma: PrismaClient): Promise<void> {
   const data = {
@@ -329,7 +326,7 @@ async function seedSiteSettings(prisma: PrismaClient): Promise<void> {
     companyNameEnglish: 'Shammed Group',
     companyNameArabic: 'مجموعة شاميد',
     email: 'info@shammed-group.com',
-    phone: '+963 11 44699200-1',
+    phone: '+963 11 446992001',
     whatsApp: '0049-17661877753',
     address:
       "Directorate of Health's building, Shahbandar Square, Damascus, Syria, P.O. Box 8001",
@@ -509,40 +506,110 @@ async function seedSampleProducts(prisma: PrismaClient): Promise<void> {
   }
 }
 
-async function seedHeadquartersLocation(prisma: PrismaClient): Promise<void> {
-  const name = 'Shammed Group Headquarters — Damascus';
-  const address =
-    "Directorate of Health's building, Shahbandar Square, Damascus, Syria, P.O. Box 8001";
-  const phones = [
-    { phone: '+963 11 44699200', displayOrder: 0 },
-    { phone: '+963 11 44699201', displayOrder: 1 },
-  ];
-  const existing = await prisma.location.findFirst({ where: { name } });
-  if (existing) {
-    await prisma.locationPhone.deleteMany({ where: { locationId: existing.id } });
-    await prisma.location.update({
-      where: { id: existing.id },
+type SeedLocation = {
+  readonly name: string;
+  readonly address: string;
+  readonly googleMapsUrl?: string;
+  readonly latitude?: number;
+  readonly longitude?: number;
+  readonly isVisible: boolean;
+  readonly isMapVisible: boolean;
+  readonly displayOrder: number;
+  readonly phones: readonly { readonly phone: string; readonly displayOrder: number }[];
+};
+
+const LOCATIONS: readonly SeedLocation[] = [
+  {
+    name: 'Shammed Group Headquarters — Damascus - First branch',
+    address:
+      "Directorate of Health's building, Shahbandar Square, Damascus, Syria, P.O. Box 8001",
+    googleMapsUrl: 'https://www.google.com/maps?q=33.52353,36.29287',
+    latitude: 33.52353,
+    longitude: 36.29287,
+    isVisible: true,
+    isMapVisible: true,
+    displayOrder: 1,
+    phones: [{ phone: '+963 11 44699201', displayOrder: 0 }],
+  },
+  {
+    name: 'Shammed Group — Damascus - Second branch',
+    address: 'Jul Jammal Street, Damascus, Syria, P.O. Box 8001',
+    googleMapsUrl: 'https://www.google.com/maps?q=33.52178,36.29788',
+    latitude: 33.52178,
+    longitude: 36.29788,
+    isVisible: true,
+    isMapVisible: true,
+    displayOrder: 2,
+    phones: [{ phone: '+963 11 44699200', displayOrder: 0 }],
+  },
+];
+
+async function seedLocations(prisma: PrismaClient): Promise<void> {
+  const keptNames = LOCATIONS.map((l) => l.name);
+  await prisma.location.deleteMany({ where: { name: { notIn: keptNames } } });
+  for (const location of LOCATIONS) {
+    const existing = await prisma.location.findFirst({ where: { name: location.name } });
+    if (existing) {
+      await prisma.locationPhone.deleteMany({ where: { locationId: existing.id } });
+      await prisma.location.update({
+        where: { id: existing.id },
+        data: {
+          address: location.address,
+          googleMapsUrl: location.googleMapsUrl ?? null,
+          latitude: location.latitude ?? null,
+          longitude: location.longitude ?? null,
+          isVisible: location.isVisible,
+          isMapVisible: location.isMapVisible,
+          displayOrder: location.displayOrder,
+          phones: { create: location.phones.map((p) => ({ phone: p.phone, displayOrder: p.displayOrder })) },
+        },
+      });
+      continue;
+    }
+    await prisma.location.create({
       data: {
-        address,
-        isVisible: true,
-        displayOrder: 1,
-        googleMapsUrl: null,
-        latitude: null,
-        longitude: null,
-        phones: { create: phones },
+        name: location.name,
+        address: location.address,
+        googleMapsUrl: location.googleMapsUrl ?? null,
+        latitude: location.latitude ?? null,
+        longitude: location.longitude ?? null,
+        isVisible: location.isVisible,
+        isMapVisible: location.isMapVisible,
+        displayOrder: location.displayOrder,
+        phones: { create: location.phones.map((p) => ({ phone: p.phone, displayOrder: p.displayOrder })) },
       },
     });
-    return;
   }
-  await prisma.location.create({
-    data: {
-      name,
-      address,
-      isVisible: true,
-      displayOrder: 1,
-      phones: { create: phones },
-    },
-  });
+}
+
+type SeedSocialLink = {
+  readonly platform: string;
+  readonly url: string;
+  readonly isVisible: boolean;
+  readonly displayOrder: number;
+};
+
+const SOCIAL_LINKS: readonly SeedSocialLink[] = [
+  {
+    platform: 'facebook',
+    url: 'https://www.facebook.com/shammed.group/',
+    isVisible: true,
+    displayOrder: 1,
+  },
+];
+
+async function seedSocialLinks(prisma: PrismaClient): Promise<void> {
+  for (const link of SOCIAL_LINKS) {
+    const existing = await prisma.socialLink.findFirst({ where: { platform: link.platform } });
+    if (existing) {
+      await prisma.socialLink.update({
+        where: { id: existing.id },
+        data: { url: link.url, isVisible: link.isVisible, displayOrder: link.displayOrder },
+      });
+      continue;
+    }
+    await prisma.socialLink.create({ data: link });
+  }
 }
 
 if (require.main === module) {
