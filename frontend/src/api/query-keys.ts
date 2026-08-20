@@ -8,5 +8,6 @@ export const queryKeys = {
     siteSettings: () => ['public', 'site-settings'] as const,
     socialLinks: () => ['public', 'social-links'] as const,
     homePage: () => ['public', 'home-page'] as const,
+    aboutPage: () => ['public', 'about-page'] as const,
   },
 };
