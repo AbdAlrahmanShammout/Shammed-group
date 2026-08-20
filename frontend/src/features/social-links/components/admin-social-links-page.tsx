@@ -11,6 +11,7 @@ import { useDeleteAdminSocialLinkMutation } from '@/features/social-links/hooks/
 import { useUpdateAdminSocialLinkMutation } from '@/features/social-links/hooks/use-update-admin-social-link-mutation';
 import type { SocialLinkResponse } from '@/generated/admin-social-link.contract';
 import { getNextDisplayOrder } from '@/lib/get-next-display-order';
+import { findSocialPlatform } from '@/lib/social-platforms';
 
 export function AdminSocialLinksPage(): ReactElement {
   const socialLinksQuery = useAdminSocialLinksQuery();
@@ -108,16 +109,28 @@ export function AdminSocialLinksPage(): ReactElement {
             <>
               <AdminReorderableList
                 disabled={orderedList.isSaving}
-                getItemLabel={(socialLink) => socialLink.platform}
+                getItemLabel={(socialLink) =>
+                  findSocialPlatform(socialLink.platform)?.label ?? socialLink.platform
+                }
                 items={orderedList.orderedItems}
                 onReorder={(nextItems) => {
                   void orderedList.reorder(nextItems);
                 }}
-                renderItem={(socialLink) => (
+                renderItem={(socialLink) => {
+                  const platform = findSocialPlatform(socialLink.platform);
+                  const platformLabel = platform?.label ?? socialLink.platform;
+                  return (
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="flex flex-col gap-1">
-                      <p className="font-medium">{socialLink.platform}</p>
-                      <p className="text-sm break-all text-muted-foreground">{socialLink.url}</p>
+                    <div className="flex items-center gap-3">
+                      {platform ? (
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-muted text-foreground">
+                          {platform.icon({ className: 'h-5 w-5' })}
+                        </span>
+                      ) : null}
+                      <div className="flex flex-col gap-0.5">
+                        <p className="font-medium">{platformLabel}</p>
+                        <p className="text-sm break-all text-muted-foreground">{socialLink.url}</p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <AdminVisibilitySwitch
@@ -153,7 +166,8 @@ export function AdminSocialLinksPage(): ReactElement {
                       </Button>
                     </div>
                   </div>
-                )}
+                  );
+                }}
               />
               {orderedList.isSaving ? (
                 <p className="text-sm text-muted-foreground" role="status">

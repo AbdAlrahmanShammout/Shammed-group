@@ -19,7 +19,7 @@ export const mockPublicSocialLinks = {
       id: 1,
       createdAt: '2026-01-01T00:00:00.000Z',
       updatedAt: '2026-01-01T00:00:00.000Z',
-      platform: 'LinkedIn',
+      platform: 'linkedin',
       url: 'https://www.linkedin.com/example',
       isVisible: true,
       displayOrder: 1,

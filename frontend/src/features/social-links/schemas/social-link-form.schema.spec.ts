@@ -5,7 +5,7 @@ import { socialLinkFormSchema } from '@/features/social-links/schemas/social-lin
 describe('socialLinkFormSchema', () => {
   it('rejects a URL without a protocol', () => {
     const actual = socialLinkFormSchema.safeParse({
-      platform: 'LinkedIn',
+      platform: 'linkedin',
       url: 'linkedin.com/company/example',
       isVisible: true,
       displayOrder: '0',
@@ -21,11 +21,21 @@ describe('socialLinkFormSchema', () => {
 
   it('accepts an https URL', () => {
     const actual = socialLinkFormSchema.safeParse({
-      platform: 'LinkedIn',
+      platform: 'linkedin',
       url: 'https://linkedin.com/company/example',
       isVisible: true,
       displayOrder: '0',
     });
     expect(actual.success).toBe(true);
+  });
+
+  it('rejects an unknown platform', () => {
+    const actual = socialLinkFormSchema.safeParse({
+      platform: 'myspace',
+      url: 'https://myspace.com/example',
+      isVisible: true,
+      displayOrder: '0',
+    });
+    expect(actual.success).toBe(false);
   });
 });

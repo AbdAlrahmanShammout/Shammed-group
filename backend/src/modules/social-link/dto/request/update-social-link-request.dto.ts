@@ -1,11 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, IsUrl, Min } from 'class-validator';
+import { IsBoolean, IsIn, IsInt, IsOptional, IsUrl, Min } from 'class-validator';
+
+import { SOCIAL_PLATFORM_KEYS } from '@/modules/social-link/social-link.constants';
 
 export class UpdateSocialLinkRequestDto {
-  @ApiPropertyOptional({ description: 'Platform display name', example: 'LinkedIn' })
+  @ApiPropertyOptional({ description: 'Platform key', enum: SOCIAL_PLATFORM_KEYS, example: 'linkedin' })
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
+  @IsIn(SOCIAL_PLATFORM_KEYS)
   platform?: string;
 
   @ApiPropertyOptional({

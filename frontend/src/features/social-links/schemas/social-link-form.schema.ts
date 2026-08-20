@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
+import { SOCIAL_PLATFORM_KEYS } from '@/lib/social-platforms';
+
 export const socialLinkFormSchema = z
   .object({
-    platform: z.string().trim().min(1, 'Platform is required'),
+    platform: z.enum(SOCIAL_PLATFORM_KEYS, { errorMap: () => ({ message: 'Select a platform' }) }),
     url: z.string().trim().min(1, 'URL is required'),
     isVisible: z.boolean(),
     displayOrder: z.string().trim(),

@@ -13,6 +13,11 @@ import {
   type SocialLinkFormValues,
 } from '@/features/social-links/schemas/social-link-form.schema';
 import type { SocialLinkResponse } from '@/generated/admin-social-link.contract';
+import {
+  findSocialPlatform,
+  SOCIAL_PLATFORMS,
+  type SocialPlatformKey,
+} from '@/lib/social-platforms';
 
 type SocialLinkFormProps = {
   readonly nextDisplayOrder?: number;
@@ -26,7 +31,7 @@ function createDefaultValues(
   nextDisplayOrder = 0,
 ): SocialLinkFormValues {
   return {
-    platform: socialLink?.platform ?? '',
+    platform: (socialLink?.platform ?? '') as SocialPlatformKey,
     url: socialLink?.url ?? '',
     isVisible: socialLink?.isVisible ?? true,
     displayOrder: socialLink?.displayOrder?.toString() ?? String(nextDisplayOrder),
@@ -56,6 +61,8 @@ export function SocialLinkForm({
       : updateMutation.error instanceof ApiError
         ? updateMutation.error.message
         : null;
+  const selectedPlatformKey = form.watch('platform');
+  const selectedPlatform = findSocialPlatform(selectedPlatformKey);
   async function onSubmit(values: SocialLinkFormValues): Promise<void> {
     setIsSuccess(false);
     const body = {
@@ -91,13 +98,39 @@ export function SocialLinkForm({
         <Label htmlFor="platform">
           Platform <span aria-hidden="true">*</span>
         </Label>
-        <Input
-          aria-invalid={Boolean(form.formState.errors.platform)}
-          aria-required="true"
-          disabled={isPending}
-          id="platform"
-          {...form.register('platform')}
-        />
+        <div className="relative flex items-center">
+          {selectedPlatform ? (
+            <span className="pointer-events-none absolute left-3 flex h-5 w-5 items-center justify-center text-muted-foreground">
+              {selectedPlatform.icon({ className: 'h-4 w-4' })}
+            </span>
+          ) : null}
+          <select
+            aria-invalid={Boolean(form.formState.errors.platform)}
+            aria-required="true"
+            className="flex h-9 w-full appearance-none rounded-md border border-input bg-transparent py-1 pr-8 text-sm shadow-sm ring-offset-background transition-colors focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isPending}
+            id="platform"
+            style={{ paddingLeft: selectedPlatform ? '2.25rem' : '0.75rem' }}
+            {...form.register('platform')}
+          >
+            <option value="">Select a platform…</option>
+            {SOCIAL_PLATFORMS.map((p) => (
+              <option key={p.key} value={p.key}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+          <svg
+            aria-hidden="true"
+            className="pointer-events-none absolute right-3 h-4 w-4 text-muted-foreground"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
         {form.formState.errors.platform ? (
           <p className="text-sm text-destructive" role="alert">
             {form.formState.errors.platform.message}

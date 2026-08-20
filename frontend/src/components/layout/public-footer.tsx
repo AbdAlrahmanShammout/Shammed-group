@@ -4,6 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import type { PublicNavItem } from '@/components/layout/public-nav-item';
 import { PublicMediaImage } from '@/components/media/public-media-image';
 import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
+import { findSocialPlatform } from '@/lib/social-platforms';
 import { cn } from '@/lib/utils';
 
 type PublicFooterSocialLink = {
@@ -168,20 +169,32 @@ export function PublicFooter({
             </div>
           ) : null}
           {socialLinks.length > 0 ? (
-            <ul className="flex flex-col gap-2">
-              {socialLinks.map((socialLink) => (
-                <li key={socialLink.id}>
-                  <a
-                    className={cn('hover:text-foreground', focusRingClassName)}
-                    href={socialLink.url}
-                    rel="noreferrer noopener"
-                    target="_blank"
-                  >
-                    {socialLink.platform}
-                    <span className="sr-only"> (opens in a new tab)</span>
-                  </a>
-                </li>
-              ))}
+            <ul className="flex flex-wrap gap-3 pt-1">
+              {socialLinks.map((socialLink) => {
+                const platform = findSocialPlatform(socialLink.platform);
+                const platformLabel = platform?.label ?? socialLink.platform;
+                return (
+                  <li key={socialLink.id}>
+                    <a
+                      aria-label={`${platformLabel} (opens in a new tab)`}
+                      className={cn(
+                        'flex h-9 w-9 items-center justify-center rounded-md border border-white/20 bg-white/5 transition-colors hover:bg-white/15',
+                        focusRingClassName,
+                      )}
+                      href={socialLink.url}
+                      rel="noreferrer noopener"
+                      target="_blank"
+                      title={platformLabel}
+                    >
+                      {platform ? (
+                        platform.icon({ className: 'h-4 w-4' })
+                      ) : (
+                        <span className="text-xs font-medium">{socialLink.platform.slice(0, 2).toUpperCase()}</span>
+                      )}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           ) : null}
         </div>

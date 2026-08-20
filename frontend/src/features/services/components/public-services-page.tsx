@@ -40,9 +40,9 @@ export function PublicServicesPage(): ReactElement {
           No services are available yet.
         </p>
       ) : (
-        <ul className="mt-4">
-          {services.map((service) => (
-            <ServiceListItem key={service.id} service={service} />
+        <ul className="mt-8 flex flex-col gap-6">
+          {services.map((service, index) => (
+            <ServiceListItem index={index} key={service.id} service={service} />
           ))}
         </ul>
       )}
