@@ -1,11 +1,19 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from '@/app/app';
+import { createPublicChromeFetchMock } from '@/test/public-chrome';
 
 describe('App', () => {
-  it('renders the application title', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn(createPublicChromeFetchMock()));
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+  it('renders the public home heading inside the site chrome', () => {
     render(<App />);
-    expect(screen.getByRole('heading', { name: 'Shammed Group' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Primary' })).toBeInTheDocument();
   });
 });

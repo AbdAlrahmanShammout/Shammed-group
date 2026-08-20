@@ -50,4 +50,10 @@ describe('admin session routes', () => {
     renderAdminRoute(appPaths.adminLogin);
     expect(screen.getByRole('heading', { name: 'Admin' })).toBeInTheDocument();
   });
+
+  it('does not wrap admin routes in the public site chrome', () => {
+    renderAdminRoute(appPaths.adminLogin);
+    expect(screen.queryByRole('navigation', { name: 'Primary' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument();
+  });
 });
