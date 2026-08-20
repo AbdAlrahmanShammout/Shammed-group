@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { appPaths } from '@/config/app-paths';
 import type { HomePageResponse, PublicServiceResponse } from '@/generated/public-home.contract';
+import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
+import { cn } from '@/lib/utils';
 
 type HomeServicesSectionProps = {
   readonly homePage: HomePageResponse;
@@ -20,7 +22,13 @@ export function HomeServicesSection({ homePage, services }: HomeServicesSectionP
           {homePage.servicesSectionDescription ? (
             <p className="max-w-3xl text-muted-foreground">{homePage.servicesSectionDescription}</p>
           ) : null}
-          <Link className="text-sm font-medium text-foreground underline-offset-4 hover:underline" to={appPaths.services}>
+          <Link
+            className={cn(
+              'text-sm font-medium text-foreground underline-offset-4 hover:underline',
+              focusRingClassName,
+            )}
+            to={appPaths.services}
+          >
             View all services
           </Link>
         </div>

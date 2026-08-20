@@ -66,7 +66,7 @@ describe('AdminLocationsPage', () => {
     const user = userEvent.setup();
     renderPage();
     expect(await screen.findByText('Damascus office')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    await user.click(screen.getByRole('button', { name: /Delete/ }));
     const confirmDialog = screen.getByRole('alertdialog');
     expect(confirmDialog).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Delete location?' })).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('AdminLocationsPage', () => {
       `${appEnv.apiBaseUrl}/admin/location/7`,
       expect.objectContaining({ method: 'DELETE' }),
     );
-    await user.click(within(confirmDialog).getByRole('button', { name: 'Delete' }));
+    await user.click(within(confirmDialog).getByRole('button', { name: /Delete/ }));
     await vi.waitFor(() => {
       expect(vi.mocked(fetch)).toHaveBeenCalledWith(
         `${appEnv.apiBaseUrl}/admin/location/7`,

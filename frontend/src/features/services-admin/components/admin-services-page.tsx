@@ -81,6 +81,7 @@ export function AdminServicesPage(): ReactElement {
                     </div>
                     <div className="flex gap-2">
                       <Button
+                        aria-label={`Edit ${service.title}`}
                         onClick={() => {
                           setEditingService(service);
                           setIsCreating(false);
@@ -91,6 +92,7 @@ export function AdminServicesPage(): ReactElement {
                         Edit
                       </Button>
                       <Button
+                        aria-label={`Delete ${service.title}`}
                         onClick={() => setServicePendingDelete(service)}
                         type="button"
                         variant="outline"

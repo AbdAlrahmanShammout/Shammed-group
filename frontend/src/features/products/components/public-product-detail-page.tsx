@@ -7,6 +7,8 @@ import { appPaths } from '@/config/app-paths';
 import { usePublicProductQuery } from '@/features/products/hooks/use-public-product-query';
 import { createProductDetailPath } from '@/features/products/lib/create-product-detail-path';
 import { parseProductIdParam } from '@/features/products/lib/parse-product-id-param';
+import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
+import { cn } from '@/lib/utils';
 
 export function PublicProductDetailPage(): ReactElement {
   const params = useParams();
@@ -48,7 +50,10 @@ export function PublicProductDetailPage(): ReactElement {
         path={createProductDetailPath(product.id)}
         title={product.name}
       />
-      <Link className="text-sm font-medium underline-offset-4 hover:underline" to={appPaths.products}>
+      <Link
+        className={cn('text-sm font-medium underline-offset-4 hover:underline', focusRingClassName)}
+        to={appPaths.products}
+      >
         Back to products
       </Link>
       <h1 className="text-3xl font-medium">{product.name}</h1>
@@ -67,12 +72,13 @@ export function PublicProductDetailPage(): ReactElement {
           </h2>
           {product.partner.websiteUrl ? (
             <a
-              className="font-medium underline-offset-4 hover:underline"
+              className={cn('font-medium underline-offset-4 hover:underline', focusRingClassName)}
               href={product.partner.websiteUrl}
               rel="noreferrer noopener"
               target="_blank"
             >
               {product.partner.name}
+              <span className="sr-only"> (opens in a new tab)</span>
             </a>
           ) : (
             <p>{product.partner.name}</p>

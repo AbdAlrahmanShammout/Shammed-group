@@ -79,6 +79,7 @@ export function AdminLocationsPage(): ReactElement {
                     </div>
                     <div className="flex gap-2">
                       <Button
+                        aria-label={`Edit ${location.name}`}
                         onClick={() => {
                           setEditingLocation(location);
                           setIsCreating(false);
@@ -89,6 +90,7 @@ export function AdminLocationsPage(): ReactElement {
                         Edit
                       </Button>
                       <Button
+                        aria-label={`Delete ${location.name}`}
                         onClick={() => setLocationPendingDelete(location)}
                         type="button"
                         variant="outline"

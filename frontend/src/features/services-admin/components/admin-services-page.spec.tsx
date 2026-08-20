@@ -110,7 +110,7 @@ describe('AdminServicesPage', () => {
     });
     expect(createCall?.[1]?.body).toContain('"title":"Custom Logistics"');
     expect(createCall?.[1]?.body).toContain('"isVisible":false');
-    await user.click(screen.getByRole('button', { name: 'Edit' }));
+    await user.click(screen.getByRole('button', { name: /Edit/ }));
     await user.click(screen.getByLabelText('Visible on the public site'));
     await user.click(screen.getByRole('button', { name: 'Save service' }));
     await vi.waitFor(() => {
@@ -125,14 +125,14 @@ describe('AdminServicesPage', () => {
     const user = userEvent.setup();
     renderPage();
     expect(await screen.findByText('Product Distribution')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    await user.click(screen.getByRole('button', { name: /Delete/ }));
     const confirmDialog = screen.getByRole('alertdialog');
     expect(screen.getByRole('heading', { name: 'Delete service?' })).toBeInTheDocument();
     expect(vi.mocked(fetch)).not.toHaveBeenCalledWith(
       `${appEnv.apiBaseUrl}/admin/service/4`,
       expect.objectContaining({ method: 'DELETE' }),
     );
-    await user.click(within(confirmDialog).getByRole('button', { name: 'Delete' }));
+    await user.click(within(confirmDialog).getByRole('button', { name: /Delete/ }));
     await vi.waitFor(() => {
       expect(vi.mocked(fetch)).toHaveBeenCalledWith(
         `${appEnv.apiBaseUrl}/admin/service/4`,

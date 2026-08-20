@@ -50,7 +50,7 @@ describe('PublicSiteShell', () => {
     );
     expect(screen.queryByText(hardcodedCompanyEmail)).not.toBeInTheDocument();
     expect(await screen.findAllByRole('link', { name: mockPublicSiteSettings.companyName })).not.toHaveLength(0);
-    expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute(
       'href',
       'https://www.linkedin.com/example',
     );

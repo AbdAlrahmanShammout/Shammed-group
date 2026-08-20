@@ -125,6 +125,7 @@ export function AdminCategoriesPage(): ReactElement {
                     </div>
                     <div className="flex gap-2">
                       <Button
+                        aria-label={`Edit ${category.name}`}
                         onClick={() => {
                           setEditingCategory(category);
                           setIsCreating(false);
@@ -135,6 +136,7 @@ export function AdminCategoriesPage(): ReactElement {
                         Edit
                       </Button>
                       <Button
+                        aria-label={`Delete ${category.name}`}
                         onClick={() => {
                           setDeleteError(null);
                           setCategoryPendingDelete(category);

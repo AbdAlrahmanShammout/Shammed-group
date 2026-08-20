@@ -116,11 +116,11 @@ describe('PublicContactPage', () => {
     expect(await screen.findByRole('heading', { name: 'Example Company' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'contact@example.test' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Example Branch' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Open in Google Maps' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Open in Google Maps/ })).toHaveAttribute(
       'href',
       'https://maps.google.com/?q=example',
     );
-    expect(screen.getByRole('link', { name: 'LinkedIn' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /LinkedIn/ })).toBeInTheDocument();
     expect(screen.getByLabelText(/Full Name/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/)).toBeInTheDocument();
     expect(screen.getByLabelText('Phone Number')).toBeInTheDocument();

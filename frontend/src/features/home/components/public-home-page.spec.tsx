@@ -52,7 +52,7 @@ describe('PublicHomePage', () => {
     expect(screen.queryByText('Hidden Partner')).not.toBeInTheDocument();
     expect(screen.queryByText('Hidden Product')).not.toBeInTheDocument();
     expect(screen.queryByText('Hidden Service')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Visit website' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Visit website/ })).toHaveAttribute(
       'href',
       'https://www.visible-partner.example',
     );

@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 import type { PublicNavItem } from '@/components/layout/public-nav-item';
+import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
 import { cn } from '@/lib/utils';
 
 type PublicFooterSocialLink = {
@@ -39,7 +40,7 @@ export function PublicFooter({
     <footer className="border-t bg-background">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 md:grid-cols-3 md:px-6">
         <section>
-          <Link className="text-lg font-medium" to={homePath}>
+          <Link className={cn('text-lg font-medium', focusRingClassName)} to={homePath}>
             {companyName ?? 'Home'}
           </Link>
         </section>
@@ -51,6 +52,7 @@ export function PublicFooter({
                   className={({ isActive }) =>
                     cn(
                       'text-sm text-muted-foreground hover:text-foreground',
+                      focusRingClassName,
                       isActive && 'font-medium text-foreground',
                     )
                   }
@@ -64,15 +66,21 @@ export function PublicFooter({
         </nav>
         <section aria-label="Contact" className="flex flex-col gap-2 text-sm text-muted-foreground">
           {isSettingsPending ? <p role="status">Loading contact details…</p> : null}
-          {isSettingsError ? <p role="status">Contact details are unavailable.</p> : null}
+          {isSettingsError ? (
+            <p role="alert">Contact details are unavailable.</p>
+          ) : null}
           {!isSettingsPending && !isSettingsError ? (
             <>
               {email ? (
-                <a className="hover:text-foreground" href={`mailto:${email}`}>
+                <a className={cn('hover:text-foreground', focusRingClassName)} href={`mailto:${email}`}>
                   {email}
                 </a>
               ) : null}
-              {phone ? <p>{phone}</p> : null}
+              {phone ? (
+                <a className={cn('hover:text-foreground', focusRingClassName)} href={`tel:${phone}`}>
+                  {phone}
+                </a>
+              ) : null}
               {address ? <p>{address}</p> : null}
             </>
           ) : null}
@@ -81,12 +89,13 @@ export function PublicFooter({
               {socialLinks.map((socialLink) => (
                 <li key={socialLink.id}>
                   <a
-                    className="hover:text-foreground"
+                    className={cn('hover:text-foreground', focusRingClassName)}
                     href={socialLink.url}
                     rel="noreferrer noopener"
                     target="_blank"
                   >
                     {socialLink.platform}
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </li>
               ))}

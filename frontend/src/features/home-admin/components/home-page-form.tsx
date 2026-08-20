@@ -166,6 +166,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               aria-required="true"
               disabled={isPending}
               id="primaryCtaText"
+              aria-invalid={Boolean(form.formState.errors.primaryCtaText)}
               {...form.register('primaryCtaText')}
             />
             {form.formState.errors.primaryCtaText ? (
@@ -182,6 +183,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               aria-required="true"
               disabled={isPending}
               id="primaryCtaUrl"
+              aria-invalid={Boolean(form.formState.errors.primaryCtaUrl)}
               {...form.register('primaryCtaUrl')}
             />
             {form.formState.errors.primaryCtaUrl ? (
@@ -198,6 +200,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               aria-required="true"
               disabled={isPending}
               id="secondaryCtaText"
+              aria-invalid={Boolean(form.formState.errors.secondaryCtaText)}
               {...form.register('secondaryCtaText')}
             />
             {form.formState.errors.secondaryCtaText ? (
@@ -214,6 +217,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               aria-required="true"
               disabled={isPending}
               id="secondaryCtaUrl"
+              aria-invalid={Boolean(form.formState.errors.secondaryCtaUrl)}
               {...form.register('secondaryCtaUrl')}
             />
             {form.formState.errors.secondaryCtaUrl ? (
@@ -234,6 +238,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             aria-required="true"
             disabled={isPending}
             id="aboutPreviewTitle"
+            aria-invalid={Boolean(form.formState.errors.aboutPreviewTitle)}
             {...form.register('aboutPreviewTitle')}
           />
           {form.formState.errors.aboutPreviewTitle ? (
@@ -251,6 +256,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             className={textareaClassName}
             disabled={isPending}
             id="aboutPreviewDescription"
+            aria-invalid={Boolean(form.formState.errors.aboutPreviewDescription)}
             {...form.register('aboutPreviewDescription')}
           />
           {form.formState.errors.aboutPreviewDescription ? (
@@ -283,6 +289,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               aria-required="true"
               disabled={isPending}
               id="aboutPreviewCtaText"
+              aria-invalid={Boolean(form.formState.errors.aboutPreviewCtaText)}
               {...form.register('aboutPreviewCtaText')}
             />
           </div>
@@ -294,6 +301,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               aria-required="true"
               disabled={isPending}
               id="aboutPreviewCtaUrl"
+              aria-invalid={Boolean(form.formState.errors.aboutPreviewCtaUrl)}
               {...form.register('aboutPreviewCtaUrl')}
             />
           </div>
@@ -313,6 +321,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             aria-required="true"
             disabled={isPending}
             id="partnersSectionTitle"
+            aria-invalid={Boolean(form.formState.errors.partnersSectionTitle)}
             {...form.register('partnersSectionTitle')}
           />
         </div>
@@ -322,6 +331,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             className={textareaClassName}
             disabled={isPending}
             id="partnersSectionDescription"
+            aria-invalid={Boolean(form.formState.errors.partnersSectionDescription)}
             {...form.register('partnersSectionDescription')}
           />
         </div>
@@ -333,6 +343,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             aria-required="true"
             disabled={isPending}
             id="productsSectionTitle"
+            aria-invalid={Boolean(form.formState.errors.productsSectionTitle)}
             {...form.register('productsSectionTitle')}
           />
         </div>
@@ -342,6 +353,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             className={textareaClassName}
             disabled={isPending}
             id="productsSectionDescription"
+            aria-invalid={Boolean(form.formState.errors.productsSectionDescription)}
             {...form.register('productsSectionDescription')}
           />
         </div>
@@ -353,6 +365,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             aria-required="true"
             disabled={isPending}
             id="servicesSectionTitle"
+            aria-invalid={Boolean(form.formState.errors.servicesSectionTitle)}
             {...form.register('servicesSectionTitle')}
           />
         </div>
@@ -362,6 +375,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             className={textareaClassName}
             disabled={isPending}
             id="servicesSectionDescription"
+            aria-invalid={Boolean(form.formState.errors.servicesSectionDescription)}
             {...form.register('servicesSectionDescription')}
           />
         </div>
@@ -372,7 +386,13 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
           <Label htmlFor="whyTitle">
             Title <span aria-hidden="true">*</span>
           </Label>
-          <Input aria-required="true" disabled={isPending} id="whyTitle" {...form.register('whyTitle')} />
+          <Input
+            aria-invalid={Boolean(form.formState.errors.whyTitle)}
+            aria-required="true"
+            disabled={isPending}
+            id="whyTitle"
+            {...form.register('whyTitle')}
+          />
           {form.formState.errors.whyTitle ? (
             <p className="text-sm text-destructive" role="alert">
               {form.formState.errors.whyTitle.message}
@@ -388,6 +408,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             className={textareaClassName}
             disabled={isPending}
             id="whyDescription"
+            aria-invalid={Boolean(form.formState.errors.whyDescription)}
             {...form.register('whyDescription')}
           />
           {form.formState.errors.whyDescription ? (
@@ -422,6 +443,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             aria-required="true"
             disabled={isPending}
             id="contactSectionTitle"
+            aria-invalid={Boolean(form.formState.errors.contactSectionTitle)}
             {...form.register('contactSectionTitle')}
           />
         </div>
@@ -431,6 +453,7 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             className={textareaClassName}
             disabled={isPending}
             id="contactSectionDescription"
+            aria-invalid={Boolean(form.formState.errors.contactSectionDescription)}
             {...form.register('contactSectionDescription')}
           />
         </div>

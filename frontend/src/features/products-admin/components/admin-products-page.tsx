@@ -83,6 +83,7 @@ export function AdminProductsPage(): ReactElement {
                     </div>
                     <div className="flex gap-2">
                       <Button
+                        aria-label={`Edit ${product.name}`}
                         onClick={() => {
                           setEditingProduct(product);
                           setIsCreating(false);
@@ -93,6 +94,7 @@ export function AdminProductsPage(): ReactElement {
                         Edit
                       </Button>
                       <Button
+                        aria-label={`Delete ${product.name}`}
                         onClick={() => setProductPendingDelete(product)}
                         type="button"
                         variant="outline"

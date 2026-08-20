@@ -154,7 +154,7 @@ describe('AdminProductsPage', () => {
     });
     expect(createCall?.[1]?.body).toContain('"categoryId":2');
     expect(createCall?.[1]?.body).toContain('"isVisible":false');
-    await user.click(screen.getByRole('button', { name: 'Edit' }));
+    await user.click(screen.getByRole('button', { name: /Edit/ }));
     await user.click(screen.getByLabelText('Visible on the public site'));
     await user.click(screen.getByRole('button', { name: 'Save product' }));
     await vi.waitFor(() => {
@@ -184,14 +184,14 @@ describe('AdminProductsPage', () => {
     const user = userEvent.setup();
     renderPage();
     expect(await screen.findByText('Analyzer Kit')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    await user.click(screen.getByRole('button', { name: /Delete/ }));
     const confirmDialog = screen.getByRole('alertdialog');
     expect(screen.getByRole('heading', { name: 'Delete product?' })).toBeInTheDocument();
     expect(vi.mocked(fetch)).not.toHaveBeenCalledWith(
       `${appEnv.apiBaseUrl}/admin/product/5`,
       expect.objectContaining({ method: 'DELETE' }),
     );
-    await user.click(within(confirmDialog).getByRole('button', { name: 'Delete' }));
+    await user.click(within(confirmDialog).getByRole('button', { name: /Delete/ }));
     await vi.waitFor(() => {
       expect(vi.mocked(fetch)).toHaveBeenCalledWith(
         `${appEnv.apiBaseUrl}/admin/product/5`,

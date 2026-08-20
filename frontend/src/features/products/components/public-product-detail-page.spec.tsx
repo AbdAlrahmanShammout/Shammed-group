@@ -88,7 +88,7 @@ describe('PublicProductDetailPage', () => {
     expect(await screen.findByRole('heading', { name: 'Detail Product' })).toBeInTheDocument();
     expect(screen.getByText('Detailed description')).toBeInTheDocument();
     expect(screen.getByText('Manufacturer: Detail Labs')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Detail Partner' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Detail Partner/ })).toHaveAttribute(
       'href',
       'https://www.detail-partner.example',
     );

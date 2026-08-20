@@ -114,14 +114,14 @@ describe('AdminPartnersPage', () => {
     const user = userEvent.setup();
     renderPage();
     expect(await screen.findByText('Acme Pharma')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    await user.click(screen.getByRole('button', { name: /Delete/ }));
     const confirmDialog = screen.getByRole('alertdialog');
     expect(screen.getByRole('heading', { name: 'Delete partner?' })).toBeInTheDocument();
     expect(vi.mocked(fetch)).not.toHaveBeenCalledWith(
       `${appEnv.apiBaseUrl}/admin/partner/3`,
       expect.objectContaining({ method: 'DELETE' }),
     );
-    await user.click(within(confirmDialog).getByRole('button', { name: 'Delete' }));
+    await user.click(within(confirmDialog).getByRole('button', { name: /Delete/ }));
     await vi.waitFor(() => {
       expect(vi.mocked(fetch)).toHaveBeenCalledWith(
         `${appEnv.apiBaseUrl}/admin/partner/3`,

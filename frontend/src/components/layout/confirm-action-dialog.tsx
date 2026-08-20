@@ -1,6 +1,7 @@
-import type { ReactElement } from 'react';
+import { useRef, type ReactElement } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { useDialogAccessibility } from '@/lib/a11y/use-dialog-accessibility';
 
 type ConfirmActionDialogProps = {
   readonly confirmLabel?: string;
@@ -21,6 +22,12 @@ export function ConfirmActionDialog({
   open,
   title,
 }: ConfirmActionDialogProps): ReactElement | null {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialogAccessibility({
+    containerRef: dialogRef,
+    isOpen: open,
+    onEscape: onCancel,
+  });
   if (!open) {
     return null;
   }
@@ -30,6 +37,7 @@ export function ConfirmActionDialog({
       aria-labelledby="confirm-action-title"
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      ref={dialogRef}
       role="alertdialog"
     >
       <div className="w-full max-w-md rounded-md border bg-background p-6 shadow-lg">

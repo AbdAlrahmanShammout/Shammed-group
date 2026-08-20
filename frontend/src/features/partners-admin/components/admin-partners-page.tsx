@@ -81,6 +81,7 @@ export function AdminPartnersPage(): ReactElement {
                     </div>
                     <div className="flex gap-2">
                       <Button
+                        aria-label={`Edit ${partner.name}`}
                         onClick={() => {
                           setEditingPartner(partner);
                           setIsCreating(false);
@@ -91,6 +92,7 @@ export function AdminPartnersPage(): ReactElement {
                         Edit
                       </Button>
                       <Button
+                        aria-label={`Delete ${partner.name}`}
                         onClick={() => setPartnerPendingDelete(partner)}
                         type="button"
                         variant="outline"

@@ -91,8 +91,8 @@ describe('AdminCategoriesPage', () => {
     expect(await screen.findByText('Medicines')).toBeInTheDocument();
     const medicinesRow = screen.getByText('Medicines').closest('li');
     expect(medicinesRow).not.toBeNull();
-    await user.click(within(medicinesRow!).getByRole('button', { name: 'Delete' }));
-    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Delete' }));
+    await user.click(within(medicinesRow!).getByRole('button', { name: /Delete/ }));
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: /Delete/ }));
     expect(
       await screen.findByRole('heading', { name: 'Move products before deleting' }),
     ).toBeInTheDocument();
@@ -141,8 +141,8 @@ describe('AdminCategoriesPage', () => {
     );
     renderPage();
     expect(await screen.findByText('Medicines')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Delete' }));
-    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Delete' }));
+    await user.click(screen.getByRole('button', { name: /Delete/ }));
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: /Delete/ }));
     expect(
       await screen.findByText(/only category with products/),
     ).toBeInTheDocument();

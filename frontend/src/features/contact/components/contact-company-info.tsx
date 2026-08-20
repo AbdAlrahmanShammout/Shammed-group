@@ -1,6 +1,8 @@
 import type { ReactElement } from 'react';
 
 import type { SiteSettingsResponse } from '@/generated/public-site.contract';
+import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
+import { cn } from '@/lib/utils';
 
 type ContactCompanyInfoProps = {
   readonly siteSettings: SiteSettingsResponse;
@@ -12,10 +14,20 @@ export function ContactCompanyInfo({ siteSettings }: ContactCompanyInfoProps): R
       <h2 className="text-2xl font-medium" id="contact-company-title">
         {siteSettings.companyName}
       </h2>
-      <a className="text-muted-foreground hover:text-foreground" href={`mailto:${siteSettings.email}`}>
+      <a
+        className={cn('text-muted-foreground hover:text-foreground', focusRingClassName)}
+        href={`mailto:${siteSettings.email}`}
+      >
         {siteSettings.email}
       </a>
-      {siteSettings.phone ? <p className="text-muted-foreground">{siteSettings.phone}</p> : null}
+      {siteSettings.phone ? (
+        <a
+          className={cn('text-muted-foreground hover:text-foreground', focusRingClassName)}
+          href={`tel:${siteSettings.phone}`}
+        >
+          {siteSettings.phone}
+        </a>
+      ) : null}
       {siteSettings.whatsApp ? (
         <p className="text-muted-foreground">WhatsApp: {siteSettings.whatsApp}</p>
       ) : null}

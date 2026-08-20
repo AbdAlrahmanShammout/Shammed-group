@@ -1,6 +1,8 @@
 import type { ReactElement } from 'react';
 
 import type { PartnerResponse } from '@/generated/public-partner.contract';
+import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
+import { cn } from '@/lib/utils';
 
 type PartnerListItemProps = {
   readonly partner: PartnerResponse;
@@ -20,12 +22,13 @@ export function PartnerListItem({ partner }: PartnerListItemProps): ReactElement
       {partner.country ? <p className="text-sm text-muted-foreground">Country: {partner.country}</p> : null}
       {partner.websiteUrl ? (
         <a
-          className="text-sm font-medium underline-offset-4 hover:underline"
+          className={cn('text-sm font-medium underline-offset-4 hover:underline', focusRingClassName)}
           href={partner.websiteUrl}
           rel="noreferrer noopener"
           target="_blank"
         >
           Visit website
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
       ) : null}
     </li>

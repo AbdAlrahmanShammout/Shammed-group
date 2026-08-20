@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { appPaths } from '@/config/app-paths';
 import type { HomePageResponse, PublicPartnerResponse } from '@/generated/public-home.contract';
+import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
+import { cn } from '@/lib/utils';
 
 type HomePartnersSectionProps = {
   readonly homePage: HomePageResponse;
@@ -20,7 +22,7 @@ export function HomePartnersSection({ homePage, partners }: HomePartnersSectionP
           {homePage.partnersSectionDescription ? (
             <p className="max-w-3xl text-muted-foreground">{homePage.partnersSectionDescription}</p>
           ) : null}
-          <Link className="text-sm font-medium text-foreground underline-offset-4 hover:underline" to={appPaths.partners}>
+          <Link className={cn('text-sm font-medium text-foreground underline-offset-4 hover:underline', focusRingClassName)} to={appPaths.partners}>
             View all partners
           </Link>
         </div>
@@ -37,12 +39,13 @@ export function HomePartnersSection({ homePage, partners }: HomePartnersSectionP
                 ) : null}
                 {partner.websiteUrl ? (
                   <a
-                    className="text-sm font-medium underline-offset-4 hover:underline"
+                    className={cn('text-sm font-medium underline-offset-4 hover:underline', focusRingClassName)}
                     href={partner.websiteUrl}
                     rel="noreferrer noopener"
                     target="_blank"
                   >
                     Visit website
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 ) : null}
               </li>

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { appPaths } from '@/config/app-paths';
 import type { HomePageResponse, PublicProductResponse } from '@/generated/public-home.contract';
+import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
+import { cn } from '@/lib/utils';
 
 type HomeProductsSectionProps = {
   readonly homePage: HomePageResponse;
@@ -20,7 +22,13 @@ export function HomeProductsSection({ homePage, products }: HomeProductsSectionP
           {homePage.productsSectionDescription ? (
             <p className="max-w-3xl text-muted-foreground">{homePage.productsSectionDescription}</p>
           ) : null}
-          <Link className="text-sm font-medium text-foreground underline-offset-4 hover:underline" to={appPaths.products}>
+          <Link
+            className={cn(
+              'text-sm font-medium text-foreground underline-offset-4 hover:underline',
+              focusRingClassName,
+            )}
+            to={appPaths.products}
+          >
             View all products
           </Link>
         </div>

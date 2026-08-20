@@ -1,8 +1,9 @@
-import { useState, type ReactElement } from 'react';
+import { useRef, useState, type ReactElement } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import type { ProductCategoryResponse } from '@/generated/admin-product-category.contract';
+import { useDialogAccessibility } from '@/lib/a11y/use-dialog-accessibility';
 
 type CategoryReplacementDialogProps = {
   readonly category: ProductCategoryResponse;
@@ -21,8 +22,14 @@ export function CategoryReplacementDialog({
   replacementOptions,
   serverError = null,
 }: CategoryReplacementDialogProps): ReactElement {
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [replacementCategoryId, setReplacementCategoryId] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
+  useDialogAccessibility({
+    containerRef: dialogRef,
+    isOpen: true,
+    onEscape: onCancel,
+  });
   function handleConfirm(): void {
     const parsed = Number(replacementCategoryId);
     if (!Number.isInteger(parsed) || parsed < 1) {
@@ -38,6 +45,7 @@ export function CategoryReplacementDialog({
       aria-labelledby="category-replacement-title"
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      ref={dialogRef}
       role="alertdialog"
     >
       <div className="w-full max-w-md rounded-md border bg-background p-6 shadow-lg">
@@ -51,7 +59,7 @@ export function CategoryReplacementDialog({
         <div className="mt-4 flex flex-col gap-2">
           <Label htmlFor="replacementCategoryId">Replacement category</Label>
           <select
-            className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+            className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
             disabled={isPending}
             id="replacementCategoryId"
             onChange={(event) => setReplacementCategoryId(event.target.value)}

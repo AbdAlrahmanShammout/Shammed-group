@@ -82,6 +82,7 @@ export function AdminSocialLinksPage(): ReactElement {
                     </div>
                     <div className="flex gap-2">
                       <Button
+                        aria-label={`Edit ${socialLink.platform} link`}
                         onClick={() => {
                           setEditingSocialLink(socialLink);
                           setIsCreating(false);
@@ -92,6 +93,7 @@ export function AdminSocialLinksPage(): ReactElement {
                         Edit
                       </Button>
                       <Button
+                        aria-label={`Delete ${socialLink.platform} link`}
                         onClick={() => setSocialLinkPendingDelete(socialLink)}
                         type="button"
                         variant="outline"

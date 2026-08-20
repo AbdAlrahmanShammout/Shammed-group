@@ -61,7 +61,7 @@ describe('PublicPartnersPage', () => {
     expect(screen.getByRole('heading', { name: 'Visible Partner' })).toBeInTheDocument();
     expect(screen.getByText('Shown on partners page')).toBeInTheDocument();
     expect(screen.getByText('Specialization: Oncology')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Visit website' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Visit website/ })).toHaveAttribute(
       'href',
       'https://www.visible-partner.example',
     );
