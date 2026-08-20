@@ -116,6 +116,7 @@ export const mockPublicHomePage = {
       displayOrder: 0,
       categoryId: 1,
       partnerId: 1,
+      imageMediaId: 42,
       category: {
         id: 1,
         createdAt: '2026-01-01T00:00:00.000Z',

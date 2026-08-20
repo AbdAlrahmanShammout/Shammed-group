@@ -69,6 +69,15 @@ describe('PublicHomePage', () => {
       `${appEnv.apiBaseUrl}/media/31`,
     );
     expect(screen.getByRole('heading', { name: 'Visible Product' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Visible Product' })).toHaveAttribute(
+      'src',
+      `${appEnv.apiBaseUrl}/media/42`,
+    );
+    expect(screen.getByRole('link', { name: /Visible Product/ })).toHaveAttribute(
+      'href',
+      '/products/1',
+    );
+    expect(screen.getByText(/Partner: Visible Partner/)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Visible Service' })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Visible Service' })).toHaveAttribute(
       'src',
@@ -81,7 +90,6 @@ describe('PublicHomePage', () => {
       'href',
       'https://www.visible-partner.example',
     );
-    expect(screen.getByText('Partner: Visible Partner')).toBeInTheDocument();
     const heroImage = document.querySelector(
       `img[src="${appEnv.apiBaseUrl}/media/${mockPublicHomePage.homePage.heroImageMediaId}"]`,
     );

@@ -1,6 +1,10 @@
 import type { ReactElement } from 'react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
+import { PublicMediaImage } from '@/components/media/public-media-image';
+import { Button } from '@/components/ui/button';
 import { appPaths } from '@/config/app-paths';
 import type { HomePageResponse, PublicProductResponse } from '@/generated/public-home.contract';
 import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
@@ -11,43 +15,185 @@ type HomeProductsSectionProps = {
   readonly products: readonly PublicProductResponse[];
 };
 
-export function HomeProductsSection({ homePage, products }: HomeProductsSectionProps): ReactElement {
+type ProductMediaProps = {
+  readonly alt: string;
+  readonly className?: string;
+  readonly mediaId?: number;
+};
+
+function ProductMedia({ alt, className, mediaId }: ProductMediaProps): ReactElement {
+  if (mediaId === undefined) {
+    return (
+      <div
+        className={cn(
+          'flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,oklch(0.93_0.01_230),oklch(0.97_0_0)_72%)] px-6 text-center text-sm text-muted-foreground',
+          className,
+        )}
+      >
+        {alt}
+      </div>
+    );
+  }
   return (
-    <section aria-labelledby="home-products-title" className="border-b">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 md:px-6">
-        <div className="flex flex-col gap-4">
-          <h2 className="text-3xl font-medium" id="home-products-title">
-            {homePage.productsSectionTitle}
-          </h2>
-          {homePage.productsSectionDescription ? (
-            <p className="max-w-3xl text-muted-foreground">{homePage.productsSectionDescription}</p>
-          ) : null}
-          <Link
-            className={cn(
-              'text-sm font-medium text-foreground underline-offset-4 hover:underline',
-              focusRingClassName,
+    <PublicMediaImage
+      alt={alt}
+      className={cn(
+        'size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]',
+        className,
+      )}
+      mediaId={mediaId}
+    />
+  );
+}
+
+function createProductHref(productId: number): string {
+  return `${appPaths.products}/${productId}`;
+}
+
+type ProductTileProps = {
+  readonly product: PublicProductResponse;
+  readonly featured?: boolean;
+  readonly index: number;
+  readonly shouldReduceMotion: boolean | null;
+};
+
+function ProductTile({
+  product,
+  featured = false,
+  index,
+  shouldReduceMotion,
+}: ProductTileProps): ReactElement {
+  const href = createProductHref(product.id);
+  return (
+    <motion.li
+      className={cn('list-none', featured && 'md:col-span-2')}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+      transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : index * 0.05 }}
+      viewport={{ once: true, amount: 0.25 }}
+      whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+    >
+      <Link
+        className={cn(
+          'group relative flex h-full overflow-hidden rounded-2xl border border-border/70 bg-background',
+          'shadow-xs transition-[border-color,box-shadow,transform] duration-300',
+          'hover:border-foreground/15 hover:shadow-sm',
+          focusRingClassName,
+          featured ? 'flex-col md:min-h-[22rem] md:flex-row' : 'flex-col',
+        )}
+        to={href}
+      >
+        <div
+          className={cn(
+            'relative overflow-hidden bg-muted/30',
+            featured ? 'aspect-[16/11] md:aspect-auto md:w-[54%] md:self-stretch' : 'aspect-[4/3]',
+          )}
+        >
+          <ProductMedia
+            alt={product.name}
+            className="absolute inset-0 size-full"
+            mediaId={product.imageMediaId}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent opacity-80 md:from-transparent"
+          />
+        </div>
+        <div
+          className={cn(
+            'flex flex-1 flex-col justify-between gap-4 p-5 md:p-6',
+            featured && 'md:w-[46%] md:justify-center md:p-8',
+          )}
+        >
+          <div className="flex flex-col gap-3">
+            <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              {product.category.name}
+            </p>
+            <h3
+              className={cn(
+                'font-medium tracking-tight text-foreground transition-colors group-hover:text-foreground',
+                featured ? 'text-2xl md:text-3xl' : 'text-lg md:text-xl',
+              )}
+            >
+              {product.name}
+            </h3>
+            <p
+              className={cn(
+                'leading-relaxed text-muted-foreground',
+                featured ? 'line-clamp-4 text-base' : 'line-clamp-3 text-sm',
+              )}
+            >
+              {product.shortDescription}
+            </p>
+            {(product.manufacturer || product.partner) && (
+              <p className="text-sm text-muted-foreground">
+                {product.manufacturer ? product.manufacturer : null}
+                {product.manufacturer && product.partner ? ' · ' : null}
+                {product.partner ? `Partner: ${product.partner.name}` : null}
+              </p>
             )}
-            to={appPaths.products}
-          >
-            View all products
-          </Link>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+            View product
+            <ArrowUpRight
+              aria-hidden="true"
+              className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </span>
+        </div>
+      </Link>
+    </motion.li>
+  );
+}
+
+export function HomeProductsSection({ homePage, products }: HomeProductsSectionProps): ReactElement {
+  const shouldReduceMotion = useReducedMotion();
+  const [featuredProduct, ...remainingProducts] = products;
+  return (
+    <section
+      aria-labelledby="home-products-title"
+      className="border-b bg-[linear-gradient(180deg,oklch(0.99_0_0)_0%,oklch(0.975_0.006_230)_55%,oklch(0.99_0_0)_100%)]"
+    >
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 md:px-6">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="flex max-w-2xl flex-col gap-3">
+            <p className="text-sm font-medium tracking-wide text-muted-foreground uppercase">
+              Catalogue highlights
+            </p>
+            <h2 className="text-3xl font-medium tracking-tight md:text-4xl" id="home-products-title">
+              {homePage.productsSectionTitle}
+            </h2>
+            {homePage.productsSectionDescription ? (
+              <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+                {homePage.productsSectionDescription}
+              </p>
+            ) : null}
+          </div>
+          <Button asChild className="self-start md:self-auto" variant="outline">
+            <Link to={appPaths.products}>
+              View all products
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </Link>
+          </Button>
         </div>
         {products.length === 0 ? (
           <p role="status">No products are available yet.</p>
         ) : (
-          <ul className="grid gap-8 md:grid-cols-2">
-            {products.map((product) => (
-              <li className="flex flex-col gap-2" key={product.id}>
-                <h3 className="text-xl font-medium">{product.name}</h3>
-                <p className="text-sm text-muted-foreground">{product.category.name}</p>
-                <p className="text-muted-foreground">{product.shortDescription}</p>
-                {product.manufacturer ? (
-                  <p className="text-sm text-muted-foreground">Manufacturer: {product.manufacturer}</p>
-                ) : null}
-                {product.partner ? (
-                  <p className="text-sm text-muted-foreground">Partner: {product.partner.name}</p>
-                ) : null}
-              </li>
+          <ul className="grid gap-5 md:grid-cols-2">
+            {featuredProduct ? (
+              <ProductTile
+                featured
+                index={0}
+                product={featuredProduct}
+                shouldReduceMotion={shouldReduceMotion}
+              />
+            ) : null}
+            {remainingProducts.map((product, index) => (
+              <ProductTile
+                index={index + 1}
+                key={product.id}
+                product={product}
+                shouldReduceMotion={shouldReduceMotion}
+              />
             ))}
           </ul>
         )}
