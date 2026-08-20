@@ -6,6 +6,8 @@ import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { AboutPageAdminController } from '@/modules/about-page/about-page.admin.controller';
 import { AboutPageModule } from '@/modules/about-page/about-page.module';
+import { DashboardAdminController } from '@/modules/dashboard/dashboard.admin.controller';
+import { DashboardModule } from '@/modules/dashboard/dashboard.module';
 import { HomePageAdminController } from '@/modules/home-page/home-page.admin.controller';
 import { HomePageModule } from '@/modules/home-page/home-page.module';
 import { LocationAdminController } from '@/modules/location/location.admin.controller';
@@ -29,6 +31,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
   imports: [
     AuthModule,
     AboutPageModule,
+    DashboardModule,
     HomePageModule,
     LocationModule,
     MediaModule,
@@ -42,6 +45,7 @@ import { SocialLinkModule } from '@/modules/social-link/social-link.module';
   controllers: [
     AuthAdminController,
     AboutPageAdminController,
+    DashboardAdminController,
     HomePageAdminController,
     LocationAdminController,
     MediaAdminController,
