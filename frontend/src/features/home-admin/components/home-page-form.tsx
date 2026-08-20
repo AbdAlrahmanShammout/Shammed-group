@@ -3,10 +3,12 @@ import { useEffect, useState, type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ApiError } from '@/api/api-error';
+import { AdminFormSectionCard } from '@/components/layout/admin-form-section-card';
 import { AdminMediaUploadField } from '@/components/media/admin-media-upload-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { HomeCmsSectionNav } from '@/features/home-admin/components/home-cms-section-nav';
 import { useCreateAdminHomePageMutation } from '@/features/home-admin/hooks/use-create-admin-home-page-mutation';
 import { useUpdateAdminHomePageMutation } from '@/features/home-admin/hooks/use-update-admin-home-page-mutation';
 import { toCreateHomePageRequest } from '@/features/home-admin/lib/to-create-home-page-request';
@@ -104,9 +106,18 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
     }
   }
   return (
-    <form className="flex max-w-2xl flex-col gap-8" noValidate onSubmit={form.handleSubmit(onSubmit)}>
-      <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-medium">Hero</h2>
+    <form className="flex flex-col gap-6" noValidate onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+        <aside className="w-full shrink-0 lg:sticky lg:top-6 lg:w-56">
+          <HomeCmsSectionNav />
+        </aside>
+        <div className="flex min-w-0 flex-1 flex-col gap-6 lg:max-w-3xl">
+      <AdminFormSectionCard
+        description="Top-of-page headline, supporting copy, image, and call-to-action buttons."
+        id="home-cms-hero"
+        title="Hero"
+        tone="muted"
+      >
         <div className="flex flex-col gap-2">
           <Label htmlFor="heroTitle">
             Title <span aria-hidden="true">*</span>
@@ -163,10 +174,10 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               Primary CTA text <span aria-hidden="true">*</span>
             </Label>
             <Input
+              aria-invalid={Boolean(form.formState.errors.primaryCtaText)}
               aria-required="true"
               disabled={isPending}
               id="primaryCtaText"
-              aria-invalid={Boolean(form.formState.errors.primaryCtaText)}
               {...form.register('primaryCtaText')}
             />
             {form.formState.errors.primaryCtaText ? (
@@ -180,10 +191,10 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               Primary CTA URL <span aria-hidden="true">*</span>
             </Label>
             <Input
+              aria-invalid={Boolean(form.formState.errors.primaryCtaUrl)}
               aria-required="true"
               disabled={isPending}
               id="primaryCtaUrl"
-              aria-invalid={Boolean(form.formState.errors.primaryCtaUrl)}
               {...form.register('primaryCtaUrl')}
             />
             {form.formState.errors.primaryCtaUrl ? (
@@ -197,10 +208,10 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               Secondary CTA text <span aria-hidden="true">*</span>
             </Label>
             <Input
+              aria-invalid={Boolean(form.formState.errors.secondaryCtaText)}
               aria-required="true"
               disabled={isPending}
               id="secondaryCtaText"
-              aria-invalid={Boolean(form.formState.errors.secondaryCtaText)}
               {...form.register('secondaryCtaText')}
             />
             {form.formState.errors.secondaryCtaText ? (
@@ -214,10 +225,10 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               Secondary CTA URL <span aria-hidden="true">*</span>
             </Label>
             <Input
+              aria-invalid={Boolean(form.formState.errors.secondaryCtaUrl)}
               aria-required="true"
               disabled={isPending}
               id="secondaryCtaUrl"
-              aria-invalid={Boolean(form.formState.errors.secondaryCtaUrl)}
               {...form.register('secondaryCtaUrl')}
             />
             {form.formState.errors.secondaryCtaUrl ? (
@@ -227,18 +238,22 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             ) : null}
           </div>
         </div>
-      </section>
-      <section className="flex flex-col gap-4 border-t pt-6">
-        <h2 className="text-lg font-medium">About preview</h2>
+      </AdminFormSectionCard>
+      <AdminFormSectionCard
+        description="Short about teaser shown below the hero on the public home page."
+        id="home-cms-about"
+        title="About preview"
+        tone="secondary"
+      >
         <div className="flex flex-col gap-2">
           <Label htmlFor="aboutPreviewTitle">
             Title <span aria-hidden="true">*</span>
           </Label>
           <Input
+            aria-invalid={Boolean(form.formState.errors.aboutPreviewTitle)}
             aria-required="true"
             disabled={isPending}
             id="aboutPreviewTitle"
-            aria-invalid={Boolean(form.formState.errors.aboutPreviewTitle)}
             {...form.register('aboutPreviewTitle')}
           />
           {form.formState.errors.aboutPreviewTitle ? (
@@ -252,11 +267,11 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             Description <span aria-hidden="true">*</span>
           </Label>
           <textarea
+            aria-invalid={Boolean(form.formState.errors.aboutPreviewDescription)}
             aria-required="true"
             className={textareaClassName}
             disabled={isPending}
             id="aboutPreviewDescription"
-            aria-invalid={Boolean(form.formState.errors.aboutPreviewDescription)}
             {...form.register('aboutPreviewDescription')}
           />
           {form.formState.errors.aboutPreviewDescription ? (
@@ -286,10 +301,10 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               CTA text <span aria-hidden="true">*</span>
             </Label>
             <Input
+              aria-invalid={Boolean(form.formState.errors.aboutPreviewCtaText)}
               aria-required="true"
               disabled={isPending}
               id="aboutPreviewCtaText"
-              aria-invalid={Boolean(form.formState.errors.aboutPreviewCtaText)}
               {...form.register('aboutPreviewCtaText')}
             />
           </div>
@@ -298,90 +313,105 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               CTA URL <span aria-hidden="true">*</span>
             </Label>
             <Input
+              aria-invalid={Boolean(form.formState.errors.aboutPreviewCtaUrl)}
               aria-required="true"
               disabled={isPending}
               id="aboutPreviewCtaUrl"
-              aria-invalid={Boolean(form.formState.errors.aboutPreviewCtaUrl)}
               {...form.register('aboutPreviewCtaUrl')}
             />
           </div>
         </div>
-      </section>
-      <section className="flex flex-col gap-4 border-t pt-6">
-        <h2 className="text-lg font-medium">Catalog section titles</h2>
-        <p className="text-sm text-muted-foreground">
-          Partner, product, and service lists come from catalog visibility. Edit entities in Catalog
-          and Company — not here.
-        </p>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="partnersSectionTitle">
-            Partners title <span aria-hidden="true">*</span>
-          </Label>
-          <Input
-            aria-required="true"
-            disabled={isPending}
-            id="partnersSectionTitle"
-            aria-invalid={Boolean(form.formState.errors.partnersSectionTitle)}
-            {...form.register('partnersSectionTitle')}
-          />
+      </AdminFormSectionCard>
+      <AdminFormSectionCard
+        description="Titles and descriptions for catalog previews. Partner, product, and service rows still come from Catalog visibility."
+        id="home-cms-catalog"
+        title="Catalog section titles"
+        tone="accent"
+      >
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="flex flex-col gap-4 rounded-lg border border-border/70 bg-background/80 p-4">
+            <h3 className="text-sm font-medium">Partners</h3>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="partnersSectionTitle">
+                Title <span aria-hidden="true">*</span>
+              </Label>
+              <Input
+                aria-invalid={Boolean(form.formState.errors.partnersSectionTitle)}
+                aria-required="true"
+                disabled={isPending}
+                id="partnersSectionTitle"
+                {...form.register('partnersSectionTitle')}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="partnersSectionDescription">Description</Label>
+              <textarea
+                aria-invalid={Boolean(form.formState.errors.partnersSectionDescription)}
+                className={textareaClassName}
+                disabled={isPending}
+                id="partnersSectionDescription"
+                {...form.register('partnersSectionDescription')}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 rounded-lg border border-border/70 bg-background/80 p-4">
+            <h3 className="text-sm font-medium">Products</h3>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="productsSectionTitle">
+                Title <span aria-hidden="true">*</span>
+              </Label>
+              <Input
+                aria-invalid={Boolean(form.formState.errors.productsSectionTitle)}
+                aria-required="true"
+                disabled={isPending}
+                id="productsSectionTitle"
+                {...form.register('productsSectionTitle')}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="productsSectionDescription">Description</Label>
+              <textarea
+                aria-invalid={Boolean(form.formState.errors.productsSectionDescription)}
+                className={textareaClassName}
+                disabled={isPending}
+                id="productsSectionDescription"
+                {...form.register('productsSectionDescription')}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 rounded-lg border border-border/70 bg-background/80 p-4">
+            <h3 className="text-sm font-medium">Services</h3>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="servicesSectionTitle">
+                Title <span aria-hidden="true">*</span>
+              </Label>
+              <Input
+                aria-invalid={Boolean(form.formState.errors.servicesSectionTitle)}
+                aria-required="true"
+                disabled={isPending}
+                id="servicesSectionTitle"
+                {...form.register('servicesSectionTitle')}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="servicesSectionDescription">Description</Label>
+              <textarea
+                aria-invalid={Boolean(form.formState.errors.servicesSectionDescription)}
+                className={textareaClassName}
+                disabled={isPending}
+                id="servicesSectionDescription"
+                {...form.register('servicesSectionDescription')}
+              />
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="partnersSectionDescription">Partners description</Label>
-          <textarea
-            className={textareaClassName}
-            disabled={isPending}
-            id="partnersSectionDescription"
-            aria-invalid={Boolean(form.formState.errors.partnersSectionDescription)}
-            {...form.register('partnersSectionDescription')}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="productsSectionTitle">
-            Products title <span aria-hidden="true">*</span>
-          </Label>
-          <Input
-            aria-required="true"
-            disabled={isPending}
-            id="productsSectionTitle"
-            aria-invalid={Boolean(form.formState.errors.productsSectionTitle)}
-            {...form.register('productsSectionTitle')}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="productsSectionDescription">Products description</Label>
-          <textarea
-            className={textareaClassName}
-            disabled={isPending}
-            id="productsSectionDescription"
-            aria-invalid={Boolean(form.formState.errors.productsSectionDescription)}
-            {...form.register('productsSectionDescription')}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="servicesSectionTitle">
-            Services title <span aria-hidden="true">*</span>
-          </Label>
-          <Input
-            aria-required="true"
-            disabled={isPending}
-            id="servicesSectionTitle"
-            aria-invalid={Boolean(form.formState.errors.servicesSectionTitle)}
-            {...form.register('servicesSectionTitle')}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="servicesSectionDescription">Services description</Label>
-          <textarea
-            className={textareaClassName}
-            disabled={isPending}
-            id="servicesSectionDescription"
-            aria-invalid={Boolean(form.formState.errors.servicesSectionDescription)}
-            {...form.register('servicesSectionDescription')}
-          />
-        </div>
-      </section>
-      <section className="flex flex-col gap-4 border-t pt-6">
-        <h2 className="text-lg font-medium">Why Shammed Group</h2>
+      </AdminFormSectionCard>
+      <AdminFormSectionCard
+        description="Reasons-to-choose section with optional supporting image."
+        id="home-cms-why"
+        title="Why Shammed Group"
+        tone="muted"
+      >
         <div className="flex flex-col gap-2">
           <Label htmlFor="whyTitle">
             Title <span aria-hidden="true">*</span>
@@ -404,11 +434,11 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             Description <span aria-hidden="true">*</span>
           </Label>
           <textarea
+            aria-invalid={Boolean(form.formState.errors.whyDescription)}
             aria-required="true"
             className={textareaClassName}
             disabled={isPending}
             id="whyDescription"
-            aria-invalid={Boolean(form.formState.errors.whyDescription)}
             {...form.register('whyDescription')}
           />
           {form.formState.errors.whyDescription ? (
@@ -432,45 +462,57 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             setWhyFileName(fileName);
           }}
         />
-      </section>
-      <section className="flex flex-col gap-4 border-t pt-6">
-        <h2 className="text-lg font-medium">Contact section</h2>
+      </AdminFormSectionCard>
+      <AdminFormSectionCard
+        description="Closing contact prompt shown on the public home page."
+        id="home-cms-contact"
+        title="Contact section"
+        tone="secondary"
+      >
         <div className="flex flex-col gap-2">
           <Label htmlFor="contactSectionTitle">
             Title <span aria-hidden="true">*</span>
           </Label>
           <Input
+            aria-invalid={Boolean(form.formState.errors.contactSectionTitle)}
             aria-required="true"
             disabled={isPending}
             id="contactSectionTitle"
-            aria-invalid={Boolean(form.formState.errors.contactSectionTitle)}
             {...form.register('contactSectionTitle')}
           />
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="contactSectionDescription">Description</Label>
           <textarea
+            aria-invalid={Boolean(form.formState.errors.contactSectionDescription)}
             className={textareaClassName}
             disabled={isPending}
             id="contactSectionDescription"
-            aria-invalid={Boolean(form.formState.errors.contactSectionDescription)}
             {...form.register('contactSectionDescription')}
           />
         </div>
-      </section>
-      {serverError ? (
-        <p className="text-sm text-destructive" role="alert">
-          {serverError}
-        </p>
-      ) : null}
-      {isSuccess ? (
-        <p className="text-sm text-muted-foreground" role="status">
-          Home page saved successfully.
-        </p>
-      ) : null}
-      <Button disabled={isPending} type="submit">
-        {isPending ? 'Saving…' : homePage ? 'Save home page' : 'Create home page'}
-      </Button>
+      </AdminFormSectionCard>
+      <div className="sticky bottom-0 z-10 border-t border-border/80 bg-background/95 py-4 backdrop-blur">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-h-5">
+            {serverError ? (
+              <p className="text-sm text-destructive" role="alert">
+                {serverError}
+              </p>
+            ) : null}
+            {isSuccess ? (
+              <p className="text-sm text-muted-foreground" role="status">
+                Home page saved successfully.
+              </p>
+            ) : null}
+          </div>
+          <Button disabled={isPending} type="submit">
+            {isPending ? 'Saving…' : homePage ? 'Save home page' : 'Create home page'}
+          </Button>
+        </div>
+      </div>
+        </div>
+      </div>
     </form>
   );
 }

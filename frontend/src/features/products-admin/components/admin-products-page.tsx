@@ -1,6 +1,7 @@
 import { useState, type ReactElement } from 'react';
 
 import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
+import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ export function AdminProductsPage(): ReactElement {
   const [editingProduct, setEditingProduct] = useState<ProductResponse | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [productPendingDelete, setProductPendingDelete] = useState<ProductResponse | null>(null);
+  const [visibilityPendingId, setVisibilityPendingId] = useState<number | null>(null);
   const orderedList = useOrderedAdminList({
     items: productsQuery.data?.products,
     onPersist: async (patches) => {
@@ -31,6 +33,20 @@ export function AdminProductsPage(): ReactElement {
       );
     },
   });
+  async function executeVisibilityChange(input: {
+    readonly productId: number;
+    readonly isVisible: boolean;
+  }): Promise<void> {
+    setVisibilityPendingId(input.productId);
+    try {
+      await updateMutation.mutateAsync({
+        productId: input.productId,
+        body: { isVisible: input.isVisible },
+      });
+    } finally {
+      setVisibilityPendingId(null);
+    }
+  }
   if (productsQuery.isPending) {
     return (
       <div className="flex flex-col gap-4">
@@ -102,11 +118,20 @@ export function AdminProductsPage(): ReactElement {
                       <p className="font-medium">{product.name}</p>
                       <p className="text-sm text-muted-foreground">{product.shortDescription}</p>
                       <p className="text-sm text-muted-foreground">
-                        {product.category.name} · {product.isVisible ? 'Visible' : 'Hidden'}
+                        {product.category.name}
                         {product.partner ? ` · ${product.partner.name}` : ''}
                       </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <AdminVisibilitySwitch
+                        checked={product.isVisible}
+                        disabled={visibilityPendingId === product.id || orderedList.isSaving}
+                        entityLabel={product.name}
+                        itemId={product.id}
+                        onCheckedChange={(isVisible) => {
+                          void executeVisibilityChange({ productId: product.id, isVisible });
+                        }}
+                      />
                       <Button
                         aria-label={`Edit ${product.name}`}
                         onClick={() => {
@@ -122,7 +147,7 @@ export function AdminProductsPage(): ReactElement {
                         aria-label={`Delete ${product.name}`}
                         onClick={() => setProductPendingDelete(product)}
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                       >
                         Delete
                       </Button>

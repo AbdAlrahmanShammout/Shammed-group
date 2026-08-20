@@ -1,15 +1,16 @@
 import { useState, type ReactElement } from 'react';
 
-import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
+import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
+import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
 import { PartnerForm } from '@/features/partners-admin/components/partner-form';
 import { useAdminPartnersQuery } from '@/features/partners-admin/hooks/use-admin-partners-query';
 import { useDeleteAdminPartnerMutation } from '@/features/partners-admin/hooks/use-delete-admin-partner-mutation';
 import { useUpdateAdminPartnerMutation } from '@/features/partners-admin/hooks/use-update-admin-partner-mutation';
-import { getNextDisplayOrder } from '@/lib/get-next-display-order';
 import type { PartnerResponse } from '@/generated/admin-partner.contract';
+import { getNextDisplayOrder } from '@/lib/get-next-display-order';
 
 export function AdminPartnersPage(): ReactElement {
   const partnersQuery = useAdminPartnersQuery();
@@ -18,6 +19,7 @@ export function AdminPartnersPage(): ReactElement {
   const [editingPartner, setEditingPartner] = useState<PartnerResponse | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [partnerPendingDelete, setPartnerPendingDelete] = useState<PartnerResponse | null>(null);
+  const [visibilityPendingId, setVisibilityPendingId] = useState<number | null>(null);
   const orderedList = useOrderedAdminList({
     items: partnersQuery.data?.partners,
     onPersist: async (patches) => {
@@ -31,6 +33,17 @@ export function AdminPartnersPage(): ReactElement {
       );
     },
   });
+  async function onVisibilityChange(partner: PartnerResponse, isVisible: boolean): Promise<void> {
+    setVisibilityPendingId(partner.id);
+    try {
+      await updateMutation.mutateAsync({
+        partnerId: partner.id,
+        body: { isVisible },
+      });
+    } finally {
+      setVisibilityPendingId(null);
+    }
+  }
   if (partnersQuery.isPending) {
     return (
       <div className="flex flex-col gap-4">
@@ -100,11 +113,17 @@ export function AdminPartnersPage(): ReactElement {
                     <div className="flex flex-col gap-1">
                       <p className="font-medium">{partner.name}</p>
                       <p className="text-sm text-muted-foreground">{partner.shortDescription}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {partner.isVisible ? 'Visible' : 'Hidden'}
-                      </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <AdminVisibilitySwitch
+                        checked={partner.isVisible}
+                        disabled={visibilityPendingId === partner.id || orderedList.isSaving}
+                        entityLabel={partner.name}
+                        itemId={partner.id}
+                        onCheckedChange={(isVisible) => {
+                          void onVisibilityChange(partner, isVisible);
+                        }}
+                      />
                       <Button
                         aria-label={`Edit ${partner.name}`}
                         onClick={() => {
@@ -120,7 +139,7 @@ export function AdminPartnersPage(): ReactElement {
                         aria-label={`Delete ${partner.name}`}
                         onClick={() => setPartnerPendingDelete(partner)}
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                       >
                         Delete
                       </Button>

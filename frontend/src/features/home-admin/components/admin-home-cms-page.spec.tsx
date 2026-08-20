@@ -89,11 +89,18 @@ describe('AdminHomeCmsPage', () => {
     const user = userEvent.setup();
     renderPage();
     expect(await screen.findByDisplayValue('Existing Hero')).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Home page sections' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Hero' })).toHaveAttribute('href', '#home-cms-hero');
+    expect(screen.getByRole('heading', { name: 'Hero' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'About preview' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Catalog section titles' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Why Shammed Group' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Contact section' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Add partner' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Add product' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Add service' })).not.toBeInTheDocument();
     expect(
-      screen.getByText(/Partner, product, and service lists come from catalog visibility/),
+      screen.getByText(/Partner, product, and service rows still come from Catalog visibility/),
     ).toBeInTheDocument();
     const heroTitleInput = screen.getByDisplayValue('Existing Hero');
     await user.clear(heroTitleInput);

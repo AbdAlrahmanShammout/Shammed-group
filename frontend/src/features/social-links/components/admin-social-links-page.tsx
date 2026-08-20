@@ -1,6 +1,7 @@
 import { useState, type ReactElement } from 'react';
 
 import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
+import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ export function AdminSocialLinksPage(): ReactElement {
   const [socialLinkPendingDelete, setSocialLinkPendingDelete] = useState<SocialLinkResponse | null>(
     null,
   );
+  const [visibilityPendingId, setVisibilityPendingId] = useState<number | null>(null);
   const orderedList = useOrderedAdminList({
     items: socialLinksQuery.data?.socialLinks,
     onPersist: async (patches) => {
@@ -33,6 +35,20 @@ export function AdminSocialLinksPage(): ReactElement {
       );
     },
   });
+  async function executeVisibilityChange(input: {
+    readonly socialLinkId: number;
+    readonly isVisible: boolean;
+  }): Promise<void> {
+    setVisibilityPendingId(input.socialLinkId);
+    try {
+      await updateMutation.mutateAsync({
+        socialLinkId: input.socialLinkId,
+        body: { isVisible: input.isVisible },
+      });
+    } finally {
+      setVisibilityPendingId(null);
+    }
+  }
   if (socialLinksQuery.isPending) {
     return (
       <div className="flex flex-col gap-4">
@@ -102,11 +118,20 @@ export function AdminSocialLinksPage(): ReactElement {
                     <div className="flex flex-col gap-1">
                       <p className="font-medium">{socialLink.platform}</p>
                       <p className="text-sm break-all text-muted-foreground">{socialLink.url}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {socialLink.isVisible ? 'Visible' : 'Hidden'}
-                      </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <AdminVisibilitySwitch
+                        checked={socialLink.isVisible}
+                        disabled={visibilityPendingId === socialLink.id || orderedList.isSaving}
+                        entityLabel={socialLink.platform}
+                        itemId={socialLink.id}
+                        onCheckedChange={(isVisible) => {
+                          void executeVisibilityChange({
+                            socialLinkId: socialLink.id,
+                            isVisible,
+                          });
+                        }}
+                      />
                       <Button
                         aria-label={`Edit ${socialLink.platform} link`}
                         onClick={() => {
@@ -122,7 +147,7 @@ export function AdminSocialLinksPage(): ReactElement {
                         aria-label={`Delete ${socialLink.platform} link`}
                         onClick={() => setSocialLinkPendingDelete(socialLink)}
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                       >
                         Delete
                       </Button>

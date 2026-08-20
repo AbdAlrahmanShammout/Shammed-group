@@ -1,6 +1,7 @@
 import { useState, type ReactElement } from 'react';
 
 import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
+import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ export function AdminLocationsPage(): ReactElement {
   const [editingLocation, setEditingLocation] = useState<LocationResponse | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [locationPendingDelete, setLocationPendingDelete] = useState<LocationResponse | null>(null);
+  const [visibilityPendingId, setVisibilityPendingId] = useState<number | null>(null);
   const orderedList = useOrderedAdminList({
     items: locationsQuery.data?.locations,
     onPersist: async (patches) => {
@@ -31,6 +33,20 @@ export function AdminLocationsPage(): ReactElement {
       );
     },
   });
+  async function executeVisibilityChange(input: {
+    readonly locationId: number;
+    readonly isVisible: boolean;
+  }): Promise<void> {
+    setVisibilityPendingId(input.locationId);
+    try {
+      await updateMutation.mutateAsync({
+        locationId: input.locationId,
+        body: { isVisible: input.isVisible },
+      });
+    } finally {
+      setVisibilityPendingId(null);
+    }
+  }
   if (locationsQuery.isPending) {
     return (
       <div className="flex flex-col gap-4">
@@ -100,11 +116,17 @@ export function AdminLocationsPage(): ReactElement {
                     <div className="flex flex-col gap-1">
                       <p className="font-medium">{location.name}</p>
                       <p className="text-sm text-muted-foreground">{location.address}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {location.isVisible ? 'Visible' : 'Hidden'}
-                      </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <AdminVisibilitySwitch
+                        checked={location.isVisible}
+                        disabled={visibilityPendingId === location.id || orderedList.isSaving}
+                        entityLabel={location.name}
+                        itemId={location.id}
+                        onCheckedChange={(isVisible) => {
+                          void executeVisibilityChange({ locationId: location.id, isVisible });
+                        }}
+                      />
                       <Button
                         aria-label={`Edit ${location.name}`}
                         onClick={() => {
@@ -120,7 +142,7 @@ export function AdminLocationsPage(): ReactElement {
                         aria-label={`Delete ${location.name}`}
                         onClick={() => setLocationPendingDelete(location)}
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                       >
                         Delete
                       </Button>

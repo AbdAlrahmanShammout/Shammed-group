@@ -32,9 +32,9 @@ export function AdminHomeCmsPage(): ReactElement {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-medium">Home Page</h1>
-        <p className="text-muted-foreground">
-          Edit hero, about preview, why Shammed, and section titles. Catalog previews stay driven by
-          entity visibility.
+        <p className="max-w-2xl text-muted-foreground">
+          Edit each public home section from the side menu. Catalog previews stay driven by entity
+          visibility.
         </p>
       </div>
       <HomePageForm homePage={homePageQuery.data?.homePage} />

@@ -1,6 +1,7 @@
 import { useState, type ReactElement } from 'react';
 
 import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
+import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ export function AdminServicesPage(): ReactElement {
   const [editingService, setEditingService] = useState<ServiceResponse | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [servicePendingDelete, setServicePendingDelete] = useState<ServiceResponse | null>(null);
+  const [visibilityPendingId, setVisibilityPendingId] = useState<number | null>(null);
   const orderedList = useOrderedAdminList({
     items: servicesQuery.data?.services,
     onPersist: async (patches) => {
@@ -31,6 +33,20 @@ export function AdminServicesPage(): ReactElement {
       );
     },
   });
+  async function executeVisibilityChange(input: {
+    readonly serviceId: number;
+    readonly isVisible: boolean;
+  }): Promise<void> {
+    setVisibilityPendingId(input.serviceId);
+    try {
+      await updateMutation.mutateAsync({
+        serviceId: input.serviceId,
+        body: { isVisible: input.isVisible },
+      });
+    } finally {
+      setVisibilityPendingId(null);
+    }
+  }
   if (servicesQuery.isPending) {
     return (
       <div className="flex flex-col gap-4">
@@ -101,11 +117,17 @@ export function AdminServicesPage(): ReactElement {
                     <div className="flex flex-col gap-1">
                       <p className="font-medium">{service.title}</p>
                       <p className="text-sm text-muted-foreground">{service.description}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {service.isVisible ? 'Visible' : 'Hidden'}
-                      </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <AdminVisibilitySwitch
+                        checked={service.isVisible}
+                        disabled={visibilityPendingId === service.id || orderedList.isSaving}
+                        entityLabel={service.title}
+                        itemId={service.id}
+                        onCheckedChange={(isVisible) => {
+                          void executeVisibilityChange({ serviceId: service.id, isVisible });
+                        }}
+                      />
                       <Button
                         aria-label={`Edit ${service.title}`}
                         onClick={() => {
@@ -121,7 +143,7 @@ export function AdminServicesPage(): ReactElement {
                         aria-label={`Delete ${service.title}`}
                         onClick={() => setServicePendingDelete(service)}
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                       >
                         Delete
                       </Button>

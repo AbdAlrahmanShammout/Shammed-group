@@ -2,6 +2,7 @@ import { useState, type ReactElement } from 'react';
 
 import { ApiError } from '@/api/api-error';
 import { AdminReorderableList } from '@/components/layout/admin-reorderable-list';
+import { AdminVisibilitySwitch } from '@/components/layout/admin-visibility-switch';
 import { ConfirmActionDialog } from '@/components/layout/confirm-action-dialog';
 import { useOrderedAdminList } from '@/components/layout/use-ordered-admin-list';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ export function AdminCategoriesPage(): ReactElement {
   const [categoryNeedingReplacement, setCategoryNeedingReplacement] =
     useState<ProductCategoryResponse | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [visibilityPendingId, setVisibilityPendingId] = useState<number | null>(null);
   const orderedList = useOrderedAdminList({
     items: categoriesQuery.data?.productCategories,
     onPersist: async (patches) => {
@@ -41,6 +43,20 @@ export function AdminCategoriesPage(): ReactElement {
       );
     },
   });
+  async function executeVisibilityChange(input: {
+    readonly categoryId: number;
+    readonly isVisible: boolean;
+  }): Promise<void> {
+    setVisibilityPendingId(input.categoryId);
+    try {
+      await updateMutation.mutateAsync({
+        categoryId: input.categoryId,
+        body: { isVisible: input.isVisible },
+      });
+    } finally {
+      setVisibilityPendingId(null);
+    }
+  }
   async function executeDelete(input: {
     readonly category: ProductCategoryResponse;
     readonly replacementCategoryId?: number;
@@ -144,11 +160,17 @@ export function AdminCategoriesPage(): ReactElement {
                       {category.description ? (
                         <p className="text-sm text-muted-foreground">{category.description}</p>
                       ) : null}
-                      <p className="text-sm text-muted-foreground">
-                        {category.isVisible ? 'Visible' : 'Hidden'}
-                      </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <AdminVisibilitySwitch
+                        checked={category.isVisible}
+                        disabled={visibilityPendingId === category.id || orderedList.isSaving}
+                        entityLabel={category.name}
+                        itemId={category.id}
+                        onCheckedChange={(isVisible) => {
+                          void executeVisibilityChange({ categoryId: category.id, isVisible });
+                        }}
+                      />
                       <Button
                         aria-label={`Edit ${category.name}`}
                         onClick={() => {
@@ -167,7 +189,7 @@ export function AdminCategoriesPage(): ReactElement {
                           setCategoryPendingDelete(category);
                         }}
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                       >
                         Delete
                       </Button>

@@ -113,6 +113,23 @@ describe('AdminPartnersPage', () => {
     expect(createCall?.[1]?.body).toContain('"displayOrder":1');
   });
 
+  it('toggles partner visibility from the list without opening edit', async () => {
+    const user = userEvent.setup();
+    renderPage();
+    expect(await screen.findByText('Acme Pharma')).toBeInTheDocument();
+    await user.click(screen.getByRole('switch', { name: /Hide Acme Pharma on the public site/i }));
+    await vi.waitFor(() => {
+      expect(vi.mocked(fetch)).toHaveBeenCalledWith(
+        `${appEnv.apiBaseUrl}/admin/partner/3`,
+        expect.objectContaining({ method: 'PATCH' }),
+      );
+    });
+    const patchCall = vi.mocked(fetch).mock.calls.find((call) => {
+      return String(call[0]) === `${appEnv.apiBaseUrl}/admin/partner/3` && call[1]?.method === 'PATCH';
+    });
+    expect(patchCall?.[1]?.body).toContain('"isVisible":false');
+  });
+
   it('requires confirmation before deleting a partner', async () => {
     const user = userEvent.setup();
     renderPage();
