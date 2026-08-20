@@ -34,7 +34,7 @@ type PublicFooterProps = {
   readonly isSettingsError?: boolean;
 };
 
-const footerHeadingClassName = 'flex min-h-9 items-center text-sm font-medium text-primary-foreground';
+const footerHeadingClassName = 'flex min-h-9 items-center text-xs font-semibold uppercase tracking-wider text-white';
 
 export function PublicFooter({
   companyName,
@@ -56,8 +56,9 @@ export function PublicFooter({
     : mapLocations[0]?.id;
   const activeLocation = mapLocations.find((location) => location.id === activeLocationId);
   return (
-    <footer className="w-full bg-primary text-primary-foreground">
-      <div className="grid w-full grid-cols-1 gap-6 px-4 py-8 sm:px-6 md:grid-cols-3 md:items-start md:gap-6 lg:gap-8 lg:px-8 xl:px-12">
+    <footer className="w-full bg-[#0B0F1E] text-slate-400">
+      <div aria-hidden="true" className="h-[3px] bg-gradient-to-r from-primary via-primary/60 to-transparent" />
+      <div className="grid w-full grid-cols-1 gap-6 px-4 py-10 sm:px-6 md:grid-cols-3 md:items-start md:gap-8 lg:gap-10 lg:px-8 xl:px-12">
         <section aria-label="Office locations map" className="flex min-w-0 flex-col gap-3">
           <div className={footerHeadingClassName}>
             {mapLocations.length > 1 ? (
@@ -76,8 +77,8 @@ export function PublicFooter({
                         'max-w-full truncate rounded-md border px-2.5 py-1 text-left text-xs transition-colors',
                         focusRingClassName,
                         isSelected
-                          ? 'border-primary-foreground/50 bg-primary-foreground/20 text-primary-foreground'
-                          : 'border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground',
+                          ? 'border-primary/60 bg-primary/25 text-white'
+                          : 'border-white/20 bg-white/8 text-slate-300 hover:border-white/30 hover:bg-white/12 hover:text-white',
                       )}
                       id={`footer-map-tab-${location.id}`}
                       key={location.id}
@@ -98,7 +99,7 @@ export function PublicFooter({
             )}
           </div>
           {mapLocations.length === 0 ? (
-            <p className="text-sm text-primary-foreground/60" role="status">
+            <p className="text-sm text-slate-500" role="status">
               Map locations are not available yet.
             </p>
           ) : null}
@@ -107,7 +108,7 @@ export function PublicFooter({
               aria-labelledby={
                 mapLocations.length > 1 ? `footer-map-tab-${activeLocation.id}` : undefined
               }
-              className="overflow-hidden rounded-md border bg-muted/30"
+              className="overflow-hidden rounded-md border border-white/10 bg-white/5"
               id={`footer-map-panel-${activeLocation.id}`}
               role="tabpanel"
             >
@@ -124,7 +125,7 @@ export function PublicFooter({
         </section>
         <div
           aria-label="Contact"
-          className="flex min-w-0 flex-col gap-3 text-sm text-primary-foreground/70"
+          className="flex min-w-0 flex-col gap-3 text-sm text-slate-400"
           role="region"
         >
           <Link
@@ -133,13 +134,15 @@ export function PublicFooter({
             to={homePath}
           >
             {logoMediaId !== undefined ? (
-              <PublicMediaImage
-                alt={companyName ? `${companyName} logo` : 'Company logo'}
-                className="h-12 w-auto max-w-full object-contain md:h-14"
-                mediaId={logoMediaId}
-              />
+              <span className="inline-flex items-center rounded-lg bg-white px-3 py-2">
+                <PublicMediaImage
+                  alt={companyName ? `${companyName} logo` : 'Company logo'}
+                  className="h-10 w-auto max-w-[10rem] object-contain md:h-12"
+                  mediaId={logoMediaId}
+                />
+              </span>
             ) : (
-              <span className="text-lg font-medium">{companyName ?? 'Home'}</span>
+              <span className="text-lg font-semibold text-white">{companyName ?? 'Home'}</span>
             )}
           </Link>
           <h2 className={footerHeadingClassName}>Contact</h2>
@@ -151,7 +154,7 @@ export function PublicFooter({
             <div className="flex flex-col gap-2">
               {email ? (
                 <a
-                  className={cn('break-all transition-colors hover:text-primary-foreground', focusRingClassName)}
+                  className={cn('break-all transition-colors hover:text-white', focusRingClassName)}
                   href={`mailto:${email}`}
                 >
                   {email}
@@ -159,7 +162,7 @@ export function PublicFooter({
               ) : null}
               {phone ? (
                 <a
-                  className={cn('transition-colors hover:text-primary-foreground', focusRingClassName)}
+                  className={cn('transition-colors hover:text-white', focusRingClassName)}
                   href={`tel:${phone}`}
                 >
                   {phone}
@@ -177,10 +180,10 @@ export function PublicFooter({
                   <li key={socialLink.id}>
                     <a
                       aria-label={`${platformLabel} (opens in a new tab)`}
-                      className={cn(
-                        'flex h-9 w-9 items-center justify-center rounded-md border border-white/20 bg-white/5 transition-colors hover:bg-white/15',
-                        focusRingClassName,
-                      )}
+                  className={cn(
+                      'flex h-9 w-9 items-center justify-center rounded-md border border-white/15 bg-white/5 text-slate-400 transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white',
+                      focusRingClassName,
+                    )}
                       href={socialLink.url}
                       rel="noreferrer noopener"
                       target="_blank"
@@ -206,9 +209,9 @@ export function PublicFooter({
                 <NavLink
                   className={({ isActive }) =>
                     cn(
-                      'text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground',
+                      'text-sm transition-colors hover:text-white',
                       focusRingClassName,
-                      isActive && 'font-medium text-primary-foreground',
+                      isActive ? 'font-medium text-white' : 'text-slate-400',
                     )
                   }
                   to={item.path}
@@ -221,7 +224,7 @@ export function PublicFooter({
         </nav>
       </div>
       {companyName ? (
-        <p className="w-full border-t border-primary-foreground/15 px-4 py-4 text-center text-sm text-primary-foreground/50 sm:px-6 lg:px-8 xl:px-12">
+        <p className="w-full border-t border-white/10 px-4 py-4 text-center text-sm text-slate-600 sm:px-6 lg:px-8 xl:px-12">
           © {copyrightYear} {companyName}
         </p>
       ) : null}

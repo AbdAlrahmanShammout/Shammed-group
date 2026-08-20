@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Building2, Handshake } from 'lucide-react';
 import type { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -46,14 +46,21 @@ export function ProductListItem({ product }: ProductListItemProps): ReactElement
           <span className="absolute left-3 top-3 rounded-full bg-background/90 px-2.5 py-0.5 text-xs font-medium text-foreground shadow-sm backdrop-blur-sm">
             {product.category.name}
           </span>
+          {product.partner ? (
+            <span className="absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-lg backdrop-blur-sm">
+              <Handshake aria-hidden="true" className="h-4 w-4" />
+              {product.partner.name}
+            </span>
+          ) : null}
         </div>
         <div className="flex flex-1 flex-col gap-2 p-4">
           <h2 className="text-base font-semibold leading-snug">{product.name}</h2>
           <p className="line-clamp-2 flex-1 text-sm text-muted-foreground">{product.shortDescription}</p>
           {product.manufacturer ? (
-            <p className="text-xs text-muted-foreground">By {product.manufacturer}</p>
-          ) : product.partner ? (
-            <p className="text-xs text-muted-foreground">Partner: {product.partner.name}</p>
+            <span className="inline-flex w-fit items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+              <Building2 aria-hidden="true" className="h-3 w-3" />
+              {product.manufacturer}
+            </span>
           ) : null}
           <span className="mt-1 flex items-center gap-1 text-sm font-medium text-primary">
             View details

@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Building2, Handshake } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -97,6 +97,12 @@ function ProductTile({
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent opacity-80 md:from-transparent"
           />
+          {product.partner !== undefined ? (
+            <span className="absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-lg backdrop-blur-sm">
+              <Handshake aria-hidden="true" className="h-4 w-4" />
+              {product.partner.name}
+            </span>
+          ) : null}
         </div>
         <div
           className={cn(
@@ -124,13 +130,12 @@ function ProductTile({
             >
               {product.shortDescription}
             </p>
-            {(product.manufacturer || product.partner) && (
-              <p className="text-sm text-muted-foreground">
-                {product.manufacturer ? product.manufacturer : null}
-                {product.manufacturer && product.partner ? ' · ' : null}
-                {product.partner ? `Partner: ${product.partner.name}` : null}
-              </p>
-            )}
+            {product.manufacturer !== undefined ? (
+              <span className="inline-flex w-fit items-center gap-1 rounded-full bg-background/60 px-2 py-0.5 text-xs text-muted-foreground backdrop-blur-sm">
+                <Building2 aria-hidden="true" className="h-3 w-3" />
+                {product.manufacturer}
+              </span>
+            ) : null}
           </div>
           <span className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-primary">
             View product
