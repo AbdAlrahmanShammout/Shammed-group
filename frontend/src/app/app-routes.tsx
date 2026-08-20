@@ -11,6 +11,7 @@ import { AboutPage } from '@/pages/about-page';
 import { ContactPage } from '@/pages/contact-page';
 import { HomePage } from '@/pages/home-page';
 import { PartnersPage } from '@/pages/partners-page';
+import { ProductDetailPage } from '@/pages/product-detail-page';
 import { ProductsPage } from '@/pages/products-page';
 import { ServicesPage } from '@/pages/services-page';
 
@@ -22,6 +23,7 @@ export function AppRoutes(): ReactElement {
         <Route element={<AboutPage />} path={appPaths.about} />
         <Route element={<PartnersPage />} path={appPaths.partners} />
         <Route element={<ProductsPage />} path={appPaths.products} />
+        <Route element={<ProductDetailPage />} path={appPaths.productDetail} />
         <Route element={<ServicesPage />} path={appPaths.services} />
         <Route element={<ContactPage />} path={appPaths.contact} />
       </Route>

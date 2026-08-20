@@ -2,6 +2,7 @@ import { requestApi } from '@/api/http-client';
 import type {
   GetPublicProductsQuery,
   GetProductsResponseDto,
+  ProductResponseDto,
 } from '@/generated/public-product.contract';
 
 const PRODUCTS_PATH = '/product';
@@ -20,6 +21,13 @@ export async function getPublicProducts(
 ): Promise<GetProductsResponseDto> {
   return requestApi<GetProductsResponseDto>({
     path: createProductsPath(query),
+    method: 'GET',
+  });
+}
+
+export async function getPublicProductById(productId: number): Promise<ProductResponseDto> {
+  return requestApi<ProductResponseDto>({
+    path: `${PRODUCTS_PATH}/${productId}`,
     method: 'GET',
   });
 }
