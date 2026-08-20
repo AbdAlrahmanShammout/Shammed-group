@@ -1,0 +1,94 @@
+/**
+ * Wire types for admin home-page CMS on the admin OpenAPI document.
+ * Keep aligned with /admin/home-page.
+ * Do not import backend source types.
+ */
+import type { MediaResponse } from '@/generated/admin-media.contract';
+
+export type HomePageResponse = {
+  readonly id: number;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+  readonly heroTitle: string;
+  readonly heroDescription: string;
+  readonly heroImageMediaId?: number;
+  readonly primaryCtaText: string;
+  readonly primaryCtaUrl: string;
+  readonly secondaryCtaText: string;
+  readonly secondaryCtaUrl: string;
+  readonly aboutPreviewTitle: string;
+  readonly aboutPreviewDescription: string;
+  readonly aboutPreviewImageMediaId?: number;
+  readonly aboutPreviewCtaText: string;
+  readonly aboutPreviewCtaUrl: string;
+  readonly partnersSectionTitle: string;
+  readonly partnersSectionDescription?: string;
+  readonly productsSectionTitle: string;
+  readonly productsSectionDescription?: string;
+  readonly servicesSectionTitle: string;
+  readonly servicesSectionDescription?: string;
+  readonly whyTitle: string;
+  readonly whyDescription: string;
+  readonly whyImageMediaId?: number;
+  readonly contactSectionTitle: string;
+  readonly contactSectionDescription?: string;
+  readonly heroImage?: MediaResponse;
+  readonly aboutPreviewImage?: MediaResponse;
+  readonly whyImage?: MediaResponse;
+};
+
+export type HomePageResponseDto = {
+  readonly homePage: HomePageResponse;
+};
+
+export type CreateHomePageRequestDto = {
+  readonly heroTitle: string;
+  readonly heroDescription: string;
+  readonly heroImageMediaId?: number;
+  readonly primaryCtaText: string;
+  readonly primaryCtaUrl: string;
+  readonly secondaryCtaText: string;
+  readonly secondaryCtaUrl: string;
+  readonly aboutPreviewTitle: string;
+  readonly aboutPreviewDescription: string;
+  readonly aboutPreviewImageMediaId?: number;
+  readonly aboutPreviewCtaText: string;
+  readonly aboutPreviewCtaUrl: string;
+  readonly partnersSectionTitle: string;
+  readonly partnersSectionDescription?: string;
+  readonly productsSectionTitle: string;
+  readonly productsSectionDescription?: string;
+  readonly servicesSectionTitle: string;
+  readonly servicesSectionDescription?: string;
+  readonly whyTitle: string;
+  readonly whyDescription: string;
+  readonly whyImageMediaId?: number;
+  readonly contactSectionTitle: string;
+  readonly contactSectionDescription?: string;
+};
+
+export type UpdateHomePageRequestDto = {
+  readonly heroTitle?: string;
+  readonly heroDescription?: string;
+  readonly heroImageMediaId?: number | null;
+  readonly primaryCtaText?: string;
+  readonly primaryCtaUrl?: string;
+  readonly secondaryCtaText?: string;
+  readonly secondaryCtaUrl?: string;
+  readonly aboutPreviewTitle?: string;
+  readonly aboutPreviewDescription?: string;
+  readonly aboutPreviewImageMediaId?: number | null;
+  readonly aboutPreviewCtaText?: string;
+  readonly aboutPreviewCtaUrl?: string;
+  readonly partnersSectionTitle?: string;
+  readonly partnersSectionDescription?: string | null;
+  readonly productsSectionTitle?: string;
+  readonly productsSectionDescription?: string | null;
+  readonly servicesSectionTitle?: string;
+  readonly servicesSectionDescription?: string | null;
+  readonly whyTitle?: string;
+  readonly whyDescription?: string;
+  readonly whyImageMediaId?: number | null;
+  readonly contactSectionTitle?: string;
+  readonly contactSectionDescription?: string | null;
+};

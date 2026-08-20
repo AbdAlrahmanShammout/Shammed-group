@@ -13,6 +13,7 @@ import { AboutPage } from '@/pages/about-page';
 import { AdminContactInformationPage } from '@/pages/admin-contact-information-page';
 import { AdminLocationsPage } from '@/pages/admin-locations-page';
 import { AdminSocialLinksPage } from '@/pages/admin-social-links-page';
+import { AdminWebsiteHomePage } from '@/pages/admin-website-home-page';
 import { AdminWebsiteSettingsPage } from '@/pages/admin-website-settings-page';
 import { ContactPage } from '@/pages/contact-page';
 import { HomePage } from '@/pages/home-page';
@@ -39,10 +40,7 @@ export function AppRoutes(): ReactElement {
       <Route element={<RequireAdminSession />}>
         <Route element={<AdminShellRoute />}>
           <Route element={<AdminHomeRoute />} path={appPaths.adminHome} />
-          <Route
-            element={<AdminPlaceholderPage title="Home Page" />}
-            path={appPaths.adminWebsiteHome}
-          />
+          <Route element={<AdminWebsiteHomePage />} path={appPaths.adminWebsiteHome} />
           <Route
             element={<AdminPlaceholderPage title="About Us" />}
             path={appPaths.adminWebsiteAbout}
