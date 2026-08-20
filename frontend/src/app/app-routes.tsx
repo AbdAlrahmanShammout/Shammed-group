@@ -12,6 +12,7 @@ import { PublicSiteShell } from '@/features/site-chrome/components/public-site-s
 import { AboutPage } from '@/pages/about-page';
 import { AdminContactInformationPage } from '@/pages/admin-contact-information-page';
 import { AdminLocationsPage } from '@/pages/admin-locations-page';
+import { AdminPartnersPage } from '@/pages/admin-partners-page';
 import { AdminSocialLinksPage } from '@/pages/admin-social-links-page';
 import { AdminWebsiteAboutPage } from '@/pages/admin-website-about-page';
 import { AdminWebsiteHomePage } from '@/pages/admin-website-home-page';
@@ -52,10 +53,7 @@ export function AppRoutes(): ReactElement {
             element={<AdminPlaceholderPage title="Products" />}
             path={appPaths.adminCatalogProducts}
           />
-          <Route
-            element={<AdminPlaceholderPage title="Partners" />}
-            path={appPaths.adminCompanyPartners}
-          />
+          <Route element={<AdminPartnersPage />} path={appPaths.adminCompanyPartners} />
           <Route
             element={<AdminPlaceholderPage title="Services" />}
             path={appPaths.adminCompanyServices}

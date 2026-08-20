@@ -11,6 +11,7 @@ export const queryKeys = {
     socialLinks: () => ['admin', 'social-links'] as const,
     homePage: () => ['admin', 'home-page'] as const,
     aboutPage: () => ['admin', 'about-page'] as const,
+    partners: () => ['admin', 'partners'] as const,
   },
   public: {
     siteSettings: () => ['public', 'site-settings'] as const,
