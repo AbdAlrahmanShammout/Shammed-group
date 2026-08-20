@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 
-import { PublicPageHeading } from '@/components/layout/public-page-heading';
+import { PublicHomePage } from '@/features/home/components/public-home-page';
 
 export function HomePage(): ReactElement {
-  return <PublicPageHeading title="Home" />;
+  return <PublicHomePage />;
 }
