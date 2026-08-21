@@ -11,11 +11,14 @@ import { HomeProductsSection } from '@/features/home/components/home-products-se
 import { HomeServicesSection } from '@/features/home/components/home-services-section';
 import { HomeWhySection } from '@/features/home/components/home-why-section';
 import { usePublicHomePageQuery } from '@/features/home/hooks/use-public-home-page-query';
+import { usePublicSiteSettingsQuery } from '@/features/site-chrome/hooks/use-public-site-settings-query';
 
 const homeSeo = findPublicPageSeo(appPaths.home);
 
 export function PublicHomePage(): ReactElement {
   const homePageQuery = usePublicHomePageQuery();
+  const siteSettingsQuery = usePublicSiteSettingsQuery();
+  const siteSettings = siteSettingsQuery.data?.siteSettings;
   if (homePageQuery.isPending) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-16 md:px-6" role="status">
@@ -41,7 +44,11 @@ export function PublicHomePage(): ReactElement {
       <HomePartnersSection homePage={homePage} partners={partners} />
       <HomeProductsSection homePage={homePage} products={products} />
       <HomeServicesSection homePage={homePage} services={services} />
-      <HomeWhySection homePage={homePage} />
+      <HomeWhySection
+        companyName={siteSettings?.companyName}
+        homePage={homePage}
+        logoMediaId={siteSettings?.logoMediaId}
+      />
       <HomeContactSection homePage={homePage} />
     </div>
   );
