@@ -74,8 +74,7 @@ Shammed_Group/
 │   ├── storage/              Uploaded media files (git-ignored)
 │   ├── tmp/
 │   │   ├── brand-assets/     logo.jpg, favicon-32.png
-│   │   ├── content-media/    Page and partner images
-│   │   └── demo-product-images/  Product catalogue images
+│   │   └── content-media/    Page and partner images
 │   └── .env                  Backend environment variables
 ├── frontend/                 React + Vite dashboard and public site
 │   ├── src/
@@ -254,21 +253,8 @@ All media source files live in `backend/tmp/` (not committed to git). You must s
 | `partner-kls.png` | KLS Martin Group logo |
 | `partner-dialife.png` | Dialife Group logo |
 
-### `backend/tmp/demo-product-images/`
-
-One image per product, named after the product's slugified name:
-
-| File | Product |
-|------|---------|
-| `demo-mobile-c-arm-system.png` | Demo Mobile C-Arm System |
-| `demo-extracorporeal-shock-wave-unit.png` | Demo Extracorporeal Shock Wave Unit |
-| `demo-endoscopy-tower-kit.png` | Demo Endoscopy Tower Kit |
-| `demo-electrosurgery-generator.png` | Demo Electrosurgery Generator |
-| `demo-tablet-coating-machine.png` | Demo Tablet Coating Machine |
-| `demo-hplc-quality-analyzer.png` | Demo HPLC Quality Analyzer |
-| `demo-surgical-consumables-pack.png` | Demo Surgical Consumables Pack |
-| `demo-dialysis-consumable-set.png` | Demo Dialysis Consumable Set |
-| `demo-specialty-oncology-capsule.png` | Demo Specialty Oncology Capsule |
+> **Product images** are downloaded automatically from source URLs embedded in each product's
+> `detailedDescription` field when you run `pnpm restore`. No local product image files are needed.
 
 ### Clean up orphaned media
 
