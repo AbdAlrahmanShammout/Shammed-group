@@ -5,19 +5,19 @@
  *
  * Usage:
  *   node scripts/restore-all.mjs
- *   API_BASE_URL=https://your-server.com node scripts/restore-all.mjs
+ *   API_BASE_URL=http://localhost:3000 node scripts/restore-all.mjs
  *
  * What this script does (in order):
  *   1. Brand assets  — upload logo + favicon from tmp/brand-assets/
- *   2. Content media — upload page images + service images from tmp/content-media/
+ *   2. Content media — upload page + service images from tmp/content-media/
  *   3. Partner logos (local files) — from tmp/content-media/partner-*.{png,webp}
  *   4. Partner logos (web download) — Al Inmaa and Marinas Official
  *   5. Product images (web download) — all 94 catalogue products via source URLs
  *      stored in each product's detailedDescription field
- *   6. Cleanup — delete media records not referenced by any entity, plus their
- *      storage files
+ *   6. Cleanup — delete all unreferenced media via the backend API
  *
  * Prerequisites:
+ *   - The backend must be running (all uploads go through the API)
  *   - backend/.env must contain ADMIN_PASSWORD
  *   - tmp/brand-assets/    logo.jpg  favicon-32.png
  *   - tmp/content-media/   hero.jpg  about-preview.jpg  why.jpg
@@ -26,24 +26,26 @@
  *                          partner-storz.png  partner-technix.webp
  *                          partner-karlstorz.png  partner-kls.png
  *                          partner-dialife.png
+ *
+ * NOTE: No direct writes to the storage directory are performed.
+ * Every media file is created through the backend API so that file
+ * permissions are always managed by the backend process.
  */
 
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'node:fs';
+import { readFileSync, existsSync, unlinkSync } from 'node:fs';
 import { resolve, dirname, extname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const sharp = require('sharp');
 const { PrismaClient } = require('@prisma/client');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BACKEND_DIR = resolve(__dirname, '..');
 const API_BASE = process.env.API_BASE_URL ?? 'http://localhost:3000';
 const ENV_PATH = resolve(BACKEND_DIR, '.env');
-const STORAGE_DIR = resolve(BACKEND_DIR, 'storage');
 
 const BRAND_ASSETS_DIR = resolve(BACKEND_DIR, 'tmp/brand-assets');
 const CONTENT_MEDIA_DIR = resolve(BACKEND_DIR, 'tmp/content-media');
@@ -57,17 +59,14 @@ function readAdminPassword() {
   return match[1].trim();
 }
 
-function mimeForFile(filePath) {
-  const ext = extname(filePath).toLowerCase();
-  const map = {
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.webp': 'image/webp',
-  };
-  const mime = map[ext];
-  if (!mime) throw new Error(`Unknown mime for extension: ${filePath}`);
-  return mime;
+function mimeForExt(ext) {
+  const map = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif' };
+  return map[ext.toLowerCase()] ?? 'image/jpeg';
+}
+
+function mimeFromUrl(url) {
+  const ext = '.' + (url.split('?')[0].split('.').pop() ?? 'jpg');
+  return mimeForExt(ext);
 }
 
 async function login(password) {
@@ -81,16 +80,13 @@ async function login(password) {
   return body.accessToken;
 }
 
-async function uploadFile(token, absolutePath) {
-  if (!existsSync(absolutePath)) {
-    console.log(`  skip (missing): ${basename(absolutePath)}`);
-    return null;
-  }
-  const fileName = basename(absolutePath);
-  const mime = mimeForFile(absolutePath);
-  const bytes = readFileSync(absolutePath);
+/**
+ * Upload raw bytes through the API.
+ * The backend process owns the storage folder and handles all file writes.
+ */
+async function uploadBytes(token, bytes, fileName, mimeType) {
   const form = new FormData();
-  form.append('file', new Blob([bytes], { type: mime }), fileName);
+  form.append('file', new Blob([bytes], { type: mimeType }), fileName);
   const response = await fetch(`${API_BASE}/admin/media`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
@@ -102,6 +98,18 @@ async function uploadFile(token, absolutePath) {
   const body = await response.json();
   console.log(`  uploaded ${fileName} → media id ${body.media.id}`);
   return body.media.id;
+}
+
+/** Upload a local file through the API. */
+async function uploadFile(token, absolutePath) {
+  if (!existsSync(absolutePath)) {
+    console.log(`  skip (missing): ${basename(absolutePath)}`);
+    return null;
+  }
+  const fileName = basename(absolutePath);
+  const mime = mimeForExt(extname(absolutePath));
+  const bytes = readFileSync(absolutePath);
+  return uploadBytes(token, bytes, fileName, mime);
 }
 
 async function getJson(token, path) {
@@ -137,24 +145,6 @@ function downloadWithCurl(url, destPath) {
   }
 }
 
-async function convertToWebPAndStore(prisma, sourcePath, originalFileName) {
-  const buf = readFileSync(sourcePath);
-  if (buf.length < 100) throw new Error(`Downloaded file too small: ${buf.length} bytes`);
-  const id = randomUUID();
-  const storedFileName = `${id}.webp`;
-  const webpBuf = await sharp(buf).webp({ quality: 85 }).toBuffer();
-  writeFileSync(resolve(STORAGE_DIR, storedFileName), webpBuf);
-  return prisma.media.create({
-    data: {
-      originalFileName,
-      storedFileName,
-      storageKey: storedFileName,
-      mimeType: 'image/webp',
-      byteSize: webpBuf.length,
-    },
-  });
-}
-
 function extractSourceImageUrl(detailedDescription) {
   if (!detailedDescription) return null;
   const match = detailedDescription.match(/^SOURCE IMAGE:\s*(.+)$/m);
@@ -169,7 +159,7 @@ function fileNameFromUrl(url) {
   }
 }
 
-// ── Step 1 & 2: Brand assets + content media (local files via API) ─────────────
+// ── Step 1: Brand assets ──────────────────────────────────────────────────────
 
 async function restoreBrandAssets(token) {
   console.log('\n── 1. Brand assets ──');
@@ -184,6 +174,8 @@ async function restoreBrandAssets(token) {
   }
 }
 
+// ── Step 2: Content media ─────────────────────────────────────────────────────
+
 async function restoreContentMedia(token) {
   console.log('\n── 2. Content media (pages + services) ──');
 
@@ -194,7 +186,6 @@ async function restoreContentMedia(token) {
   const servicePharma = await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'service-pharma.jpg'));
   const serviceSupplies = await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'service-supplies.jpg'));
 
-  // Home page
   const homePagePatch = {};
   if (hero) homePagePatch.heroImageMediaId = hero;
   if (aboutPreview) homePagePatch.aboutPreviewImageMediaId = aboutPreview;
@@ -204,13 +195,11 @@ async function restoreContentMedia(token) {
     console.log('  attached to home-page');
   }
 
-  // About page
   if (aboutOverview) {
     await patchJson(token, '/admin/about-page', { overviewImageMediaId: aboutOverview });
     console.log('  attached to about-page');
   }
 
-  // Services (reuse available images for missing ones)
   const serviceImageByTitle = {
     'Medical Equipment Distribution': aboutOverview,
     'Installation, Maintenance, and After-Sales Support': why,
@@ -227,22 +216,16 @@ async function restoreContentMedia(token) {
   }
 }
 
-// ── Step 3: Partner logos from local files ────────────────────────────────────
+// ── Step 3: Partner logos — local files ───────────────────────────────────────
 
 async function restoreLocalPartnerLogos(token) {
   console.log('\n── 3. Partner logos (local files) ──');
-  const partnerStorz = await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-storz.png'));
-  const partnerTechnix = await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-technix.webp'));
-  const partnerKarl = await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-karlstorz.png'));
-  const partnerKls = await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-kls.png'));
-  const partnerDialife = await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-dialife.png'));
-
   const partnerLogoByName = {
-    'STORZ Medical AG': partnerStorz,
-    'Technix': partnerTechnix,
-    'KARL STORZ': partnerKarl,
-    'KLS Martin Group': partnerKls,
-    'Dialife Group': partnerDialife,
+    'STORZ Medical AG':  await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-storz.png')),
+    'Technix':           await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-technix.webp')),
+    'KARL STORZ':        await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-karlstorz.png')),
+    'KLS Martin Group':  await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-kls.png')),
+    'Dialife Group':     await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-dialife.png')),
   };
 
   const { partners } = await getJson(token, '/admin/partner?limit=100&offset=0');
@@ -254,9 +237,9 @@ async function restoreLocalPartnerLogos(token) {
   }
 }
 
-// ── Step 4: Partner logos from web (Al Inmaa + Marinas) ──────────────────────
+// ── Step 4: Partner logos — web download ─────────────────────────────────────
 
-async function restoreWebPartnerLogos(prisma) {
+async function restoreWebPartnerLogos(token) {
   console.log('\n── 4. Partner logos (web download) ──');
 
   const webLogos = [
@@ -272,8 +255,11 @@ async function restoreWebPartnerLogos(prisma) {
     },
   ];
 
+  const { partners } = await getJson(token, '/admin/partner?limit=100&offset=0');
+  const partnerByName = new Map(partners.map((p) => [p.name, p]));
+
   for (const { partnerName, url, fileName } of webLogos) {
-    const partner = await prisma.partner.findFirst({ where: { name: partnerName } });
+    const partner = partnerByName.get(partnerName);
     if (!partner) {
       console.log(`  skip (partner not found): ${partnerName}`);
       continue;
@@ -283,15 +269,16 @@ async function restoreWebPartnerLogos(prisma) {
       continue;
     }
 
-    const tmpPath = `/tmp/restore-partner-logo-${randomUUID()}.tmp`;
+    const tmpPath = `/tmp/restore-web-logo-${randomUUID()}.tmp`;
     try {
       process.stdout.write(`  downloading: ${partnerName} … `);
       const ok = downloadWithCurl(url, tmpPath);
       if (!ok) throw new Error('download failed');
-
-      const media = await convertToWebPAndStore(prisma, tmpPath, fileName);
-      await prisma.partner.update({ where: { id: partner.id }, data: { logoMediaId: media.id } });
-      console.log(`→ media id=${media.id} (${media.byteSize} bytes)`);
+      const bytes = readFileSync(tmpPath);
+      if (bytes.length < 100) throw new Error(`file too small (${bytes.length} bytes)`);
+      const mediaId = await uploadBytes(token, bytes, fileName, mimeFromUrl(url));
+      await patchJson(token, `/admin/partner/${partner.id}`, { logoMediaId: mediaId });
+      console.log(`  attached logo to partner: ${partnerName}`);
     } catch (err) {
       console.log(`→ FAILED: ${err.message}`);
     } finally {
@@ -300,10 +287,10 @@ async function restoreWebPartnerLogos(prisma) {
   }
 }
 
-// ── Step 5: Product images from source URLs ──────────────────────────────────
+// ── Step 5: Product images — web download via API ────────────────────────────
 
-async function restoreProductImages(prisma) {
-  console.log('\n── 5. Product images (web download) ──');
+async function restoreProductImages(token, prisma) {
+  console.log('\n── 5. Product images (web download → API upload) ──');
 
   const products = await prisma.product.findMany({
     select: { id: true, name: true, imageMediaId: true, detailedDescription: true },
@@ -311,10 +298,11 @@ async function restoreProductImages(prisma) {
   });
 
   const withoutImage = products.filter((p) => p.imageMediaId === null);
-  console.log(`  ${products.length - withoutImage.length} already have images, downloading ${withoutImage.length}`);
+  const alreadyHave = products.length - withoutImage.length;
+  console.log(`  ${alreadyHave} already have images, downloading ${withoutImage.length}`);
 
-  // Cache converted WebP bytes by source URL to avoid re-downloading the same image
-  /** @type {Map<string, Buffer>} */
+  // Cache downloaded bytes by source URL — download once, upload once per product
+  /** @type {Map<string, { bytes: Buffer, fileName: string }>} */
   const urlCache = new Map();
   let attached = 0;
   let failed = 0;
@@ -328,37 +316,29 @@ async function restoreProductImages(prisma) {
     }
 
     process.stdout.write(`  [${i + 1}/${withoutImage.length}] ${product.name.substring(0, 55).padEnd(55)} `);
-    const tmpPath = `/tmp/restore-product-${product.id}.tmp`;
+    const tmpPath = `/tmp/restore-prod-${product.id}-${randomUUID()}.tmp`;
 
     try {
-      let webpBuf;
+      let bytes;
+      let fileName;
+
       if (urlCache.has(imageUrl)) {
-        webpBuf = urlCache.get(imageUrl);
+        ({ bytes, fileName } = urlCache.get(imageUrl));
       } else {
         const ok = downloadWithCurl(imageUrl, tmpPath);
         if (!ok) throw new Error('curl download failed');
-        const raw = readFileSync(tmpPath);
-        if (raw.length < 100) throw new Error(`file too small (${raw.length} bytes)`);
-        webpBuf = await sharp(raw).webp({ quality: 85 }).toBuffer();
-        urlCache.set(imageUrl, webpBuf);
+        bytes = readFileSync(tmpPath);
+        if (bytes.length < 100) throw new Error(`file too small (${bytes.length} bytes)`);
+        fileName = fileNameFromUrl(imageUrl);
+        urlCache.set(imageUrl, { bytes, fileName });
       }
 
-      // imageMediaId is unique — each product needs its own Media row
-      const id = randomUUID();
-      const storedFileName = `${id}.webp`;
-      writeFileSync(resolve(STORAGE_DIR, storedFileName), webpBuf);
-
-      const media = await prisma.media.create({
-        data: {
-          originalFileName: fileNameFromUrl(imageUrl),
-          storedFileName,
-          storageKey: storedFileName,
-          mimeType: 'image/webp',
-          byteSize: webpBuf.length,
-        },
-      });
-      await prisma.product.update({ where: { id: product.id }, data: { imageMediaId: media.id } });
-      console.log(`→ media id=${media.id} (${media.byteSize} bytes)`);
+      // Upload through the API — backend handles WebP conversion and unique UUID filename.
+      // imageMediaId has a unique constraint so each product must get its own Media row;
+      // uploading separately for each product guarantees that.
+      const mediaId = await uploadBytes(token, bytes, fileName, mimeFromUrl(imageUrl));
+      await patchJson(token, `/admin/product/${product.id}`, { imageMediaId: mediaId });
+      console.log(`→ media id=${mediaId}`);
       attached++;
     } catch (err) {
       console.log(`→ FAILED: ${err.message}`);
@@ -371,47 +351,19 @@ async function restoreProductImages(prisma) {
   console.log(`  product images: ${attached} attached, ${failed} failed`);
 }
 
-// ── Step 6: Delete unreferenced media ────────────────────────────────────────
+// ── Step 6: Cleanup unreferenced media via API ────────────────────────────────
 
-async function cleanupUnusedMedia(prisma) {
+async function cleanupUnusedMedia(token) {
   console.log('\n── 6. Cleanup unreferenced media ──');
-
-  const unreferenced = await prisma.$queryRaw`
-    SELECT m.id, m."storedFileName", m."originalFileName", m."byteSize"
-    FROM "Media" m
-    WHERE m.id NOT IN (
-      SELECT COALESCE("logoMediaId",0)    FROM "SiteSettings" WHERE "logoMediaId" IS NOT NULL
-      UNION SELECT COALESCE("faviconMediaId",0) FROM "SiteSettings" WHERE "faviconMediaId" IS NOT NULL
-      UNION SELECT COALESCE("placeholderMediaId",0) FROM "SiteSettings" WHERE "placeholderMediaId" IS NOT NULL
-      UNION SELECT COALESCE("heroImageMediaId",0) FROM "HomePage" WHERE "heroImageMediaId" IS NOT NULL
-      UNION SELECT COALESCE("aboutPreviewImageMediaId",0) FROM "HomePage" WHERE "aboutPreviewImageMediaId" IS NOT NULL
-      UNION SELECT COALESCE("whyImageMediaId",0) FROM "HomePage" WHERE "whyImageMediaId" IS NOT NULL
-      UNION SELECT COALESCE("overviewImageMediaId",0) FROM "AboutPage" WHERE "overviewImageMediaId" IS NOT NULL
-      UNION SELECT COALESCE("logoMediaId",0) FROM "Partner" WHERE "logoMediaId" IS NOT NULL
-      UNION SELECT COALESCE("imageMediaId",0) FROM "Service" WHERE "imageMediaId" IS NOT NULL
-      UNION SELECT COALESCE("imageMediaId",0) FROM "Product" WHERE "imageMediaId" IS NOT NULL
-    )
-  `;
-
-  if (unreferenced.length === 0) {
-    console.log('  no unreferenced media found');
-    return;
+  const response = await fetch(`${API_BASE}/admin/media`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    throw new Error(`Cleanup failed: ${response.status} ${await response.text()}`);
   }
-
-  console.log(`  found ${unreferenced.length} unreferenced media record(s)`);
-  let deleted = 0;
-
-  for (const row of unreferenced) {
-    const filePath = resolve(STORAGE_DIR, row.storedFileName);
-    if (existsSync(filePath)) {
-      unlinkSync(filePath);
-    }
-    await prisma.media.delete({ where: { id: Number(row.id) } });
-    console.log(`  deleted media id=${row.id} ${row.originalFileName} (${row.byteSize} bytes)`);
-    deleted++;
-  }
-
-  console.log(`  cleanup done: ${deleted} record(s) removed`);
+  // Endpoint returns 204 No Content
+  console.log('  cleanup done: unreferenced media purged');
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -426,9 +378,9 @@ async function main() {
     await restoreBrandAssets(token);
     await restoreContentMedia(token);
     await restoreLocalPartnerLogos(token);
-    await restoreWebPartnerLogos(prisma);
-    await restoreProductImages(prisma);
-    await cleanupUnusedMedia(prisma);
+    await restoreWebPartnerLogos(token);
+    await restoreProductImages(token, prisma);
+    await cleanupUnusedMedia(token);
 
     console.log('\n✅ Restore complete. All media uploaded, attached, and cleaned up.');
   } finally {
