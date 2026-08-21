@@ -19,6 +19,7 @@ describe('ProductService', () => {
     description: null,
     isVisible: true,
     displayOrder: 0,
+    color: null,
   });
   const expectedPartner = new PartnerEntity({
     id: 2,

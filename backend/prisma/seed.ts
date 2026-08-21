@@ -319,6 +319,9 @@ export async function executeSeed(): Promise<void> {
     await seedSiteSettings(prisma);
     await seedHomePage(prisma);
     await seedAboutPage(prisma);
+    // Products must be cleared before categories so FK constraints don't block
+    // category deletions when running on a server with stale demo products.
+    await prisma.product.deleteMany();
     await seedProductCategories(prisma);
     await seedPartners(prisma);
     await seedCatalogueProducts(prisma);
@@ -505,10 +508,8 @@ async function seedCatalogueProducts(prisma: PrismaClient): Promise<void> {
   const partners = await prisma.partner.findMany();
   const categoryIdByName = new Map(categories.map((category) => [category.name, category.id]));
   const partnerIdByName = new Map(partners.map((partner) => [partner.name, partner.id]));
-  const keptNames = CATALOGUE_PRODUCTS.map((product) => product.name);
-  await prisma.product.deleteMany({
-    where: { name: { notIn: [...keptNames] } },
-  });
+  // Products were already cleared in executeSeed before categories were seeded.
+  // This guard handles any stragglers added between those two steps.
   for (const product of CATALOGUE_PRODUCTS) {
     const categoryId = categoryIdByName.get(product.categoryName);
     if (categoryId === undefined) {

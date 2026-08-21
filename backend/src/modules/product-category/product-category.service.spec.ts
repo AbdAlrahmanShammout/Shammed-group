@@ -16,6 +16,7 @@ describe('ProductCategoryService', () => {
     description: null,
     isVisible: true,
     displayOrder: 0,
+    color: null,
   });
   let productCategoryService: ProductCategoryService;
   let productCategoryRepository: {
