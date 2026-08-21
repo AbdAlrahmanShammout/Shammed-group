@@ -53,6 +53,7 @@ export class ProductCategoryAdminController {
       description: requestDto.description,
       isVisible: requestDto.isVisible,
       displayOrder: requestDto.displayOrder,
+      color: requestDto.color,
     });
     return new ProductCategoryResponseDto(productCategory);
   }
@@ -96,6 +97,7 @@ export class ProductCategoryAdminController {
       description: requestDto.description,
       isVisible: requestDto.isVisible,
       displayOrder: requestDto.displayOrder,
+      color: requestDto.color,
     });
     return new ProductCategoryResponseDto(productCategory);
   }

@@ -13,6 +13,7 @@ export const ProductCategoryZodSchema = BaseZodSchema.extend({
   description: ZodStringNullable,
   isVisible: ZodBoolean,
   displayOrder: ZodNumber,
+  color: ZodStringNullable,
 });
 
 export type ProductCategoryZodType = z.infer<typeof ProductCategoryZodSchema>;

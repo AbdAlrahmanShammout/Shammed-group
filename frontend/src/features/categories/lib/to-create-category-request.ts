@@ -9,5 +9,6 @@ export function toCreateCategoryRequest(
     description: values.description === '' ? undefined : values.description,
     isVisible: values.isVisible,
     displayOrder: values.displayOrder === '' ? 0 : Number(values.displayOrder),
+    color: values.color ?? undefined,
   };
 }

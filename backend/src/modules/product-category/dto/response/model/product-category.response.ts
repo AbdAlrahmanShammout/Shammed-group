@@ -19,11 +19,18 @@ export class ProductCategoryResponse extends BaseModelResponseDto {
   @ApiProperty({ description: 'Sort order among categories', example: 0 })
   displayOrder: number;
 
+  @ApiPropertyOptional({
+    description: 'Hex color code for the category theme',
+    example: '#394285',
+  })
+  color?: string;
+
   constructor(data: ProductCategoryEntity) {
     super(data);
     this.name = data.name;
     this.description = data.description ?? undefined;
     this.isVisible = data.isVisible;
     this.displayOrder = data.displayOrder;
+    this.color = data.color ?? undefined;
   }
 }

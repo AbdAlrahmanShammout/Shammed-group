@@ -6,6 +6,7 @@ import { ApiError } from '@/api/api-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ColorPickerField } from '@/features/theme-settings/components/color-picker-field';
 import { useCreateAdminProductCategoryMutation } from '@/features/categories/hooks/use-create-admin-product-category-mutation';
 import { useUpdateAdminProductCategoryMutation } from '@/features/categories/hooks/use-update-admin-product-category-mutation';
 import { toCreateCategoryRequest } from '@/features/categories/lib/to-create-category-request';
@@ -16,6 +17,8 @@ import {
 } from '@/features/categories/schemas/category-form.schema';
 import type { ProductCategoryResponse } from '@/generated/admin-product-category.contract';
 import { cn } from '@/lib/utils';
+
+const CATEGORY_COLOR_DEFAULT = '#394285';
 
 const textareaClassName = cn(
   'min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none md:text-sm',
@@ -39,6 +42,7 @@ function createDefaultValues(
     description: category?.description ?? '',
     isVisible: category?.isVisible ?? true,
     displayOrder: category?.displayOrder?.toString() ?? String(nextDisplayOrder),
+    color: category?.color ?? null,
   };
 }
 
@@ -59,6 +63,7 @@ export function CategoryForm({
   useEffect(() => {
     form.reset(createDefaultValues(category, nextDisplayOrder));
   }, [category, form, nextDisplayOrder]);
+  const colorValue = form.watch('color');
   const serverError =
     createMutation.error instanceof ApiError
       ? createMutation.error.message
@@ -124,6 +129,15 @@ export function CategoryForm({
         <input disabled={isPending} type="checkbox" {...form.register('isVisible')} />
         Visible on the public site
       </label>
+
+      <ColorPickerField
+        defaultValue={CATEGORY_COLOR_DEFAULT}
+        description="Theme color used on the Home Page product showcase to create a visual atmosphere for this category."
+        label="Category Color"
+        onChange={(value) => form.setValue('color', value, { shouldDirty: true })}
+        value={colorValue}
+      />
+
       {serverError ? (
         <p className="text-sm text-destructive" role="alert">
           {serverError}

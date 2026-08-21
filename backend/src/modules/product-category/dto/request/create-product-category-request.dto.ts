@@ -1,5 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsHexColor,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class CreateProductCategoryRequestDto {
   @ApiProperty({ description: 'Category name', example: 'Pharmaceutical Products' })
@@ -26,4 +34,13 @@ export class CreateProductCategoryRequestDto {
   @IsInt()
   @Min(0)
   displayOrder?: number;
+
+  @ApiPropertyOptional({
+    description: 'Hex color code for the category theme (e.g. #394285)',
+    example: '#394285',
+  })
+  @IsOptional()
+  @IsString()
+  @IsHexColor()
+  color?: string;
 }

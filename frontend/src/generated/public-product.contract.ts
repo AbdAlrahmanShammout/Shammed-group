@@ -14,6 +14,7 @@ export type ProductCategoryResponse = {
   readonly description?: string;
   readonly isVisible: boolean;
   readonly displayOrder: number;
+  readonly color?: string;
 };
 
 export type ProductResponse = {

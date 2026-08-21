@@ -11,6 +11,7 @@ export type ProductCategoryResponse = {
   readonly description?: string;
   readonly isVisible: boolean;
   readonly displayOrder: number;
+  readonly color?: string;
 };
 
 export type ProductCategoryResponseDto = {
@@ -27,6 +28,7 @@ export type CreateProductCategoryRequestDto = {
   readonly description?: string;
   readonly isVisible?: boolean;
   readonly displayOrder?: number;
+  readonly color?: string;
 };
 
 export type UpdateProductCategoryRequestDto = {
@@ -34,6 +36,7 @@ export type UpdateProductCategoryRequestDto = {
   readonly description?: string | null;
   readonly isVisible?: boolean;
   readonly displayOrder?: number;
+  readonly color?: string | null;
 };
 
 export type DeleteProductCategoryResponseDto = {

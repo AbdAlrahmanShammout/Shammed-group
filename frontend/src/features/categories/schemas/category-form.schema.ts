@@ -1,11 +1,14 @@
 import { z } from 'zod';
 
+const HEX_COLOR_REGEX = /^#[0-9A-Fa-f]{6}$/;
+
 export const categoryFormSchema = z
   .object({
     name: z.string().trim().min(1, 'Category name is required'),
     description: z.string().trim(),
     isVisible: z.boolean(),
     displayOrder: z.string().trim(),
+    color: z.string().regex(HEX_COLOR_REGEX).nullable(),
   })
   .superRefine((values, context) => {
     if (values.displayOrder !== '') {

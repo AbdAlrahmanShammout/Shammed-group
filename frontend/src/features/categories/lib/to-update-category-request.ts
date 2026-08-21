@@ -9,5 +9,6 @@ export function toUpdateCategoryRequest(
     description: values.description === '' ? null : values.description,
     isVisible: values.isVisible,
     displayOrder: values.displayOrder === '' ? 0 : Number(values.displayOrder),
+    color: values.color,
   };
 }

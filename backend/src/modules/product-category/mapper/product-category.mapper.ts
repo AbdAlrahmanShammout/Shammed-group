@@ -11,6 +11,7 @@ export class ProductCategoryMapper {
       description: schema.description ?? null,
       isVisible: schema.isVisible,
       displayOrder: schema.displayOrder,
+      color: schema.color ?? null,
     });
   }
 }

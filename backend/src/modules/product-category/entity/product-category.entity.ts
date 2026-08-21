@@ -6,6 +6,7 @@ export class ProductCategoryEntity extends BaseEntity {
   description!: string | null;
   isVisible!: boolean;
   displayOrder!: number;
+  color!: string | null;
 
   constructor(data: ProductCategoryZodType) {
     super();

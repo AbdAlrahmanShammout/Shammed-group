@@ -3,6 +3,7 @@ export type CreateProductCategoryServiceInput = {
   readonly description?: string;
   readonly isVisible?: boolean;
   readonly displayOrder?: number;
+  readonly color?: string;
 };
 
 export type UpdateProductCategoryServiceInput = {
@@ -11,6 +12,7 @@ export type UpdateProductCategoryServiceInput = {
   readonly description?: string | null;
   readonly isVisible?: boolean;
   readonly displayOrder?: number;
+  readonly color?: string | null;
 };
 
 export type GetProductCategoriesServiceInput = {

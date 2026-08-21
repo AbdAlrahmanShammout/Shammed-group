@@ -5,6 +5,7 @@ export type CreateProductCategoryRepoInput = {
   readonly description: string | null;
   readonly isVisible: boolean;
   readonly displayOrder: number;
+  readonly color: string | null;
 };
 
 export type UpdateProductCategoryRepoInput = {
@@ -13,6 +14,7 @@ export type UpdateProductCategoryRepoInput = {
   readonly description?: string | null;
   readonly isVisible?: boolean;
   readonly displayOrder?: number;
+  readonly color?: string | null;
 };
 
 export type GetProductCategoriesRepoInput = {

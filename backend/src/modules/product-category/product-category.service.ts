@@ -26,6 +26,7 @@ export class ProductCategoryService {
       description: input.description ?? null,
       isVisible: input.isVisible ?? true,
       displayOrder: input.displayOrder ?? 0,
+      color: input.color ?? null,
     });
   }
 
@@ -79,6 +80,7 @@ export class ProductCategoryService {
       description: input.description,
       isVisible: input.isVisible,
       displayOrder: input.displayOrder,
+      color: input.color,
     });
   }
 

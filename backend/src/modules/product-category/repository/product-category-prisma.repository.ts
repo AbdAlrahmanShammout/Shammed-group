@@ -30,6 +30,7 @@ export class ProductCategoryPrismaRepository implements ProductCategoryRepositor
         description: input.description,
         isVisible: input.isVisible,
         displayOrder: input.displayOrder,
+        color: input.color,
       },
     });
     return ProductCategoryMapper.toEntity(result);
@@ -132,6 +133,9 @@ export class ProductCategoryPrismaRepository implements ProductCategoryRepositor
     }
     if (input.displayOrder !== undefined) {
       data.displayOrder = input.displayOrder;
+    }
+    if (input.color !== undefined) {
+      data.color = input.color;
     }
     return data;
   }
