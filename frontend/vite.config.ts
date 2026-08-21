@@ -20,6 +20,7 @@ export default defineConfig({
     host: 'localhost',
     port: VITE_DEV_SERVER_PORT,
     strictPort: true,
+    allowedHosts: true,
   },
   test: {
     environment: 'jsdom',
