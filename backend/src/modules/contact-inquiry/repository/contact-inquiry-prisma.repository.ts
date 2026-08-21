@@ -57,7 +57,9 @@ export class ContactInquiryPrismaRepository implements ContactInquiryRepository 
   }
 
   async count(status?: string): Promise<number> {
-    const where = status ? { emailDeliveryStatus: status as Prisma.EnumEmailDeliveryStatusFilter } : {};
+    const where = status
+      ? { emailDeliveryStatus: status as Prisma.EnumEmailDeliveryStatusFilter }
+      : {};
     return this.prismaProviderService.contactInquiry.count({ where });
   }
 

@@ -39,7 +39,10 @@ export class MediaPrismaRepository implements MediaRepository {
     return MediaMapper.toEntity(result);
   }
 
-  async findAll(limit: number, offset: number): Promise<{ entities: MediaEntity[]; total: number }> {
+  async findAll(
+    limit: number,
+    offset: number,
+  ): Promise<{ entities: MediaEntity[]; total: number }> {
     const [results, total] = await Promise.all([
       this.prismaProviderService.media.findMany({
         orderBy: { createdAt: 'desc' },

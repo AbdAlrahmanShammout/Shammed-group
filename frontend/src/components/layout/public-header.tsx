@@ -36,7 +36,7 @@ export function PublicHeader({
   return (
     <header className="sticky top-0 z-50 bg-white/95 shadow-sm backdrop-blur-sm">
       <div aria-hidden="true" className="h-[3px] bg-primary" />
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-4">
         <Link
           aria-busy={isSettingsPending}
           aria-label={companyName ?? 'Home'}
@@ -46,12 +46,12 @@ export function PublicHeader({
           {logoMediaId !== undefined ? (
             <PublicMediaImage
               alt={companyName ? `${companyName} logo` : 'Company logo'}
-              className="h-10 w-auto max-w-[11rem] object-contain md:h-11"
+              className="h-14 w-auto max-w-[14rem] object-contain md:h-16"
               loading="eager"
               mediaId={logoMediaId}
             />
           ) : (
-            <span className="text-lg font-semibold text-primary">{companyName ?? 'Home'}</span>
+            <span className="text-xl font-bold text-primary">{companyName ?? 'Home'}</span>
           )}
         </Link>
         <nav aria-label="Primary" className="hidden md:block">

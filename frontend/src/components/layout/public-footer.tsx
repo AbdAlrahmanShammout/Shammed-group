@@ -134,15 +134,15 @@ export function PublicFooter({
             to={homePath}
           >
             {logoMediaId !== undefined ? (
-              <span className="inline-flex items-center rounded-lg bg-white px-3 py-2">
+              <span className="inline-flex items-center rounded-xl bg-white px-4 py-3 shadow-lg">
                 <PublicMediaImage
                   alt={companyName ? `${companyName} logo` : 'Company logo'}
-                  className="h-10 w-auto max-w-[10rem] object-contain md:h-12"
+                  className="h-14 w-auto max-w-[13rem] object-contain md:h-16"
                   mediaId={logoMediaId}
                 />
               </span>
             ) : (
-              <span className="text-lg font-semibold text-white">{companyName ?? 'Home'}</span>
+              <span className="text-xl font-bold text-white">{companyName ?? 'Home'}</span>
             )}
           </Link>
           <h2 className={footerHeadingClassName}>Contact</h2>

@@ -67,9 +67,7 @@ describe('Seed (e2e)', () => {
       }),
     );
     expect(homePages).toHaveLength(1);
-    expect(homePages[0]?.heroTitle).toBe(
-      'Medical Equipment and Pharmaceutical Services in Syria',
-    );
+    expect(homePages[0]?.heroTitle).toBe('Medical Equipment and Pharmaceutical Services in Syria');
     expect(homePages[0]?.aboutPreviewDescription).toContain('2005');
     expect(aboutPages).toHaveLength(1);
     expect(aboutPages[0]?.mission).toContain('medical equipment');
