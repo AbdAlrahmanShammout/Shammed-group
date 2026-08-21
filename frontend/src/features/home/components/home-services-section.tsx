@@ -53,7 +53,7 @@ export function HomeServicesSection({ homePage, services }: HomeServicesSectionP
   return (
     <section
       aria-labelledby="home-services-title"
-      className="border-b bg-[linear-gradient(160deg,#181E40_0%,#2C3470_45%,#181E40_100%)] text-background"
+      className="relative z-10 -mt-20 border-b bg-[linear-gradient(160deg,#181E40_0%,#2C3470_45%,#181E40_100%)] text-background"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-20 md:px-6">
         <div className="flex flex-col gap-6 border-b border-background/15 pb-10 md:flex-row md:items-end md:justify-between">

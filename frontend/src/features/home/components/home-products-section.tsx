@@ -416,7 +416,7 @@ export function HomeProductsSection({
   return (
     <section
       aria-labelledby="home-products-title"
-      className="relative isolate overflow-hidden border-b bg-background"
+      className="relative isolate overflow-hidden bg-background pb-24"
     >
       {/* ── Dynamic color atmosphere ─────────────────────────────────────── */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -466,13 +466,6 @@ export function HomeProductsSection({
             opacity: 0.34,
           }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-        />
-        {/* Soft bottom edge gradient for section separation */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-32"
-          style={{
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.94) 100%)',
-          }}
         />
         {/* Fine grid pattern for depth */}
         <svg
