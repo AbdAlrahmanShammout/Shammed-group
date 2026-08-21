@@ -66,10 +66,9 @@ describe('PublicPartnersPage', () => {
     );
     expect(screen.getByText('Shown on partners page')).toBeInTheDocument();
     expect(screen.getByText('Oncology')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Visit website/ })).toHaveAttribute(
-      'href',
-      'https://www.visible-partner.example',
-    );
+    const partnerWebsiteLink = screen.getByRole('heading', { name: 'Visible Partner' }).closest('a');
+    expect(partnerWebsiteLink).toHaveAttribute('href', 'https://www.visible-partner.example');
+    expect(partnerWebsiteLink).toHaveAttribute('target', '_blank');
     expect(screen.queryByText('Hidden Partner')).not.toBeInTheDocument();
   });
   it('does not invent partners omitted by the API', async () => {

@@ -68,6 +68,9 @@ describe('PublicHomePage', () => {
       'src',
       `${appEnv.apiBaseUrl}/media/31`,
     );
+    const partnerWebsiteLink = screen.getByRole('heading', { name: 'Visible Partner' }).closest('a');
+    expect(partnerWebsiteLink).toHaveAttribute('href', 'https://www.visible-partner.example');
+    expect(partnerWebsiteLink).toHaveAttribute('target', '_blank');
     expect(screen.getByRole('heading', { name: 'Visible Product' })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Visible Product' })).toHaveAttribute(
       'src',
@@ -77,7 +80,7 @@ describe('PublicHomePage', () => {
       'href',
       '/products/1',
     );
-    expect(screen.getByText(/Partner: Visible Partner/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Visible Product/ })).toHaveTextContent('Visible Partner');
     expect(screen.getByRole('heading', { name: 'Visible Service' })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Visible Service' })).toHaveAttribute(
       'src',
@@ -86,10 +89,6 @@ describe('PublicHomePage', () => {
     expect(screen.queryByText('Hidden Partner')).not.toBeInTheDocument();
     expect(screen.queryByText('Hidden Product')).not.toBeInTheDocument();
     expect(screen.queryByText('Hidden Service')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Visit website/ })).toHaveAttribute(
-      'href',
-      'https://www.visible-partner.example',
-    );
     const heroImage = document.querySelector(
       `img[src="${appEnv.apiBaseUrl}/media/${mockPublicHomePage.homePage.heroImageMediaId}"]`,
     );

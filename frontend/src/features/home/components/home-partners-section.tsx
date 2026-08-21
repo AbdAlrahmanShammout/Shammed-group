@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { ArrowRight, ArrowUpRight, MapPin } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -14,6 +14,130 @@ type HomePartnersSectionProps = {
   readonly homePage: HomePageResponse;
   readonly partners: readonly PublicPartnerResponse[];
 };
+
+type HomePartnerCardProps = {
+  readonly partner: PublicPartnerResponse;
+  readonly shouldReduceMotion: boolean | null;
+};
+
+type HomePartnerCardContentProps = HomePartnerCardProps & {
+  readonly isInteractive: boolean;
+};
+
+function HomePartnerCardContent({
+  isInteractive,
+  partner,
+  shouldReduceMotion,
+}: HomePartnerCardContentProps): ReactElement {
+  const shouldAnimateHover = isInteractive && !shouldReduceMotion;
+  return (
+    <>
+      {isInteractive ? (
+        <span
+          aria-hidden="true"
+          className={cn(
+            'pointer-events-none absolute inset-0 rounded-2xl',
+            'bg-[radial-gradient(120%_70%_at_50%_-10%,oklch(0.62_0.09_255_/_0.16),transparent_58%)]',
+            'opacity-0 transition-opacity duration-300 group-hover:opacity-100',
+            shouldReduceMotion && 'hidden',
+          )}
+        />
+      ) : null}
+      <div className="relative flex h-full flex-col gap-5">
+        {partner.logoMediaId !== undefined ? (
+          <LogoMediaFrame
+            alt={`${partner.name} logo`}
+            className={cn(
+              shouldAnimateHover &&
+                'overflow-hidden transition-[border-color,background-color] duration-300 group-hover:border-primary/25 group-hover:bg-muted/40 [&_img]:transition-transform [&_img]:duration-500 [&_img]:ease-out group-hover:[&_img]:scale-[1.06]',
+            )}
+            mediaId={partner.logoMediaId}
+          />
+        ) : (
+          <div
+            className={cn(
+              'flex h-28 items-center justify-center rounded-xl border border-dashed border-border/80 bg-muted/40 px-4 text-sm text-muted-foreground',
+              shouldAnimateHover &&
+                'transition-colors duration-300 group-hover:border-primary/25 group-hover:bg-muted/70',
+            )}
+          >
+            {partner.name}
+          </div>
+        )}
+        <div className="flex flex-1 flex-col gap-3">
+          <div className="flex flex-col gap-2">
+            <h3
+              className={cn(
+                'text-lg font-medium tracking-tight',
+                isInteractive && 'transition-colors duration-300 group-hover:text-primary',
+              )}
+            >
+              {partner.name}
+            </h3>
+            <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+              {partner.shortDescription}
+            </p>
+          </div>
+          <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 pt-1">
+            {partner.specialization ? (
+              <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                {partner.specialization}
+              </span>
+            ) : null}
+            {partner.country ? (
+              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                <MapPin aria-hidden="true" className="size-3.5" />
+                {partner.country}
+              </span>
+            ) : null}
+          </div>
+          {isInteractive ? <span className="sr-only"> (opens in a new tab)</span> : null}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function HomePartnerCard({ partner, shouldReduceMotion }: HomePartnerCardProps): ReactElement {
+  const websiteUrl = partner.websiteUrl;
+  const isInteractive = Boolean(websiteUrl);
+  const cardClassName = cn(
+    'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-background p-5 text-inherit no-underline',
+    'shadow-xs',
+    isInteractive &&
+      cn(
+        'transition-[border-color,box-shadow] duration-300',
+        'hover:border-primary/25 hover:shadow-[0_18px_40px_-24px_oklch(0.32_0.06_260_/_0.55)]',
+        focusRingClassName,
+        shouldReduceMotion && 'transition-none hover:border-border/80 hover:shadow-xs',
+      ),
+  );
+  const cardContent = (
+    <HomePartnerCardContent
+      isInteractive={isInteractive}
+      partner={partner}
+      shouldReduceMotion={shouldReduceMotion}
+    />
+  );
+  if (!websiteUrl) {
+    return <article className={cardClassName}>{cardContent}</article>;
+  }
+  return (
+    <motion.a
+      className={cardClassName}
+      href={websiteUrl}
+      rel="noreferrer noopener"
+      target="_blank"
+      transition={
+        shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 28 }
+      }
+      whileHover={shouldReduceMotion ? undefined : { y: -8 }}
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.985 }}
+    >
+      {cardContent}
+    </motion.a>
+  );
+}
 
 export function HomePartnersSection({ homePage, partners }: HomePartnersSectionProps): ReactElement {
   const shouldReduceMotion = useReducedMotion();
@@ -57,58 +181,7 @@ export function HomePartnersSection({ homePage, partners }: HomePartnersSectionP
                 viewport={{ once: true, amount: 0.3 }}
                 whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
               >
-                <article
-                  className={cn(
-                    'group flex h-full flex-col gap-5 rounded-2xl border border-border/80 bg-background p-5',
-                    'shadow-xs transition-[border-color,box-shadow,transform] duration-200',
-                    'hover:border-foreground/15 hover:shadow-sm',
-                  )}
-                >
-                  {partner.logoMediaId !== undefined ? (
-                    <LogoMediaFrame alt={`${partner.name} logo`} mediaId={partner.logoMediaId} />
-                  ) : (
-                    <div className="flex h-28 items-center justify-center rounded-xl border border-dashed border-border/80 bg-muted/40 px-4 text-sm text-muted-foreground">
-                      {partner.name}
-                    </div>
-                  )}
-                  <div className="flex flex-1 flex-col gap-3">
-                    <div className="flex flex-col gap-2">
-                      <h3 className="text-lg font-medium tracking-tight">{partner.name}</h3>
-                      <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                        {partner.shortDescription}
-                      </p>
-                    </div>
-                    <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 pt-1">
-                      {partner.specialization ? (
-                        <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                          {partner.specialization}
-                        </span>
-                      ) : null}
-                      {partner.country ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                          <MapPin aria-hidden="true" className="size-3.5" />
-                          {partner.country}
-                        </span>
-                      ) : null}
-                    </div>
-                    {partner.websiteUrl ? (
-                      <a
-                        className={cn(
-                          'inline-flex items-center gap-1.5 text-sm font-medium text-foreground',
-                          'underline-offset-4 transition-colors hover:underline',
-                          focusRingClassName,
-                        )}
-                        href={partner.websiteUrl}
-                        rel="noreferrer noopener"
-                        target="_blank"
-                      >
-                        Visit website
-                        <ArrowUpRight aria-hidden="true" className="size-3.5 opacity-70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                        <span className="sr-only"> (opens in a new tab)</span>
-                      </a>
-                    ) : null}
-                  </div>
-                </article>
+                <HomePartnerCard partner={partner} shouldReduceMotion={shouldReduceMotion} />
               </motion.li>
             ))}
           </ul>
