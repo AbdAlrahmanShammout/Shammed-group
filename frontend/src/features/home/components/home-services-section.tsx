@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-import { PublicMediaImage } from '@/components/media/public-media-image';
+import { ProgressiveImage } from '@/components/media/progressive-image';
 import { Button } from '@/components/ui/button';
 import { appPaths } from '@/config/app-paths';
 import type { HomePageResponse, PublicServiceResponse } from '@/generated/public-home.contract';
@@ -39,10 +39,11 @@ function ServiceMedia({ alt, className, mediaId }: ServiceMediaProps): ReactElem
     );
   }
   return (
-    <PublicMediaImage
+    <ProgressiveImage
       alt={alt}
-      className={cn('size-full object-cover', className)}
+      className={className}
       mediaId={mediaId}
+      sizes="(max-width: 768px) 100vw, 50vw"
     />
   );
 }

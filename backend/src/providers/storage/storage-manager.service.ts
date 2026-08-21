@@ -6,25 +6,35 @@ import { Injectable } from '@nestjs/common';
 
 import { DependencyFailureException } from '@/common/exceptions/dependency-failure.exception';
 import { StorageConfigService } from '@/config/storage/storage-config.service';
-import { ALLOWED_IMAGE_MIME_TYPES, AllowedImageMimeType } from '@/providers/storage/consts';
+import {
+  ALLOWED_IMAGE_MIME_TYPES,
+  AllowedImageMimeType,
+  OUTPUT_IMAGE_EXTENSION,
+  OUTPUT_IMAGE_MIME_TYPE,
+} from '@/providers/storage/consts';
 import { StoreFileInput, StoredFile } from '@/providers/storage/defs/storage-manager.defs';
 import { StorageFileTooLargeException } from '@/providers/storage/exceptions/storage-file-too-large.exception';
 import { StorageInvalidTypeException } from '@/providers/storage/exceptions/storage-invalid-type.exception';
+import { ImageProcessorService } from '@/providers/storage/image-processor.service';
 
 @Injectable()
 export class StorageManagerService {
-  constructor(private readonly storageConfigService: StorageConfigService) {}
+  constructor(
+    private readonly storageConfigService: StorageConfigService,
+    private readonly imageProcessorService: ImageProcessorService,
+  ) {}
 
   async storeFile(input: StoreFileInput): Promise<StoredFile> {
-    const mimeType = this.parseAllowedMimeType(input.mimeType, input.originalFileName);
+    this.parseAllowedMimeType(input.mimeType, input.originalFileName);
     this.assertIsWithinSizeLimit(input.content.byteLength);
-    const storedFileName = this.createStoredFileName(mimeType);
-    await this.writeStoredFile(storedFileName, input.content);
+    const processed = await this.imageProcessorService.processUpload(input.content);
+    const storedFileName = `${randomUUID()}${OUTPUT_IMAGE_EXTENSION}`;
+    await this.writeStoredFile(storedFileName, processed.buffer);
     return {
       originalFileName: input.originalFileName,
       storedFileName,
-      mimeType,
-      byteSize: input.content.byteLength,
+      mimeType: OUTPUT_IMAGE_MIME_TYPE,
+      byteSize: processed.buffer.byteLength,
       storageKey: storedFileName,
     };
   }
@@ -85,10 +95,6 @@ export class StorageManagerService {
     if (byteSize > this.storageConfigService.maxFileBytes) {
       throw new StorageFileTooLargeException(this.storageConfigService.maxFileBytes);
     }
-  }
-
-  private createStoredFileName(mimeType: AllowedImageMimeType): string {
-    return `${randomUUID()}${ALLOWED_IMAGE_MIME_TYPES[mimeType][0]}`;
   }
 
   private async writeStoredFile(storedFileName: string, content: Buffer): Promise<void> {

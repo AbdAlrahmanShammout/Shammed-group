@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-import { PublicMediaImage } from '@/components/media/public-media-image';
+import { ProgressiveImage } from '@/components/media/progressive-image';
 import { HomeCtaLink } from '@/features/home/components/home-cta-link';
 import type { HomePageResponse } from '@/generated/public-home.contract';
 
@@ -17,11 +17,13 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
     >
       {heroImageMediaId ? (
         <div aria-hidden="true" className="absolute inset-0 -z-10">
-          <PublicMediaImage
+          <ProgressiveImage
             alt=""
-            className="h-full w-full object-cover opacity-35"
+            className="absolute inset-0 size-full opacity-35"
             loading="eager"
             mediaId={heroImageMediaId}
+            sizes="100vw"
+            srcWidths={[800, 1200, 1920]}
           />
           <div className="absolute inset-0 bg-background/55" />
         </div>

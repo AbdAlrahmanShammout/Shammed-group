@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { ApiError } from '@/api/api-error';
-import { PublicMediaImage } from '@/components/media/public-media-image';
+import { ProgressiveImage } from '@/components/media/progressive-image';
 import { PageSeo } from '@/components/seo/page-seo';
 import { appPaths } from '@/config/app-paths';
 import { usePublicProductQuery } from '@/features/products/hooks/use-public-product-query';
@@ -121,10 +121,12 @@ export function PublicProductDetailPage(): ReactElement {
           <div className="flex flex-col gap-4">
             {product.imageMediaId !== undefined ? (
               <div className="overflow-hidden rounded-2xl border border-border bg-muted/30 shadow-sm">
-                <PublicMediaImage
+                <ProgressiveImage
                   alt={product.name}
-                  className="aspect-[4/3] w-full object-cover"
+                  className="aspect-[4/3] w-full"
+                  loading="eager"
                   mediaId={product.imageMediaId}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 600px"
                 />
               </div>
             ) : (

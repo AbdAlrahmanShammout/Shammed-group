@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight, Building2, Handshake } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-import { PublicMediaImage } from '@/components/media/public-media-image';
+import { ProgressiveImage } from '@/components/media/progressive-image';
 import { Button } from '@/components/ui/button';
 import { appPaths } from '@/config/app-paths';
 import type { HomePageResponse, PublicProductResponse } from '@/generated/public-home.contract';
@@ -35,13 +35,14 @@ function ProductMedia({ alt, className, mediaId }: ProductMediaProps): ReactElem
     );
   }
   return (
-    <PublicMediaImage
+    <ProgressiveImage
       alt={alt}
       className={cn(
-        'size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]',
+        'transition-transform duration-500 ease-out group-hover:scale-[1.03]',
         className,
       )}
       mediaId={mediaId}
+      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 54vw, 640px"
     />
   );
 }

@@ -2,7 +2,7 @@ import { ArrowRight, Building2, Handshake } from 'lucide-react';
 import type { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
-import { PublicMediaImage } from '@/components/media/public-media-image';
+import { ProgressiveImage } from '@/components/media/progressive-image';
 import { createProductDetailPath } from '@/features/products/lib/create-product-detail-path';
 import type { ProductResponse } from '@/generated/public-product.contract';
 
@@ -20,10 +20,11 @@ export function ProductListItem({ product }: ProductListItemProps): ReactElement
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
           {product.imageMediaId ? (
-            <PublicMediaImage
+            <ProgressiveImage
               alt={product.name}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="absolute inset-0 size-full transition-transform duration-300 group-hover:scale-105"
               mediaId={product.imageMediaId}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-muted-foreground">

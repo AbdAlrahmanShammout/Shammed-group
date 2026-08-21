@@ -7,13 +7,16 @@ import type {
 } from '@/modules/media/defs/media-service.defs';
 import { MediaEntity } from '@/modules/media/entity/media.entity';
 import { MediaRepository } from '@/modules/media/repository/media.repository';
+import { ImageProcessorService } from '@/providers/storage/image-processor.service';
 import { StorageManagerService } from '@/providers/storage/storage-manager.service';
+import { OUTPUT_IMAGE_MIME_TYPE } from '@/providers/storage/consts';
 
 @Injectable()
 export class MediaService {
   constructor(
     private readonly mediaRepository: MediaRepository,
     private readonly storageManagerService: StorageManagerService,
+    private readonly imageProcessorService: ImageProcessorService,
   ) {}
 
   async createMedia(input: CreateMediaServiceInput): Promise<MediaEntity> {
@@ -48,20 +51,27 @@ export class MediaService {
     return media;
   }
 
-  async getMediaFileContent(id: number): Promise<MediaFileContent> {
+  async getMediaFileContent(id: number, width?: number): Promise<MediaFileContent> {
     const media = await this.getMediaById(id);
-    const content = await this.storageManagerService.readFile(media.storageKey);
-    return {
-      originalFileName: media.originalFileName,
-      mimeType: media.mimeType,
-      content,
-    };
+    const raw = await this.storageManagerService.readFile(media.storageKey);
+    if (width !== undefined) {
+      const resized = await this.imageProcessorService.resizeToWidth(raw, width);
+      return {
+        originalFileName: media.originalFileName,
+        mimeType: OUTPUT_IMAGE_MIME_TYPE,
+        content: resized,
+      };
+    }
+    return { originalFileName: media.originalFileName, mimeType: media.mimeType, content: raw };
   }
 
   async getMediaList(
     limit: number,
     offset: number,
-  ): Promise<{ readonly entities: import('./entity/media.entity').MediaEntity[]; readonly total: number }> {
+  ): Promise<{
+    readonly entities: import('./entity/media.entity').MediaEntity[];
+    readonly total: number;
+  }> {
     return this.mediaRepository.findAll(limit, offset);
   }
 

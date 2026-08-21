@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-import { PublicMediaImage } from '@/components/media/public-media-image';
+import { ProgressiveImage } from '@/components/media/progressive-image';
 import type { ServiceResponse } from '@/generated/public-service.contract';
 
 type ServiceListItemProps = {
@@ -17,10 +17,11 @@ export function ServiceListItem({ index, service }: ServiceListItemProps): React
       >
         <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-muted md:aspect-auto md:w-2/5">
           {service.imageMediaId ? (
-            <PublicMediaImage
+            <ProgressiveImage
               alt={service.title}
-              className="h-full w-full object-cover"
+              className="absolute inset-0 size-full"
               mediaId={service.imageMediaId}
+              sizes="(max-width: 768px) 100vw, 40vw"
             />
           ) : (
             <div className="flex h-full min-h-48 w-full items-center justify-center text-muted-foreground">

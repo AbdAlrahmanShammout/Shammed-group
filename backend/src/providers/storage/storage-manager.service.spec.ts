@@ -5,12 +5,24 @@ import path from 'node:path';
 import { StorageConfigService } from '@/config/storage/storage-config.service';
 import { StorageFileTooLargeException } from '@/providers/storage/exceptions/storage-file-too-large.exception';
 import { StorageInvalidTypeException } from '@/providers/storage/exceptions/storage-invalid-type.exception';
+import { ImageProcessorService } from '@/providers/storage/image-processor.service';
 import { StorageManagerService } from '@/providers/storage/storage-manager.service';
+
+function buildMockImageProcessor(outputBuffer?: Buffer): ImageProcessorService {
+  return {
+    processUpload: jest.fn(async (buf: Buffer) => ({
+      buffer: outputBuffer ?? buf,
+      mimeType: 'image/webp' as const,
+    })),
+    resizeToWidth: jest.fn(async (buf: Buffer) => buf),
+  } as unknown as ImageProcessorService;
+}
 
 describe('StorageManagerService', () => {
   const inputMaxFileBytes = 5 * 1024 * 1024;
   let rootPath: string;
   let storageManagerService: StorageManagerService;
+  let mockImageProcessor: ImageProcessorService;
 
   beforeEach(async () => {
     rootPath = await mkdtemp(path.join(os.tmpdir(), 'shammed-storage-'));
@@ -18,7 +30,8 @@ describe('StorageManagerService', () => {
       rootPath,
       maxFileBytes: inputMaxFileBytes,
     } as StorageConfigService;
-    storageManagerService = new StorageManagerService(storageConfigService);
+    mockImageProcessor = buildMockImageProcessor();
+    storageManagerService = new StorageManagerService(storageConfigService, mockImageProcessor);
   });
 
   afterEach(async () => {
@@ -69,18 +82,26 @@ describe('StorageManagerService', () => {
     );
   });
 
-  it('stores a PNG within the size limit', async () => {
+  it('stores a PNG as WebP after processing', async () => {
     const inputContent = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
+    const mockWebpOutput = Buffer.from('mock-webp-output');
+    mockImageProcessor = buildMockImageProcessor(mockWebpOutput);
+    storageManagerService = new StorageManagerService(
+      { rootPath, maxFileBytes: inputMaxFileBytes } as StorageConfigService,
+      mockImageProcessor,
+    );
+
     const actual = await storageManagerService.storeFile({
       originalFileName: 'logo.png',
       mimeType: 'image/png',
       content: inputContent,
     });
+
     const storedContent = await readFile(path.join(rootPath, actual.storageKey));
-    expect(actual.mimeType).toBe('image/png');
-    expect(actual.byteSize).toBe(inputContent.byteLength);
-    expect(actual.storedFileName.endsWith('.png')).toBe(true);
-    expect(storedContent.equals(inputContent)).toBe(true);
+    expect(actual.mimeType).toBe('image/webp');
+    expect(actual.byteSize).toBe(mockWebpOutput.byteLength);
+    expect(actual.storedFileName.endsWith('.webp')).toBe(true);
+    expect(storedContent.equals(mockWebpOutput)).toBe(true);
   });
 
   it('deletes a stored file by storage key', async () => {
@@ -96,7 +117,7 @@ describe('StorageManagerService', () => {
   });
 
   it('ignores deletion of a missing file', async () => {
-    await expect(storageManagerService.deleteFile('missing.png')).resolves.toBeUndefined();
+    await expect(storageManagerService.deleteFile('missing.webp')).resolves.toBeUndefined();
   });
 
   it('reads a stored file by storage key', async () => {
@@ -107,6 +128,6 @@ describe('StorageManagerService', () => {
       content: inputContent,
     });
     const actual = await storageManagerService.readFile(storedFile.storageKey);
-    expect(actual.equals(inputContent)).toBe(true);
+    expect(actual).toEqual(inputContent);
   });
 });
