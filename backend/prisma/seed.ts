@@ -32,28 +32,16 @@ type SeedService = {
 
 const PRODUCT_CATEGORIES: readonly SeedCategory[] = [
   {
+    name: 'Pharmaceutical Equipment',
+    description: 'Technical equipment for pharmaceutical production and quality control.',
+    isVisible: true,
+    displayOrder: 0,
+  },
+  {
     name: 'Medical Equipment',
     description: 'Medical equipment distributed, installed, and serviced for healthcare organizations.',
     isVisible: true,
     displayOrder: 1,
-  },
-  {
-    name: 'Pharmaceutical Equipment',
-    description: 'Technical equipment for pharmaceutical production and quality control.',
-    isVisible: true,
-    displayOrder: 2,
-  },
-  {
-    name: 'Medical Supplies and Consumables',
-    description: 'Operation supplies and medical consumables distributed by Shammed Group.',
-    isVisible: true,
-    displayOrder: 3,
-  },
-  {
-    name: 'Specialized Pharmaceutical Products',
-    description: 'Specialized pharmaceutical products supplied to the healthcare market in Syria.',
-    isVisible: true,
-    displayOrder: 4,
   },
 ];
 
@@ -147,7 +135,7 @@ const PARTNERS: readonly SeedPartner[] = [
     specialization: 'Pharmaceutical, medical, and beauty distribution',
     websiteUrl: 'https://inmaa.ae/',
     country: 'United Arab Emirates',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 9,
   },
   {
@@ -159,7 +147,7 @@ const PARTNERS: readonly SeedPartner[] = [
     specialization: 'Dietary supplements and personal care',
     websiteUrl: 'https://marinasofficial.com/',
     country: 'Lebanon — site market; legal manufacturing country needs client confirmation',
-    isVisible: false,
+    isVisible: true,
     displayOrder: 10,
   },
 ];
