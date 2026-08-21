@@ -40,7 +40,11 @@ import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
+const sharp = require('sharp');
 const { PrismaClient } = require('@prisma/client');
+
+/** Max bytes to send in a single upload — stay well under nginx's default 1 MB limit. */
+const UPLOAD_SIZE_LIMIT = 900_000;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BACKEND_DIR = resolve(__dirname, '..');
@@ -83,10 +87,26 @@ async function login(password) {
 /**
  * Upload raw bytes through the API.
  * The backend process owns the storage folder and handles all file writes.
+ * If the payload exceeds UPLOAD_SIZE_LIMIT, the image is pre-compressed to
+ * JPEG so it fits within nginx's default client_max_body_size.
  */
 async function uploadBytes(token, bytes, fileName, mimeType) {
+  let finalBytes = bytes;
+  let finalName = fileName;
+  let finalMime = mimeType;
+
+  if (bytes.length > UPLOAD_SIZE_LIMIT && mimeType !== 'image/gif') {
+    try {
+      finalBytes = await sharp(bytes).jpeg({ quality: 82 }).toBuffer();
+      finalName = fileName.replace(/\.[^.]+$/, '.jpg');
+      finalMime = 'image/jpeg';
+    } catch {
+      // sharp failed — try uploading original and let the server reject if needed
+    }
+  }
+
   const form = new FormData();
-  form.append('file', new Blob([bytes], { type: mimeType }), fileName);
+  form.append('file', new Blob([finalBytes], { type: finalMime }), finalName);
   const response = await fetch(`${API_BASE}/admin/media`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
