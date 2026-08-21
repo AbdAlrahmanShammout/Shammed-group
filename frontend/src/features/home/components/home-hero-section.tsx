@@ -271,7 +271,7 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
               className="text-xs font-semibold uppercase"
               style={{ color: '#6E88E8', letterSpacing: '0.2em' }}
             >
-              FORMULATION / 01 — SYRIA
+              {homePage.heroEyebrow}
             </p>
           </div>
 

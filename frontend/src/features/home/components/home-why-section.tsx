@@ -4,37 +4,6 @@ import type { ReactElement } from 'react';
 import { PublicMediaImage } from '@/components/media/public-media-image';
 import type { HomePageResponse } from '@/generated/public-home.contract';
 
-/**
- * Brand-value reasons shown in the left column.
- * These are stable brand messaging points for a pharmaceutical distribution company.
- */
-const WHY_REASONS = [
-  {
-    id: 'quality',
-    title: 'Quality-Certified Portfolio',
-    description:
-      'Every product meets rigorous international pharmaceutical and healthcare quality standards.',
-  },
-  {
-    id: 'partnerships',
-    title: 'Trusted Global Partnerships',
-    description:
-      'Direct distribution agreements with leading European and international manufacturers.',
-  },
-  {
-    id: 'expertise',
-    title: 'Decades of Regional Expertise',
-    description:
-      'Established networks and deep market knowledge across the MENA region since our founding.',
-  },
-  {
-    id: 'supply',
-    title: 'Reliable Supply Chain',
-    description:
-      'Consistent product availability backed by efficient logistics and responsive service.',
-  },
-] as const;
-
 type HomeWhySectionProps = {
   readonly companyName?: string;
   readonly homePage: HomePageResponse;
@@ -65,7 +34,7 @@ export function HomeWhySection({
         >
           <div className="flex flex-col gap-4">
             <p className="text-sm font-medium uppercase tracking-widest text-primary">
-              Our identity
+              {homePage.whyEyebrow}
             </p>
             <h2
               className="text-3xl font-medium tracking-tight text-foreground md:text-4xl"
@@ -79,11 +48,16 @@ export function HomeWhySection({
           </div>
 
           <ul className="flex flex-col gap-5" role="list">
-            {WHY_REASONS.map((reason, index) => (
+            {[
+              { title: homePage.whyReason1Title, description: homePage.whyReason1Description },
+              { title: homePage.whyReason2Title, description: homePage.whyReason2Description },
+              { title: homePage.whyReason3Title, description: homePage.whyReason3Description },
+              { title: homePage.whyReason4Title, description: homePage.whyReason4Description },
+            ].map((reason, index) => (
               <motion.li
                 className="list-none border-l-2 border-primary/30 pl-5"
                 initial={shouldReduceMotion ? false : { opacity: 0, x: -10 }}
-                key={reason.id}
+                key={reason.title}
                 transition={{
                   duration: 0.38,
                   delay: shouldReduceMotion ? 0 : 0.18 + index * 0.09,

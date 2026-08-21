@@ -369,6 +369,27 @@ async function seedHomePage(prisma: PrismaClient): Promise<void> {
     whyTitle: 'Why Shammed Group',
     whyDescription:
       'Shammed Group combines a distribution network throughout Syria with trained service engineers, international supplier connections, turnkey-project experience, and technical support for medical equipment and pharmaceutical operations.',
+    whyEyebrow: 'Our identity',
+    whyReason1Title: 'Quality-Certified Portfolio',
+    whyReason1Description:
+      'Every product meets rigorous international pharmaceutical and healthcare quality standards.',
+    whyReason2Title: 'Trusted Global Partnerships',
+    whyReason2Description:
+      'Direct distribution agreements with leading European and international manufacturers.',
+    whyReason3Title: 'Decades of Regional Expertise',
+    whyReason3Description:
+      'Established networks and deep market knowledge across Syria and the MENA region since our founding.',
+    whyReason4Title: 'Reliable Supply Chain',
+    whyReason4Description:
+      'Consistent product availability backed by efficient logistics and responsive after-sales service.',
+    heroEyebrow: 'FORMULATION / 01 — SYRIA',
+    aboutEyebrow: 'About us',
+    aboutMetric1Value: '40+',
+    aboutMetric1Label: 'Years in healthcare',
+    aboutMetric2Value: '300+',
+    aboutMetric2Label: 'Products & equipment',
+    aboutMetric3Value: '100%',
+    aboutMetric3Label: 'Syria coverage',
     contactSectionTitle: 'Talk to Our Team',
     contactSectionDescription:
       'Contact Shammed Group about medical equipment, pharmaceutical solutions, technical service, or distribution support in Syria.',

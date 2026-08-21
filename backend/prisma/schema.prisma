@@ -172,7 +172,24 @@ model HomePage {
   servicesSectionDescription String?
   whyTitle                   String
   whyDescription             String
+  whyEyebrow                 String   @default("Our identity")
+  whyReason1Title            String   @default("Quality-Certified Portfolio")
+  whyReason1Description      String   @default("Every product meets rigorous international pharmaceutical and healthcare quality standards.")
+  whyReason2Title            String   @default("Trusted Global Partnerships")
+  whyReason2Description      String   @default("Direct distribution agreements with leading European and international manufacturers.")
+  whyReason3Title            String   @default("Decades of Regional Expertise")
+  whyReason3Description      String   @default("Established networks and deep market knowledge across the MENA region since our founding.")
+  whyReason4Title            String   @default("Reliable Supply Chain")
+  whyReason4Description      String   @default("Consistent product availability backed by efficient logistics and responsive service.")
   whyImageMediaId            Int?     @unique
+  heroEyebrow                String   @default("FORMULATION / 01 — SYRIA")
+  aboutEyebrow               String   @default("About us")
+  aboutMetric1Value          String   @default("40+")
+  aboutMetric1Label          String   @default("Years in healthcare")
+  aboutMetric2Value          String   @default("300+")
+  aboutMetric2Label          String   @default("Products & equipment")
+  aboutMetric3Value          String   @default("100%")
+  aboutMetric3Label          String   @default("Syria coverage")
   contactSectionTitle        String
   contactSectionDescription  String?
   heroImage                  Media?   @relation("HomePageHeroImage", fields: [heroImageMediaId], references: [id], onDelete: SetNull)

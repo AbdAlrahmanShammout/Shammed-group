@@ -83,8 +83,59 @@ export class HomePageResponse extends BaseModelResponseDto {
   })
   whyDescription: string;
 
+  @ApiProperty({ description: 'Why section eyebrow label', example: 'Our identity' })
+  whyEyebrow: string;
+
+  @ApiProperty({ description: 'Why reason 1 title', example: 'Quality-Certified Portfolio' })
+  whyReason1Title: string;
+
+  @ApiProperty({ description: 'Why reason 1 description', example: 'Every product meets...' })
+  whyReason1Description: string;
+
+  @ApiProperty({ description: 'Why reason 2 title', example: 'Trusted Global Partnerships' })
+  whyReason2Title: string;
+
+  @ApiProperty({ description: 'Why reason 2 description', example: 'Direct distribution...' })
+  whyReason2Description: string;
+
+  @ApiProperty({ description: 'Why reason 3 title', example: 'Decades of Regional Expertise' })
+  whyReason3Title: string;
+
+  @ApiProperty({ description: 'Why reason 3 description', example: 'Established networks...' })
+  whyReason3Description: string;
+
+  @ApiProperty({ description: 'Why reason 4 title', example: 'Reliable Supply Chain' })
+  whyReason4Title: string;
+
+  @ApiProperty({ description: 'Why reason 4 description', example: 'Consistent product...' })
+  whyReason4Description: string;
+
   @ApiPropertyOptional({ description: 'Why section image media identifier', example: 3 })
   whyImageMediaId?: number;
+
+  @ApiProperty({ description: 'Hero eyebrow label', example: 'FORMULATION / 01 — SYRIA' })
+  heroEyebrow: string;
+
+  @ApiProperty({ description: 'About section eyebrow label', example: 'About us' })
+  aboutEyebrow: string;
+
+  @ApiProperty({ description: 'About metric 1 value', example: '40+' })
+  aboutMetric1Value: string;
+
+  @ApiProperty({ description: 'About metric 1 label', example: 'Years in healthcare' })
+  aboutMetric1Label: string;
+
+  @ApiProperty({ description: 'About metric 2 value', example: '300+' })
+  aboutMetric2Value: string;
+
+  @ApiProperty({ description: 'About metric 2 label', example: 'Products & equipment' })
+  aboutMetric2Label: string;
+
+  @ApiProperty({ description: 'About metric 3 value', example: '100%' })
+  aboutMetric3Value: string;
+
+  @ApiProperty({ description: 'About metric 3 label', example: 'Syria coverage' })
+  aboutMetric3Label: string;
 
   @ApiProperty({ description: 'Contact section heading', example: 'Contact Us' })
   contactSectionTitle: string;
@@ -126,7 +177,24 @@ export class HomePageResponse extends BaseModelResponseDto {
     this.servicesSectionDescription = data.servicesSectionDescription ?? undefined;
     this.whyTitle = data.whyTitle;
     this.whyDescription = data.whyDescription;
+    this.whyEyebrow = data.whyEyebrow;
+    this.whyReason1Title = data.whyReason1Title;
+    this.whyReason1Description = data.whyReason1Description;
+    this.whyReason2Title = data.whyReason2Title;
+    this.whyReason2Description = data.whyReason2Description;
+    this.whyReason3Title = data.whyReason3Title;
+    this.whyReason3Description = data.whyReason3Description;
+    this.whyReason4Title = data.whyReason4Title;
+    this.whyReason4Description = data.whyReason4Description;
     this.whyImageMediaId = data.whyImageMediaId ?? undefined;
+    this.heroEyebrow = data.heroEyebrow;
+    this.aboutEyebrow = data.aboutEyebrow;
+    this.aboutMetric1Value = data.aboutMetric1Value;
+    this.aboutMetric1Label = data.aboutMetric1Label;
+    this.aboutMetric2Value = data.aboutMetric2Value;
+    this.aboutMetric2Label = data.aboutMetric2Label;
+    this.aboutMetric3Value = data.aboutMetric3Value;
+    this.aboutMetric3Label = data.aboutMetric3Label;
     this.contactSectionTitle = data.contactSectionTitle;
     this.contactSectionDescription = data.contactSectionDescription ?? undefined;
     this.heroImage = data.heroImage ? new MediaResponse(data.heroImage) : undefined;

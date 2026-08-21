@@ -52,7 +52,24 @@ function createDefaultValues(homePage?: HomePageResponse): HomePageFormValues {
     servicesSectionDescription: homePage?.servicesSectionDescription ?? '',
     whyTitle: homePage?.whyTitle ?? '',
     whyDescription: homePage?.whyDescription ?? '',
+    whyEyebrow: homePage?.whyEyebrow ?? 'Our identity',
+    whyReason1Title: homePage?.whyReason1Title ?? '',
+    whyReason1Description: homePage?.whyReason1Description ?? '',
+    whyReason2Title: homePage?.whyReason2Title ?? '',
+    whyReason2Description: homePage?.whyReason2Description ?? '',
+    whyReason3Title: homePage?.whyReason3Title ?? '',
+    whyReason3Description: homePage?.whyReason3Description ?? '',
+    whyReason4Title: homePage?.whyReason4Title ?? '',
+    whyReason4Description: homePage?.whyReason4Description ?? '',
     whyImageMediaId: homePage?.whyImageMediaId?.toString() ?? '',
+    heroEyebrow: homePage?.heroEyebrow ?? 'FORMULATION / 01 — SYRIA',
+    aboutEyebrow: homePage?.aboutEyebrow ?? 'About us',
+    aboutMetric1Value: homePage?.aboutMetric1Value ?? '',
+    aboutMetric1Label: homePage?.aboutMetric1Label ?? '',
+    aboutMetric2Value: homePage?.aboutMetric2Value ?? '',
+    aboutMetric2Label: homePage?.aboutMetric2Label ?? '',
+    aboutMetric3Value: homePage?.aboutMetric3Value ?? '',
+    aboutMetric3Label: homePage?.aboutMetric3Label ?? '',
     contactSectionTitle: homePage?.contactSectionTitle ?? '',
     contactSectionDescription: homePage?.contactSectionDescription ?? '',
   };
@@ -118,6 +135,23 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
         title="Hero"
         tone="muted"
       >
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="heroEyebrow">
+            Eyebrow label <span aria-hidden="true">*</span>
+          </Label>
+          <Input
+            aria-invalid={Boolean(form.formState.errors.heroEyebrow)}
+            aria-required="true"
+            disabled={isPending}
+            id="heroEyebrow"
+            {...form.register('heroEyebrow')}
+          />
+          {form.formState.errors.heroEyebrow ? (
+            <p className="text-sm text-destructive" role="alert">
+              {form.formState.errors.heroEyebrow.message}
+            </p>
+          ) : null}
+        </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="heroTitle">
             Title <span aria-hidden="true">*</span>
@@ -246,6 +280,23 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
         tone="secondary"
       >
         <div className="flex flex-col gap-2">
+          <Label htmlFor="aboutEyebrow">
+            Eyebrow label <span aria-hidden="true">*</span>
+          </Label>
+          <Input
+            aria-invalid={Boolean(form.formState.errors.aboutEyebrow)}
+            aria-required="true"
+            disabled={isPending}
+            id="aboutEyebrow"
+            {...form.register('aboutEyebrow')}
+          />
+          {form.formState.errors.aboutEyebrow ? (
+            <p className="text-sm text-destructive" role="alert">
+              {form.formState.errors.aboutEyebrow.message}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex flex-col gap-2">
           <Label htmlFor="aboutPreviewTitle">
             Title <span aria-hidden="true">*</span>
           </Label>
@@ -295,6 +346,32 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
             setAboutFileName(fileName);
           }}
         />
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-medium">Brand metrics (3 stat items)</p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {([
+              { n: 1 as const, valuePlaceholder: '40+',  labelPlaceholder: 'Years in healthcare' },
+              { n: 2 as const, valuePlaceholder: '300+', labelPlaceholder: 'Products & equipment' },
+              { n: 3 as const, valuePlaceholder: '100%', labelPlaceholder: 'Syria coverage' },
+            ]).map(({ n, valuePlaceholder, labelPlaceholder }) => (
+              <div className="flex flex-col gap-2 rounded-lg border border-border/70 bg-background/60 p-3" key={n}>
+                <p className="text-xs font-medium text-muted-foreground">Metric {n}</p>
+                <Input
+                  aria-label={`Metric ${n} value`}
+                  disabled={isPending}
+                  placeholder={valuePlaceholder}
+                  {...form.register(`aboutMetric${n}Value` as const)}
+                />
+                <Input
+                  aria-label={`Metric ${n} label`}
+                  disabled={isPending}
+                  placeholder={labelPlaceholder}
+                  {...form.register(`aboutMetric${n}Label` as const)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="aboutPreviewCtaText">
@@ -413,6 +490,23 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
         tone="muted"
       >
         <div className="flex flex-col gap-2">
+          <Label htmlFor="whyEyebrow">
+            Eyebrow label <span aria-hidden="true">*</span>
+          </Label>
+          <Input
+            aria-invalid={Boolean(form.formState.errors.whyEyebrow)}
+            aria-required="true"
+            disabled={isPending}
+            id="whyEyebrow"
+            {...form.register('whyEyebrow')}
+          />
+          {form.formState.errors.whyEyebrow ? (
+            <p className="text-sm text-destructive" role="alert">
+              {form.formState.errors.whyEyebrow.message}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex flex-col gap-2">
           <Label htmlFor="whyTitle">
             Title <span aria-hidden="true">*</span>
           </Label>
@@ -446,6 +540,54 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
               {form.formState.errors.whyDescription.message}
             </p>
           ) : null}
+        </div>
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-medium">Reasons (4 items)</p>
+          <div className="flex flex-col gap-3">
+            {([
+              {
+                n: 1 as const,
+                titlePlaceholder: 'Quality-Certified Portfolio',
+                descPlaceholder:
+                  'Every product meets rigorous international pharmaceutical and healthcare quality standards.',
+              },
+              {
+                n: 2 as const,
+                titlePlaceholder: 'Trusted Global Partnerships',
+                descPlaceholder:
+                  'Direct distribution agreements with leading European and international manufacturers.',
+              },
+              {
+                n: 3 as const,
+                titlePlaceholder: 'Decades of Regional Expertise',
+                descPlaceholder:
+                  'Established networks and deep market knowledge across the MENA region since our founding.',
+              },
+              {
+                n: 4 as const,
+                titlePlaceholder: 'Reliable Supply Chain',
+                descPlaceholder:
+                  'Consistent product availability backed by efficient logistics and responsive service.',
+              },
+            ]).map(({ n, titlePlaceholder, descPlaceholder }) => (
+              <div className="flex flex-col gap-2 rounded-lg border border-border/70 bg-background/60 p-3" key={n}>
+                <p className="text-xs font-medium text-muted-foreground">Reason {n}</p>
+                <Input
+                  aria-label={`Reason ${n} title`}
+                  disabled={isPending}
+                  placeholder={titlePlaceholder}
+                  {...form.register(`whyReason${n}Title` as const)}
+                />
+                <textarea
+                  aria-label={`Reason ${n} description`}
+                  className={textareaClassName}
+                  disabled={isPending}
+                  placeholder={descPlaceholder}
+                  {...form.register(`whyReason${n}Description` as const)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
         <AdminMediaUploadField
           disabled={isPending}

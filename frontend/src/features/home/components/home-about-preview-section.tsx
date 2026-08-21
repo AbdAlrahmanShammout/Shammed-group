@@ -7,13 +7,6 @@ import { HomeCtaLink } from '@/features/home/components/home-cta-link';
 import type { HomePageResponse } from '@/generated/public-home.contract';
 import { cn } from '@/lib/utils';
 
-/** Hardcoded brand metrics — stable identity facts shown in the About section. */
-const ABOUT_METRICS = [
-  { value: '40+', label: 'Years in healthcare' },
-  { value: '300+', label: 'Products & equipment' },
-  { value: '100%', label: 'Syria coverage' },
-] as const;
-
 type HomeAboutPreviewSectionProps = {
   readonly homePage: HomePageResponse;
 };
@@ -109,7 +102,7 @@ export function HomeAboutPreviewSection({ homePage }: HomeAboutPreviewSectionPro
           <div className="flex items-center gap-2.5">
             <div className="h-px w-7 shrink-0 bg-primary/40" />
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary/60">
-              About us
+              {homePage.aboutEyebrow}
             </p>
           </div>
 
@@ -128,7 +121,11 @@ export function HomeAboutPreviewSection({ homePage }: HomeAboutPreviewSectionPro
 
           {/* Brand metrics */}
           <div className="grid grid-cols-3 gap-4 border-t border-border/60 pt-6">
-            {ABOUT_METRICS.map((metric, index) => (
+            {[
+              { value: homePage.aboutMetric1Value, label: homePage.aboutMetric1Label },
+              { value: homePage.aboutMetric2Value, label: homePage.aboutMetric2Label },
+              { value: homePage.aboutMetric3Value, label: homePage.aboutMetric3Label },
+            ].map((metric, index) => (
               <motion.div
                 className={cn(
                   'flex flex-col gap-1',

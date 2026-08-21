@@ -150,6 +150,60 @@ export class UpdateHomePageRequestDto {
   @IsNotEmpty()
   whyDescription?: string;
 
+  @ApiPropertyOptional({ description: 'Why section eyebrow label', example: 'Our identity' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyEyebrow?: string;
+
+  @ApiPropertyOptional({ description: 'Why reason 1 title', example: 'Quality-Certified Portfolio' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyReason1Title?: string;
+
+  @ApiPropertyOptional({ description: 'Why reason 1 description' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyReason1Description?: string;
+
+  @ApiPropertyOptional({ description: 'Why reason 2 title' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyReason2Title?: string;
+
+  @ApiPropertyOptional({ description: 'Why reason 2 description' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyReason2Description?: string;
+
+  @ApiPropertyOptional({ description: 'Why reason 3 title' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyReason3Title?: string;
+
+  @ApiPropertyOptional({ description: 'Why reason 3 description' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyReason3Description?: string;
+
+  @ApiPropertyOptional({ description: 'Why reason 4 title' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyReason4Title?: string;
+
+  @ApiPropertyOptional({ description: 'Why reason 4 description' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  whyReason4Description?: string;
+
   @ApiPropertyOptional({
     description: 'Why section image media identifier',
     example: 3,
@@ -159,6 +213,54 @@ export class UpdateHomePageRequestDto {
   @IsInt()
   @Min(1)
   whyImageMediaId?: number | null;
+
+  @ApiPropertyOptional({ description: 'Hero eyebrow label', example: 'FORMULATION / 01 — SYRIA' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  heroEyebrow?: string;
+
+  @ApiPropertyOptional({ description: 'About section eyebrow label', example: 'About us' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  aboutEyebrow?: string;
+
+  @ApiPropertyOptional({ description: 'About metric 1 value', example: '40+' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric1Value?: string;
+
+  @ApiPropertyOptional({ description: 'About metric 1 label', example: 'Years in healthcare' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric1Label?: string;
+
+  @ApiPropertyOptional({ description: 'About metric 2 value', example: '300+' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric2Value?: string;
+
+  @ApiPropertyOptional({ description: 'About metric 2 label', example: 'Products & equipment' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric2Label?: string;
+
+  @ApiPropertyOptional({ description: 'About metric 3 value', example: '100%' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric3Value?: string;
+
+  @ApiPropertyOptional({ description: 'About metric 3 label', example: 'Syria coverage' })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric3Label?: string;
 
   @ApiPropertyOptional({ description: 'Contact section heading', example: 'Contact Us' })
   @ValidateIf((_, value) => value !== undefined)

@@ -125,11 +125,96 @@ export class CreateHomePageRequestDto {
   @IsNotEmpty()
   whyDescription!: string;
 
+  @ApiProperty({ description: 'Why section eyebrow label', example: 'Our identity' })
+  @IsString()
+  @IsNotEmpty()
+  whyEyebrow!: string;
+
+  @ApiProperty({ description: 'Why reason 1 title', example: 'Quality-Certified Portfolio' })
+  @IsString()
+  @IsNotEmpty()
+  whyReason1Title!: string;
+
+  @ApiProperty({ description: 'Why reason 1 description' })
+  @IsString()
+  @IsNotEmpty()
+  whyReason1Description!: string;
+
+  @ApiProperty({ description: 'Why reason 2 title', example: 'Trusted Global Partnerships' })
+  @IsString()
+  @IsNotEmpty()
+  whyReason2Title!: string;
+
+  @ApiProperty({ description: 'Why reason 2 description' })
+  @IsString()
+  @IsNotEmpty()
+  whyReason2Description!: string;
+
+  @ApiProperty({ description: 'Why reason 3 title', example: 'Decades of Regional Expertise' })
+  @IsString()
+  @IsNotEmpty()
+  whyReason3Title!: string;
+
+  @ApiProperty({ description: 'Why reason 3 description' })
+  @IsString()
+  @IsNotEmpty()
+  whyReason3Description!: string;
+
+  @ApiProperty({ description: 'Why reason 4 title', example: 'Reliable Supply Chain' })
+  @IsString()
+  @IsNotEmpty()
+  whyReason4Title!: string;
+
+  @ApiProperty({ description: 'Why reason 4 description' })
+  @IsString()
+  @IsNotEmpty()
+  whyReason4Description!: string;
+
   @ApiPropertyOptional({ description: 'Why section image media identifier', example: 3 })
   @IsOptional()
   @IsInt()
   @Min(1)
   whyImageMediaId?: number;
+
+  @ApiProperty({ description: 'Hero eyebrow label', example: 'FORMULATION / 01 — SYRIA' })
+  @IsString()
+  @IsNotEmpty()
+  heroEyebrow!: string;
+
+  @ApiProperty({ description: 'About section eyebrow label', example: 'About us' })
+  @IsString()
+  @IsNotEmpty()
+  aboutEyebrow!: string;
+
+  @ApiProperty({ description: 'About metric 1 value', example: '40+' })
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric1Value!: string;
+
+  @ApiProperty({ description: 'About metric 1 label', example: 'Years in healthcare' })
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric1Label!: string;
+
+  @ApiProperty({ description: 'About metric 2 value', example: '300+' })
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric2Value!: string;
+
+  @ApiProperty({ description: 'About metric 2 label', example: 'Products & equipment' })
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric2Label!: string;
+
+  @ApiProperty({ description: 'About metric 3 value', example: '100%' })
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric3Value!: string;
+
+  @ApiProperty({ description: 'About metric 3 label', example: 'Syria coverage' })
+  @IsString()
+  @IsNotEmpty()
+  aboutMetric3Label!: string;
 
   @ApiProperty({ description: 'Contact section heading', example: 'Contact Us' })
   @IsString()
