@@ -12,6 +12,12 @@ function createProductsPath(query: GetPublicProductsQuery = {}): string {
   if (query.categoryId !== undefined) {
     searchParams.set('categoryId', String(query.categoryId));
   }
+  if (query.limit !== undefined) {
+    searchParams.set('limit', String(query.limit));
+  }
+  if (query.offset !== undefined) {
+    searchParams.set('offset', String(query.offset));
+  }
   const serialized = searchParams.toString();
   return serialized.length > 0 ? `${PRODUCTS_PATH}?${serialized}` : PRODUCTS_PATH;
 }

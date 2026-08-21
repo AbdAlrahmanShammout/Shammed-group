@@ -47,6 +47,8 @@ export type GetProductCategoriesResponseDto = {
 
 export type GetPublicProductsQuery = {
   readonly categoryId?: number;
+  readonly limit?: number;
+  readonly offset?: number;
 };
 
 export type ProductResponseDto = {

@@ -92,10 +92,10 @@ STATUS: PARTIAL — heroImage, aboutPreviewImage, and whyImage remain UNKNOWN �
 | overviewImage | IMAGE | RECOMMENDED | UNKNOWN — needs client |
 | vision | TEXT | REQUIRED | To be a leading provider by demonstrating medical excellence and superior customer service. |
 | mission | TEXT | REQUIRED | Providing high-quality medical equipment and specialized pharmaceutical products to the healthcare market in Syria. |
-| values | TEXT | REQUIRED | UNKNOWN — needs client |
+| values | TEXT | REQUIRED | Quality and Patient Focus — Choose dependable healthcare and pharmaceutical solutions with patient care in mind. Reliability — Build trust through responsive communication, careful follow-up, and dependable support. Technical Expertise — Maintain knowledgeable service and engineering capability for equipment installation, maintenance, and preventive maintenance. Partnership — Work collaboratively with healthcare providers, suppliers, and international partners to support practical solutions. Continuous Improvement — Strengthen services, processes, and distribution capability as healthcare needs evolve. |
 | capabilities | TEXT | REQUIRED | Medical-equipment distribution and servicing; turnkey hospital project planning; installation of used MRI, CT, and X-ray equipment; maintenance and preventive maintenance; distribution of operation supplies and medical consumables; pharmaceutical sourcing and distribution; and technical equipment for pharmaceutical production and quality control. |
 
-STATUS: PARTIAL — overviewImage and formal company values remain UNKNOWN — needs client.
+STATUS: PARTIAL — overviewImage requires upload to a public CMS/storage URL. Formal company values are filled as launch-ready draft copy and should receive client approval before publication.
 
 ---
 
@@ -255,13 +255,49 @@ STATUS: FILLED
 | isVisible | CONFIG | REQUIRED | false |
 | displayOrder | CONFIG | REQUIRED | 8 |
 
-STATUS: PARTIAL — partner records are staged but hidden pending client confirmation of current relationship, exclusivity, territory, and logo permission. Missing websites, countries, descriptions, and logos remain UNKNOWN — needs client for OES, SMD MEDICARE, and Bistos.
+### Partner 9
+
+| Field | Type | Priority | Value to fill |
+|-------|------|----------|---------------|
+| name | TEXT | REQUIRED | Al Inmaa Drug Store & Medical Equipment LLC |
+| shortDescription | TEXT | REQUIRED | Public source site describes Al Inmaa as a GCC distribution partner for international pharmaceutical, medical, and beauty brands. The supplied Shammed deck identifies INMAA as a sister company; current product-level Syrian rights need confirmation. |
+| fullDescription | TEXT | OPTIONAL | Official source catalogue, product-source links, and a direct logo reference are recorded in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. Website statements do not establish Shammed agency, territory, or product availability in Syria. |
+| specialization | TEXT | OPTIONAL | Pharmaceutical, medical, and beauty distribution |
+| websiteUrl | LINK | OPTIONAL | https://inmaa.ae/ |
+| country | TEXT | OPTIONAL | United Arab Emirates |
+| logo | IMAGE | RECOMMENDED | https://inmaa.ae/wp-content/uploads/2026/03/header-logo.png — verify logo-display permission before upload/publication |
+| isVisible | CONFIG | REQUIRED | false |
+| displayOrder | CONFIG | REQUIRED | 9 |
+
+### Partner 10
+
+| Field | Type | Priority | Value to fill |
+|-------|------|----------|---------------|
+| name | TEXT | REQUIRED | Marinas Official |
+| shortDescription | TEXT | REQUIRED | Public source site lists dietary supplements and personal-care products. The supplied Shammed materials refer to Earth Creation / MARRINAS; the exact current legal entity and the Shammed relationship require confirmation. |
+| fullDescription | TEXT | OPTIONAL | Official source catalogue, product-source links, and a direct logo reference are recorded in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. The public site appears oriented to the Lebanon market; it does not establish Shammed distribution rights in Syria. |
+| specialization | TEXT | OPTIONAL | Dietary supplements and personal care |
+| websiteUrl | LINK | OPTIONAL | https://marinasofficial.com/ |
+| country | TEXT | OPTIONAL | Lebanon — site market; legal manufacturing country needs client confirmation |
+| logo | IMAGE | RECOMMENDED | https://marinasofficial.com/wp-content/uploads/2023/08/MarinasOfficial-1.png — verify logo-display permission before upload/publication |
+| isVisible | CONFIG | REQUIRED | false |
+| displayOrder | CONFIG | REQUIRED | 10 |
+
+STATUS: PARTIAL — ten partner records are staged but hidden pending client confirmation of current relationship, exclusivity, territory, and logo permission. Al Inmaa and Marinas Official are source-catalogue records only; missing websites, countries, descriptions, and logos remain UNKNOWN — needs client for OES, SMD MEDICARE, and Bistos.
 
 ---
 
 ## F. Products
 
-No individual product catalog, product names, models, SKUs, specifications, or approved product images were supplied. The following hidden staging records preserve the CMS structure without inventing products.
+### Source-catalogue update — 21 August 2026
+
+The client supplied three public partner/catalogue websites after this sheet was first prepared. A separate, traceable intake sheet now documents **94 source-catalogue candidates** — 44 from Al Inmaa, 30 from Marinas Official, and 20 from STORZ MEDICAL — including the source page, source partner/manufacturer, and direct official image reference for every product:
+
+`PARTNER-CATALOGUE-SOURCE-IMPORT.md`
+
+These are **not approved CMS products** yet. Website listings do not prove Shammed's current agency rights, territory, registration, availability, or licence to reuse the product images. Keep each imported record hidden until the client confirms the product-level relationship and publication approvals.
+
+The legacy staging records below remain superseded placeholders and must not be published.
 
 ### Product 1
 
@@ -291,7 +327,7 @@ No individual product catalog, product names, models, SKUs, specifications, or a
 | isVisible | CONFIG | REQUIRED | false |
 | displayOrder | CONFIG | REQUIRED | 2 |
 
-STATUS: PARTIAL — no individual products, manufacturers, partner assignments, descriptions, or product images were supplied. The two records are hidden and must not be published.
+STATUS: PARTIAL — 94 source-catalogue candidates with manufacturer/source-partner, product-page, and direct image references are documented in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. The two legacy blank records are hidden placeholders and must not be published. No source-catalogue candidate is approved for publication until relationship, Syria territory, registration, claims, image permission, and availability are confirmed.
 
 ---
 
@@ -362,9 +398,9 @@ STATUS: PARTIAL — service copy is filled; all service images remain UNKNOWN �
 | phone 1 | TEXT | REQUIRED | +963 11 44699200 |
 | phone 2 | TEXT | OPTIONAL | +963 11 44699201 |
 | phone 3 | TEXT | OPTIONAL | UNKNOWN — needs client |
-| googleMapsUrl | LINK | RECOMMENDED | UNKNOWN — needs client |
-| latitude | CONFIG | OPTIONAL | UNKNOWN — needs client |
-| longitude | CONFIG | OPTIONAL | UNKNOWN — needs client |
+| googleMapsUrl | LINK | RECOMMENDED | https://www.google.com/maps?q=33.52353,36.29287 |
+| latitude | CONFIG | OPTIONAL | 33.52353 |
+| longitude | CONFIG | OPTIONAL | 36.29287 |
 | isVisible | CONFIG | REQUIRED | true |
 | displayOrder | CONFIG | REQUIRED | 1 |
 
@@ -438,7 +474,7 @@ STATUS: PARTIAL — service copy is filled; all service images remain UNKNOWN �
 | isVisible | CONFIG | REQUIRED | false |
 | displayOrder | CONFIG | REQUIRED | 6 |
 
-STATUS: PARTIAL — headquarters is filled and visible. Branches are named in the supplied deck but remain hidden until addresses, phones, and current active status are confirmed. Google Maps URL and coordinates remain UNKNOWN — needs client.
+STATUS: PARTIAL — headquarters is filled and visible with coordinates from the supplied Shahbandar Square screenshot. Branches are named in the supplied deck but remain hidden until addresses, phones, and current active status are confirmed. The separate Jul Jammal Street pin in the other screenshot is recorded as an alternate candidate and should not replace the Shahbandar Square headquarters pin without client confirmation.
 
 ---
 
@@ -510,11 +546,12 @@ STATUS: FILLED
 | Home about preview image | Home CMS | UNKNOWN — needs client |
 | Home why image | Home CMS | UNKNOWN — needs client |
 | About overview image | About CMS | UNKNOWN — needs client |
-| Partner logos | Partners (list) | UNKNOWN — needs client |
-| Product images | Products (list) | UNKNOWN — needs client |
+| Al Inmaa partner logo | Partners (hidden source record) | https://inmaa.ae/wp-content/uploads/2026/03/header-logo.png — verify relationship and logo-display permission |
+| Marinas Official partner logo | Partners (hidden source record) | https://marinasofficial.com/wp-content/uploads/2023/08/MarinasOfficial-1.png — verify relationship and logo-display permission |
+| Source-catalogue product images | Products (hidden source candidates) | 94 direct official source-image references are listed per product in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`; do not hotlink permanently or publish before permission |
 | Service images | Services (list) | UNKNOWN — needs client |
 
-STATUS: PARTIAL — no public HTTPS image URLs were supplied. Local PDF-embedded images were not converted into public URLs or used as if they were hosted assets.
+STATUS: PARTIAL — original company media still requires approved assets. Official public source references were added for two hidden partner records and 94 hidden source-catalogue candidates; each must be licensed/approved and copied to Shammed storage before publication.
 
 ---
 
@@ -528,19 +565,19 @@ Do not commit these values to git. Populate them through the deployment secret m
 | ADMIN_PASSWORD | UNKNOWN — needs client |
 | TOKEN_SECRET_KEY | UNKNOWN — needs client |
 | ALLOWED_ORIGINS | UNKNOWN — needs client |
-| SMTP_HOST | UNKNOWN — needs client |
-| SMTP_PORT | UNKNOWN — needs client |
-| SMTP_USER | UNKNOWN — needs client |
+| SMTP_HOST | mail.shammed-group.com |
+| SMTP_PORT | 465 |
+| SMTP_USER | info@shammed-group.com |
 | SMTP_PASSWORD | UNKNOWN — needs client |
-| SMTP_SECURE | UNKNOWN — needs client |
-| SMTP_FROM | UNKNOWN — needs client |
+| SMTP_SECURE | true |
+| SMTP_FROM | info@shammed-group.com |
 | CONTACT_EMAIL | info@shammed-group.com |
 | STORAGE_ROOT_PATH | UNKNOWN — needs client |
 | STORAGE_MAX_FILE_BYTES | 5242880 (5 MB) |
 | VITE_API_BASE_URL | UNKNOWN — needs client |
 | VITE_PUBLIC_SITE_URL | UNKNOWN — needs client |
 
-STATUS: PARTIAL — CONTACT_EMAIL and the supplied storage limit are filled; deployment values and secrets remain UNKNOWN — needs client.
+STATUS: PARTIAL — SMTP host, port, username, secure mode, sender, CONTACT_EMAIL, and the supplied storage limit are filled. The mailbox password and remaining deployment values remain UNKNOWN — needs client.
 
 ---
 
@@ -563,7 +600,7 @@ STATUS: PARTIAL — CONTACT_EMAIL and the supplied storage limit are filled; dep
 - [x] Every REQUIRED field has a value or is explicitly marked `UNKNOWN — needs client`
 - [x] No placeholder copy remains as publishable content
 - [x] Every staged product references a real category name from section D
-- [x] Every staged product partner reference is explicitly marked `UNKNOWN — needs client`; no unverified partner has been attached
+- [x] Every source-catalogue product documents its source partner and page in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`; all remain hidden pending relationship confirmation
 - [x] At least one visible location is provided
 - [x] No fake social URL or example URL was used
 - [x] Every image/logo/favicon cell has a full HTTPS URL or is explicitly marked `UNKNOWN — needs client`
@@ -578,16 +615,17 @@ STATUS: PARTIAL — CONTACT_EMAIL and the supplied storage limit are filled; dep
 - Homepage copy for hero, About preview, partners, products, services, Why Shammed, and contact sections.
 - About overview, mission, vision, capabilities, and all four source-supported product categories.
 - Five source-supported services.
-- Eight partner records, staged as hidden until current relationships and logo permissions are confirmed.
+- Ten partner records, staged as hidden until current relationships and logo permissions are confirmed.
+- A 94-record, source-traceable product-catalogue intake sheet with official product-page and image references from Al Inmaa, Marinas Official, and STORZ MEDICAL.
 - One visible Damascus headquarters location and five hidden branch records using the branch names supplied in the corporate deck.
 - Navigation paths and preferred SEO titles/meta descriptions.
 - `CONTACT_EMAIL` and the existing 5 MB storage limit.
 
 ### Remains `UNKNOWN — needs client`
 
-- Public HTTPS URLs for every logo, favicon, hero/about/why image, partner logo, product image, and service image.
+- Approved company logo, favicon, hero/about/why image, and service-image URLs.
 - Formal company values.
-- Individual product catalog, manufacturers, descriptions, product-to-partner links, and approved product media.
+- Approved product catalog, product-to-partner authorisation, Syria territory, regulatory status, approved local descriptions, and approved product media.
 - Current partner status, exclusivity, territories, countries, missing websites, and logo permissions.
 - Branch addresses, phones, Google Maps links, coordinates, and active status.
 - Verified social-media accounts.
@@ -595,4 +633,4 @@ STATUS: PARTIAL — CONTACT_EMAIL and the supplied storage limit are filled; dep
 
 ### Image URLs used
 
-None. No public image URLs were supplied, so every media field is explicitly marked `UNKNOWN — needs client` rather than using local filenames or inventing hosted URLs.
+Official source-image references for two hidden partner records and 94 hidden source-catalogue candidates are listed in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. They are not Shammed-hosted assets and must not be treated as publication approval.
