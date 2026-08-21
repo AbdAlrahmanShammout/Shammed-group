@@ -33,6 +33,15 @@ export class SiteSettingsPrismaRepository implements SiteSettingsRepository {
         address: input.address,
         logo: input.logoMediaId ? { connect: { id: input.logoMediaId } } : undefined,
         favicon: input.faviconMediaId ? { connect: { id: input.faviconMediaId } } : undefined,
+        placeholder: input.placeholderMediaId
+          ? { connect: { id: input.placeholderMediaId } }
+          : undefined,
+        primaryColor: input.primaryColor,
+        accentColor: input.accentColor,
+        backgroundColor: input.backgroundColor,
+        textColor: input.textColor,
+        secondaryColor: input.secondaryColor,
+        borderColor: input.borderColor,
       },
       include: siteSettingsDetailsInclude,
     });
@@ -96,6 +105,18 @@ export class SiteSettingsPrismaRepository implements SiteSettingsRepository {
           ? { disconnect: true }
           : { connect: { id: input.faviconMediaId } };
     }
+    if (input.placeholderMediaId !== undefined) {
+      data.placeholder =
+        input.placeholderMediaId === null
+          ? { disconnect: true }
+          : { connect: { id: input.placeholderMediaId } };
+    }
+    if (input.primaryColor !== undefined) data.primaryColor = input.primaryColor;
+    if (input.accentColor !== undefined) data.accentColor = input.accentColor;
+    if (input.backgroundColor !== undefined) data.backgroundColor = input.backgroundColor;
+    if (input.textColor !== undefined) data.textColor = input.textColor;
+    if (input.secondaryColor !== undefined) data.secondaryColor = input.secondaryColor;
+    if (input.borderColor !== undefined) data.borderColor = input.borderColor;
     return data;
   }
 }

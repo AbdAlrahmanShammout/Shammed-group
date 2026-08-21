@@ -17,8 +17,16 @@ export class SiteSettingsMapper {
       address: schema.address ?? null,
       logoMediaId: schema.logoMediaId ?? null,
       faviconMediaId: schema.faviconMediaId ?? null,
+      placeholderMediaId: schema.placeholderMediaId ?? null,
+      primaryColor: schema.primaryColor ?? null,
+      accentColor: schema.accentColor ?? null,
+      backgroundColor: schema.backgroundColor ?? null,
+      textColor: schema.textColor ?? null,
+      secondaryColor: schema.secondaryColor ?? null,
+      borderColor: schema.borderColor ?? null,
       logo: schema.logo ? MediaMapper.toEntity(schema.logo) : undefined,
       favicon: schema.favicon ? MediaMapper.toEntity(schema.favicon) : undefined,
+      placeholder: schema.placeholder ? MediaMapper.toEntity(schema.placeholder) : undefined,
     });
   }
 }

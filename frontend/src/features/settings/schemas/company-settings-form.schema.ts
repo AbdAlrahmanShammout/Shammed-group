@@ -7,6 +7,7 @@ export const companySettingsFormSchema = z.object({
   phone: z.string().trim().min(1, 'Phone is required'),
   logoMediaId: z.string().trim(),
   faviconMediaId: z.string().trim(),
+  placeholderMediaId: z.string().trim(),
 });
 
 export type CompanySettingsFormValues = z.infer<typeof companySettingsFormSchema>;

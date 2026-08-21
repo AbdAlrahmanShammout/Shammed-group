@@ -3,11 +3,13 @@ import { Outlet } from 'react-router-dom';
 
 import { PublicFooter } from '@/components/layout/public-footer';
 import { PublicHeader } from '@/components/layout/public-header';
+import { ImagePlaceholderContext } from '@/components/media/image-placeholder-context';
 import { appPaths } from '@/config/app-paths';
 import { publicNavItems } from '@/config/public-nav-items';
 import { usePublicLocationsQuery } from '@/features/site-chrome/hooks/use-public-locations-query';
 import { usePublicSiteSettingsQuery } from '@/features/site-chrome/hooks/use-public-site-settings-query';
 import { usePublicSocialLinksQuery } from '@/features/site-chrome/hooks/use-public-social-links-query';
+import { applyDocumentColors } from '@/lib/apply-document-colors';
 import { createLocationMapsEmbedUrl } from '@/lib/create-location-maps-embed-url';
 import { createPublicMediaUrl } from '@/lib/create-public-media-url';
 
@@ -45,7 +47,26 @@ export function PublicSiteShell(): ReactElement {
   useEffect(() => {
     applyDocumentFavicon(siteSettings?.faviconMediaId);
   }, [siteSettings?.faviconMediaId]);
+
+  useEffect(() => {
+    if (!siteSettings) return;
+    applyDocumentColors(siteSettings);
+  }, [
+    siteSettings,
+    siteSettings?.primaryColor,
+    siteSettings?.accentColor,
+    siteSettings?.backgroundColor,
+    siteSettings?.textColor,
+    siteSettings?.secondaryColor,
+    siteSettings?.borderColor,
+  ]);
+
+  const placeholderSrc = siteSettings?.placeholderMediaId
+    ? createPublicMediaUrl(siteSettings.placeholderMediaId, 300)
+    : undefined;
+
   return (
+    <ImagePlaceholderContext.Provider value={placeholderSrc}>
     <div className="flex min-h-svh flex-col">
       <a
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2"
@@ -78,5 +99,6 @@ export function PublicSiteShell(): ReactElement {
         socialLinks={socialLinks}
       />
     </div>
+    </ImagePlaceholderContext.Provider>
   );
 }

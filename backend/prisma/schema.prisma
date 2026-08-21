@@ -16,8 +16,9 @@ model Media {
   mimeType               String
   byteSize               Int
   storageKey             String        @unique
-  siteSettingsLogo       SiteSettings? @relation("SiteSettingsLogo")
-  siteSettingsFavicon    SiteSettings? @relation("SiteSettingsFavicon")
+  siteSettingsLogo        SiteSettings? @relation("SiteSettingsLogo")
+  siteSettingsFavicon     SiteSettings? @relation("SiteSettingsFavicon")
+  siteSettingsPlaceholder SiteSettings? @relation("SiteSettingsPlaceholder")
   partnerLogo            Partner?      @relation("PartnerLogo")
   productImage           Product?      @relation("ProductImage")
   serviceImage           Service?      @relation("ServiceImage")
@@ -38,10 +39,18 @@ model SiteSettings {
   phone              String
   whatsApp           String?
   address            String?
-  logoMediaId        Int?     @unique
-  faviconMediaId     Int?     @unique
-  logo               Media?   @relation("SiteSettingsLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
-  favicon            Media?   @relation("SiteSettingsFavicon", fields: [faviconMediaId], references: [id], onDelete: SetNull)
+  logoMediaId           Int?     @unique
+  faviconMediaId        Int?     @unique
+  placeholderMediaId    Int?     @unique
+  primaryColor          String?
+  accentColor           String?
+  backgroundColor       String?
+  textColor             String?
+  secondaryColor        String?
+  borderColor           String?
+  logo                  Media?   @relation("SiteSettingsLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
+  favicon               Media?   @relation("SiteSettingsFavicon", fields: [faviconMediaId], references: [id], onDelete: SetNull)
+  placeholder           Media?   @relation("SiteSettingsPlaceholder", fields: [placeholderMediaId], references: [id], onDelete: SetNull)
 }
 
 model Location {

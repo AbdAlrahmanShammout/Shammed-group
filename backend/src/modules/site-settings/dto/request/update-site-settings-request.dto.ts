@@ -69,4 +69,44 @@ export class UpdateSiteSettingsRequestDto {
   @IsInt()
   @Min(1)
   faviconMediaId?: number | null;
+
+  @ApiPropertyOptional({
+    description: 'Image placeholder media identifier',
+    example: 3,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  placeholderMediaId?: number | null;
+
+  @ApiPropertyOptional({ description: 'Primary brand color (hex)', example: '#2C3470', nullable: true })
+  @IsOptional()
+  @IsString()
+  primaryColor?: string | null;
+
+  @ApiPropertyOptional({ description: 'Accent / highlight color (hex)', example: '#A32D24', nullable: true })
+  @IsOptional()
+  @IsString()
+  accentColor?: string | null;
+
+  @ApiPropertyOptional({ description: 'Page background color (hex)', example: '#FFFFFF', nullable: true })
+  @IsOptional()
+  @IsString()
+  backgroundColor?: string | null;
+
+  @ApiPropertyOptional({ description: 'Body text color (hex)', example: '#1F2937', nullable: true })
+  @IsOptional()
+  @IsString()
+  textColor?: string | null;
+
+  @ApiPropertyOptional({ description: 'Secondary / soft-tint color (hex)', example: '#E8ECF7', nullable: true })
+  @IsOptional()
+  @IsString()
+  secondaryColor?: string | null;
+
+  @ApiPropertyOptional({ description: 'Border / divider color (hex)', example: '#D9DEE8', nullable: true })
+  @IsOptional()
+  @IsString()
+  borderColor?: string | null;
 }

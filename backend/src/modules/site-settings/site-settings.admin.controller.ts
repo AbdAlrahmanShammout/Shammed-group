@@ -35,6 +35,13 @@ export class SiteSettingsAdminController {
       address: requestDto.address,
       logoMediaId: requestDto.logoMediaId,
       faviconMediaId: requestDto.faviconMediaId,
+      placeholderMediaId: requestDto.placeholderMediaId,
+      primaryColor: requestDto.primaryColor,
+      accentColor: requestDto.accentColor,
+      backgroundColor: requestDto.backgroundColor,
+      textColor: requestDto.textColor,
+      secondaryColor: requestDto.secondaryColor,
+      borderColor: requestDto.borderColor,
     });
     return new SiteSettingsResponseDto(siteSettings);
   }
@@ -64,6 +71,13 @@ export class SiteSettingsAdminController {
       address: requestDto.address,
       logoMediaId: requestDto.logoMediaId,
       faviconMediaId: requestDto.faviconMediaId,
+      placeholderMediaId: requestDto.placeholderMediaId,
+      primaryColor: requestDto.primaryColor,
+      accentColor: requestDto.accentColor,
+      backgroundColor: requestDto.backgroundColor,
+      textColor: requestDto.textColor,
+      secondaryColor: requestDto.secondaryColor,
+      borderColor: requestDto.borderColor,
     });
     return new SiteSettingsResponseDto(siteSettings);
   }

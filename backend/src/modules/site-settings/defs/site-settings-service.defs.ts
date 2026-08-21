@@ -8,6 +8,13 @@ export type CreateSiteSettingsServiceInput = {
   readonly address?: string;
   readonly logoMediaId?: number;
   readonly faviconMediaId?: number;
+  readonly placeholderMediaId?: number;
+  readonly primaryColor?: string;
+  readonly accentColor?: string;
+  readonly backgroundColor?: string;
+  readonly textColor?: string;
+  readonly secondaryColor?: string;
+  readonly borderColor?: string;
 };
 
 export type UpdateSiteSettingsServiceInput = {
@@ -20,4 +27,11 @@ export type UpdateSiteSettingsServiceInput = {
   readonly address?: string | null;
   readonly logoMediaId?: number | null;
   readonly faviconMediaId?: number | null;
+  readonly placeholderMediaId?: number | null;
+  readonly primaryColor?: string | null;
+  readonly accentColor?: string | null;
+  readonly backgroundColor?: string | null;
+  readonly textColor?: string | null;
+  readonly secondaryColor?: string | null;
+  readonly borderColor?: string | null;
 };

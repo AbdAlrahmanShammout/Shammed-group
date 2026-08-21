@@ -20,4 +20,5 @@ export const appPaths = {
   adminContactSocial: '/admin/social-media',
   adminMedia: '/admin/media',
   adminContactInquiries: '/admin/contact-inquiries',
+  adminThemeSettings: '/admin/settings/theme',
 } as const;

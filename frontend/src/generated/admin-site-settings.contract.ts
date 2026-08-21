@@ -25,8 +25,16 @@ export type SiteSettingsResponse = {
   readonly address?: string;
   readonly logoMediaId?: number;
   readonly faviconMediaId?: number;
+  readonly placeholderMediaId?: number;
+  readonly primaryColor?: string;
+  readonly accentColor?: string;
+  readonly backgroundColor?: string;
+  readonly textColor?: string;
+  readonly secondaryColor?: string;
+  readonly borderColor?: string;
   readonly logo?: MediaResponse;
   readonly favicon?: MediaResponse;
+  readonly placeholder?: MediaResponse;
 };
 
 export type SiteSettingsResponseDto = {
@@ -43,6 +51,13 @@ export type CreateSiteSettingsRequestDto = {
   readonly address?: string;
   readonly logoMediaId?: number;
   readonly faviconMediaId?: number;
+  readonly placeholderMediaId?: number;
+  readonly primaryColor?: string;
+  readonly accentColor?: string;
+  readonly backgroundColor?: string;
+  readonly textColor?: string;
+  readonly secondaryColor?: string;
+  readonly borderColor?: string;
 };
 
 export type UpdateSiteSettingsRequestDto = {
@@ -55,4 +70,11 @@ export type UpdateSiteSettingsRequestDto = {
   readonly address?: string | null;
   readonly logoMediaId?: number | null;
   readonly faviconMediaId?: number | null;
+  readonly placeholderMediaId?: number | null;
+  readonly primaryColor?: string | null;
+  readonly accentColor?: string | null;
+  readonly backgroundColor?: string | null;
+  readonly textColor?: string | null;
+  readonly secondaryColor?: string | null;
+  readonly borderColor?: string | null;
 };

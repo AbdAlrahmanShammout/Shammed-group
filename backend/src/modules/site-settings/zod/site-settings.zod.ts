@@ -18,8 +18,16 @@ export const SiteSettingsZodSchema = BaseZodSchema.extend({
   address: ZodStringNullable,
   logoMediaId: ZodNumberNullable,
   faviconMediaId: ZodNumberNullable,
+  placeholderMediaId: ZodNumberNullable,
+  primaryColor: ZodStringNullable,
+  accentColor: ZodStringNullable,
+  backgroundColor: ZodStringNullable,
+  textColor: ZodStringNullable,
+  secondaryColor: ZodStringNullable,
+  borderColor: ZodStringNullable,
   logo: (z.any() as z.ZodType<MediaEntity | undefined>).optional(),
   favicon: (z.any() as z.ZodType<MediaEntity | undefined>).optional(),
+  placeholder: (z.any() as z.ZodType<MediaEntity | undefined>).optional(),
 });
 
 export type SiteSettingsZodType = z.infer<typeof SiteSettingsZodSchema>;

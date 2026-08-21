@@ -22,6 +22,13 @@ describe('SiteSettingsService', () => {
     address: null,
     logoMediaId: null,
     faviconMediaId: null,
+      placeholderMediaId: null,
+      primaryColor: null,
+      accentColor: null,
+      backgroundColor: null,
+      textColor: null,
+      secondaryColor: null,
+      borderColor: null,
   });
   let siteSettingsService: SiteSettingsService;
   let siteSettingsRepository: {

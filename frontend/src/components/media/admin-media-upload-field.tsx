@@ -10,14 +10,23 @@ import { createPublicMediaUrl } from '@/lib/create-public-media-url';
 import { cn } from '@/lib/utils';
 
 type AdminMediaUploadFieldProps = {
+  /** MIME types passed to the hidden file input's `accept` attribute. */
+  readonly accept?: string;
   readonly disabled?: boolean;
   readonly fileName?: string;
+  /** Short format description shown in the dropzone, e.g. "JPEG, PNG, or WebP · max 5 MB". */
+  readonly formatHint?: string;
+  /** Optional helper text displayed below the label. */
+  readonly hint?: string;
   readonly inputId: string;
   readonly label: string;
   readonly mediaId: string;
   readonly onClear: () => void;
   readonly onUploaded: (input: { readonly mediaId: string; readonly fileName: string }) => void;
 };
+
+const DEFAULT_ACCEPT = 'image/jpeg,image/png,image/webp';
+const DEFAULT_FORMAT_HINT = 'JPEG, PNG, or WebP · max 5 MB';
 
 function parseMediaId(mediaId: string): number | null {
   if (mediaId.trim() === '') {
@@ -34,8 +43,11 @@ function parseMediaId(mediaId: string): number | null {
  * Admin image picker with a small preview and add / replace / remove actions.
  */
 export function AdminMediaUploadField({
+  accept = DEFAULT_ACCEPT,
   disabled = false,
   fileName,
+  formatHint = DEFAULT_FORMAT_HINT,
+  hint,
   inputId,
   label,
   mediaId,
@@ -79,8 +91,9 @@ export function AdminMediaUploadField({
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor={inputId}>{label}</Label>
+      {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
       <input
-        accept="image/jpeg,image/png,image/webp"
+        accept={accept}
         className="sr-only"
         disabled={isBusy}
         id={inputId}
@@ -109,7 +122,7 @@ export function AdminMediaUploadField({
             <div className="flex min-w-0 flex-1 flex-col gap-2">
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">{previewLabel}</p>
-                <p className="text-xs text-muted-foreground">JPEG, PNG, or WebP · max 5 MB</p>
+                <p className="text-xs text-muted-foreground">{formatHint}</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -143,7 +156,7 @@ export function AdminMediaUploadField({
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">No image selected</p>
-                <p className="text-xs text-muted-foreground">JPEG, PNG, or WebP · max 5 MB</p>
+                <p className="text-xs text-muted-foreground">{formatHint}</p>
               </div>
             </div>
             <Button disabled={isBusy} onClick={openFilePicker} size="sm" type="button">

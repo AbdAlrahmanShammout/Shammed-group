@@ -12,8 +12,16 @@ export class SiteSettingsEntity extends BaseEntity {
   address!: string | null;
   logoMediaId!: number | null;
   faviconMediaId!: number | null;
+  placeholderMediaId!: number | null;
+  primaryColor!: string | null;
+  accentColor!: string | null;
+  backgroundColor!: string | null;
+  textColor!: string | null;
+  secondaryColor!: string | null;
+  borderColor!: string | null;
   logo?: MediaEntity;
   favicon?: MediaEntity;
+  placeholder?: MediaEntity;
 
   constructor(data: SiteSettingsZodType) {
     super();

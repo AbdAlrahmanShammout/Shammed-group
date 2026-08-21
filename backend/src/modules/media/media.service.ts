@@ -9,7 +9,7 @@ import { MediaEntity } from '@/modules/media/entity/media.entity';
 import { MediaRepository } from '@/modules/media/repository/media.repository';
 import { ImageProcessorService } from '@/providers/storage/image-processor.service';
 import { StorageManagerService } from '@/providers/storage/storage-manager.service';
-import { OUTPUT_IMAGE_MIME_TYPE } from '@/providers/storage/consts';
+import { OUTPUT_IMAGE_MIME_TYPE, PASSTHROUGH_MIME_TYPES } from '@/providers/storage/consts';
 
 @Injectable()
 export class MediaService {
@@ -54,7 +54,8 @@ export class MediaService {
   async getMediaFileContent(id: number, width?: number): Promise<MediaFileContent> {
     const media = await this.getMediaById(id);
     const raw = await this.storageManagerService.readFile(media.storageKey);
-    if (width !== undefined) {
+    const canResize = width !== undefined && !PASSTHROUGH_MIME_TYPES.has(media.mimeType);
+    if (canResize) {
       const resized = await this.imageProcessorService.resizeToWidth(raw, width);
       return {
         originalFileName: media.originalFileName,

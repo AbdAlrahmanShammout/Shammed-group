@@ -2,6 +2,7 @@ import { ImageOff } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactElement } from 'react';
 
+import { useImagePlaceholder } from '@/components/media/image-placeholder-context';
 import { createPublicMediaUrl } from '@/lib/create-public-media-url';
 import { cn } from '@/lib/utils';
 
@@ -53,24 +54,43 @@ export function ProgressiveImage({
 }: ProgressiveImageProps): ReactElement {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
+  const customPlaceholderSrc = useImagePlaceholder();
 
   const src = createPublicMediaUrl(mediaId);
   const srcSet = srcWidths
     .map((w) => `${createPublicMediaUrl(mediaId, w)} ${w}w`)
     .join(', ');
 
+  const isSkeletonVisible = !isLoaded && !isError;
+
   return (
     <span className={cn('relative block overflow-hidden', className)}>
-      {/* Skeleton — hidden once image loads */}
+      {/* Skeleton — visible while the image loads, then fades out */}
       <span
         aria-hidden="true"
         className={cn(
           'pointer-events-none absolute inset-0 transition-opacity duration-500',
-          isLoaded || isError
-            ? 'opacity-0'
-            : 'animate-pulse bg-gradient-to-br from-secondary/80 via-secondary/40 to-muted',
+          isSkeletonVisible ? 'opacity-100' : 'opacity-0',
         )}
-      />
+      >
+        {customPlaceholderSrc ? (
+          /* Custom branded placeholder image (configurable from admin panel) */
+          <img
+            alt=""
+            aria-hidden="true"
+            className={cn(
+              'h-full w-full object-contain p-6 opacity-20',
+              'transition-opacity duration-500',
+              isSkeletonVisible ? 'opacity-20' : 'opacity-0',
+            )}
+            loading="eager"
+            src={customPlaceholderSrc}
+          />
+        ) : (
+          /* Fallback gradient skeleton */
+          <span className="absolute inset-0 animate-pulse bg-gradient-to-br from-secondary/80 via-secondary/40 to-muted" />
+        )}
+      </span>
 
       {isError ? (
         /* Silent error state — muted placeholder, no broken icon shown to visitors */

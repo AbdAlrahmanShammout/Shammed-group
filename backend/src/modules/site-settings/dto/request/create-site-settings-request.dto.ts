@@ -54,4 +54,40 @@ export class CreateSiteSettingsRequestDto {
   @IsInt()
   @Min(1)
   faviconMediaId?: number;
+
+  @ApiPropertyOptional({ description: 'Image placeholder media identifier', example: 3 })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  placeholderMediaId?: number;
+
+  @ApiPropertyOptional({ description: 'Primary brand color (hex)', example: '#2C3470' })
+  @IsOptional()
+  @IsString()
+  primaryColor?: string;
+
+  @ApiPropertyOptional({ description: 'Accent / highlight color (hex)', example: '#A32D24' })
+  @IsOptional()
+  @IsString()
+  accentColor?: string;
+
+  @ApiPropertyOptional({ description: 'Page background color (hex)', example: '#FFFFFF' })
+  @IsOptional()
+  @IsString()
+  backgroundColor?: string;
+
+  @ApiPropertyOptional({ description: 'Body text color (hex)', example: '#1F2937' })
+  @IsOptional()
+  @IsString()
+  textColor?: string;
+
+  @ApiPropertyOptional({ description: 'Secondary / soft-tint color (hex)', example: '#E8ECF7' })
+  @IsOptional()
+  @IsString()
+  secondaryColor?: string;
+
+  @ApiPropertyOptional({ description: 'Border / divider color (hex)', example: '#D9DEE8' })
+  @IsOptional()
+  @IsString()
+  borderColor?: string;
 }

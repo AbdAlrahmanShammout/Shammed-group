@@ -32,11 +32,35 @@ export class SiteSettingsResponse extends BaseModelResponseDto {
   @ApiPropertyOptional({ description: 'Favicon media identifier', example: 2 })
   faviconMediaId?: number;
 
+  @ApiPropertyOptional({ description: 'Image placeholder media identifier', example: 3 })
+  placeholderMediaId?: number;
+
+  @ApiPropertyOptional({ description: 'Primary brand color (hex)', example: '#2C3470' })
+  primaryColor?: string;
+
+  @ApiPropertyOptional({ description: 'Accent / highlight color (hex)', example: '#A32D24' })
+  accentColor?: string;
+
+  @ApiPropertyOptional({ description: 'Page background color (hex)', example: '#FFFFFF' })
+  backgroundColor?: string;
+
+  @ApiPropertyOptional({ description: 'Body text color (hex)', example: '#1F2937' })
+  textColor?: string;
+
+  @ApiPropertyOptional({ description: 'Secondary / soft-tint color (hex)', example: '#E8ECF7' })
+  secondaryColor?: string;
+
+  @ApiPropertyOptional({ description: 'Border / divider color (hex)', example: '#D9DEE8' })
+  borderColor?: string;
+
   @ApiPropertyOptional({ type: () => MediaResponse })
   logo?: MediaResponse;
 
   @ApiPropertyOptional({ type: () => MediaResponse })
   favicon?: MediaResponse;
+
+  @ApiPropertyOptional({ type: () => MediaResponse })
+  placeholder?: MediaResponse;
 
   constructor(data: SiteSettingsEntity) {
     super(data);
@@ -49,7 +73,15 @@ export class SiteSettingsResponse extends BaseModelResponseDto {
     this.address = data.address ?? undefined;
     this.logoMediaId = data.logoMediaId ?? undefined;
     this.faviconMediaId = data.faviconMediaId ?? undefined;
+    this.placeholderMediaId = data.placeholderMediaId ?? undefined;
+    this.primaryColor = data.primaryColor ?? undefined;
+    this.accentColor = data.accentColor ?? undefined;
+    this.backgroundColor = data.backgroundColor ?? undefined;
+    this.textColor = data.textColor ?? undefined;
+    this.secondaryColor = data.secondaryColor ?? undefined;
+    this.borderColor = data.borderColor ?? undefined;
     this.logo = data.logo ? new MediaResponse(data.logo) : undefined;
     this.favicon = data.favicon ? new MediaResponse(data.favicon) : undefined;
+    this.placeholder = data.placeholder ? new MediaResponse(data.placeholder) : undefined;
   }
 }

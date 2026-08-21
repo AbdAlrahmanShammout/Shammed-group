@@ -24,6 +24,7 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
   const [isSuccess, setIsSuccess] = useState(false);
   const [logoFileName, setLogoFileName] = useState('');
   const [faviconFileName, setFaviconFileName] = useState('');
+  const [placeholderFileName, setPlaceholderFileName] = useState('');
   const createMutation = useCreateAdminSiteSettingsMutation();
   const updateMutation = useUpdateAdminSiteSettingsMutation();
   const isPending = createMutation.isPending || updateMutation.isPending;
@@ -36,22 +37,25 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
       phone: siteSettings?.phone ?? '',
       logoMediaId: siteSettings?.logoMediaId?.toString() ?? '',
       faviconMediaId: siteSettings?.faviconMediaId?.toString() ?? '',
+      placeholderMediaId: siteSettings?.placeholderMediaId?.toString() ?? '',
     },
   });
   useEffect(() => {
     if (!siteSettings) {
       return;
     }
-    form.reset({
+      form.reset({
       companyName: siteSettings.companyName,
       companyNameEnglish: siteSettings.companyNameEnglish,
       companyNameArabic: siteSettings.companyNameArabic ?? '',
       phone: siteSettings.phone,
       logoMediaId: siteSettings.logoMediaId?.toString() ?? '',
       faviconMediaId: siteSettings.faviconMediaId?.toString() ?? '',
+      placeholderMediaId: siteSettings.placeholderMediaId?.toString() ?? '',
     });
     setLogoFileName(siteSettings.logo?.originalFileName ?? '');
     setFaviconFileName(siteSettings.favicon?.originalFileName ?? '');
+    setPlaceholderFileName(siteSettings.placeholder?.originalFileName ?? '');
   }, [form, siteSettings]);
   const serverError =
     createMutation.error instanceof ApiError
@@ -60,15 +64,17 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
         ? updateMutation.error.message
         : null;
   async function persistMediaField(input: {
-    readonly field: 'logoMediaId' | 'faviconMediaId';
+    readonly field: 'logoMediaId' | 'faviconMediaId' | 'placeholderMediaId';
     readonly mediaId: string;
     readonly fileName: string;
   }): Promise<void> {
     form.setValue(input.field, input.mediaId, { shouldDirty: true });
     if (input.field === 'logoMediaId') {
       setLogoFileName(input.fileName);
-    } else {
+    } else if (input.field === 'faviconMediaId') {
       setFaviconFileName(input.fileName);
+    } else {
+      setPlaceholderFileName(input.fileName);
     }
     if (!siteSettings) {
       return;
@@ -87,6 +93,7 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
     setIsSuccess(false);
     const logoMediaId = toOptionalMediaId(values.logoMediaId);
     const faviconMediaId = toOptionalMediaId(values.faviconMediaId);
+    const placeholderMediaId = toOptionalMediaId(values.placeholderMediaId);
     try {
       if (siteSettings) {
         await updateMutation.mutateAsync({
@@ -96,6 +103,7 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
           phone: values.phone,
           logoMediaId,
           faviconMediaId,
+          placeholderMediaId,
         });
       } else {
         await createMutation.mutateAsync({
@@ -106,6 +114,7 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
           phone: values.phone,
           logoMediaId: logoMediaId ?? undefined,
           faviconMediaId: faviconMediaId ?? undefined,
+          placeholderMediaId: placeholderMediaId ?? undefined,
         });
       }
       setIsSuccess(true);
@@ -220,13 +229,38 @@ export function CompanySettingsForm({ siteSettings }: CompanySettingsFormProps):
           });
         }}
       />
+      <AdminMediaUploadField
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        disabled={isPending}
+        fileName={placeholderFileName}
+        formatHint="JPEG, PNG, WebP, or GIF · max 5 MB"
+        hint="Shown as a branded loading state while content images load. PNG or GIF (animated) with transparent background recommended."
+        inputId="placeholderImageUpload"
+        label="Image placeholder"
+        mediaId={form.watch('placeholderMediaId')}
+        onClear={() => {
+          void persistMediaField({
+            field: 'placeholderMediaId',
+            mediaId: '',
+            fileName: '',
+          });
+        }}
+        onUploaded={({ mediaId, fileName }) => {
+          void persistMediaField({
+            field: 'placeholderMediaId',
+            mediaId,
+            fileName,
+          });
+        }}
+      />
       {siteSettings ? (
         <p className="text-xs text-muted-foreground">
-          Logo and favicon apply to the public site as soon as you upload or remove them.
+          Logo, favicon, and image placeholder apply to the public site as soon as you upload or
+          remove them.
         </p>
       ) : (
         <p className="text-xs text-muted-foreground">
-          Create settings first, then logo and favicon uploads apply immediately.
+          Create settings first, then media uploads apply immediately.
         </p>
       )}
       {serverError ? (

@@ -12,6 +12,7 @@ export const adminNavGroups: readonly AdminNavGroup[] = [
       { label: 'Home Page', path: appPaths.adminWebsiteHome },
       { label: 'About Us', path: appPaths.adminWebsiteAbout },
       { label: 'Settings', path: appPaths.adminWebsiteSettings },
+      { label: 'Brand Colors', path: appPaths.adminThemeSettings },
     ],
   },
   {

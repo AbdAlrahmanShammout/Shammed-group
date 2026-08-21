@@ -64,6 +64,7 @@ export class MediaPrismaRepository implements MediaRepository {
       where: {
         siteSettingsLogo: null,
         siteSettingsFavicon: null,
+        siteSettingsPlaceholder: null,
         partnerLogo: null,
         productImage: null,
         serviceImage: null,

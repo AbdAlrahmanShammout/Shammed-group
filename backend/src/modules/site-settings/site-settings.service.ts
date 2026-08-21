@@ -22,6 +22,7 @@ export class SiteSettingsService {
     await this.assertSingletonAbsent();
     await this.assertMediaReference(input.logoMediaId);
     await this.assertMediaReference(input.faviconMediaId);
+    await this.assertMediaReference(input.placeholderMediaId);
     return this.siteSettingsRepository.create({
       companyName: input.companyName,
       companyNameEnglish: input.companyNameEnglish,
@@ -32,6 +33,13 @@ export class SiteSettingsService {
       address: input.address ?? null,
       logoMediaId: input.logoMediaId ?? null,
       faviconMediaId: input.faviconMediaId ?? null,
+      placeholderMediaId: input.placeholderMediaId ?? null,
+      primaryColor: input.primaryColor ?? null,
+      accentColor: input.accentColor ?? null,
+      backgroundColor: input.backgroundColor ?? null,
+      textColor: input.textColor ?? null,
+      secondaryColor: input.secondaryColor ?? null,
+      borderColor: input.borderColor ?? null,
     });
   }
 
@@ -51,6 +59,7 @@ export class SiteSettingsService {
     const existing = await this.getSiteSettings();
     await this.assertMediaReference(input.logoMediaId);
     await this.assertMediaReference(input.faviconMediaId);
+    await this.assertMediaReference(input.placeholderMediaId);
     return this.siteSettingsRepository.update({
       id: existing.id,
       companyName: input.companyName,
@@ -62,6 +71,13 @@ export class SiteSettingsService {
       address: input.address,
       logoMediaId: input.logoMediaId,
       faviconMediaId: input.faviconMediaId,
+      placeholderMediaId: input.placeholderMediaId,
+      primaryColor: input.primaryColor,
+      accentColor: input.accentColor,
+      backgroundColor: input.backgroundColor,
+      textColor: input.textColor,
+      secondaryColor: input.secondaryColor,
+      borderColor: input.borderColor,
     });
   }
 

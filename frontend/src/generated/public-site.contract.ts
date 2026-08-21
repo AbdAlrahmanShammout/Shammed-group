@@ -25,8 +25,16 @@ export type SiteSettingsResponse = {
   readonly address?: string;
   readonly logoMediaId?: number;
   readonly faviconMediaId?: number;
+  readonly placeholderMediaId?: number;
+  readonly primaryColor?: string;
+  readonly accentColor?: string;
+  readonly backgroundColor?: string;
+  readonly textColor?: string;
+  readonly secondaryColor?: string;
+  readonly borderColor?: string;
   readonly logo?: MediaResponse;
   readonly favicon?: MediaResponse;
+  readonly placeholder?: MediaResponse;
 };
 
 export type SiteSettingsResponseDto = {

@@ -31,7 +31,7 @@ export class MediaPublicController {
   @ApiOperation({ summary: 'Download a public media file by id' })
   @ApiParam({ name: 'id', type: Number })
   @ApiQuery({ name: 'w', required: false, type: Number, description: 'Resize to this pixel width' })
-  @ApiProduces('image/webp', 'image/jpeg', 'image/png')
+  @ApiProduces('image/webp', 'image/jpeg', 'image/png', 'image/gif')
   @ApiResponse({ status: HttpStatus.OK, description: 'Binary image content' })
   @Header('Cache-Control', 'public, max-age=31536000, immutable')
   @Header('Cross-Origin-Resource-Policy', 'cross-origin')

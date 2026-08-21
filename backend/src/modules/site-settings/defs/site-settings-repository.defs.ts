@@ -8,6 +8,13 @@ export type CreateSiteSettingsRepoInput = {
   readonly address: string | null;
   readonly logoMediaId: number | null;
   readonly faviconMediaId: number | null;
+  readonly placeholderMediaId: number | null;
+  readonly primaryColor: string | null;
+  readonly accentColor: string | null;
+  readonly backgroundColor: string | null;
+  readonly textColor: string | null;
+  readonly secondaryColor: string | null;
+  readonly borderColor: string | null;
 };
 
 export type UpdateSiteSettingsRepoInput = {
@@ -21,4 +28,11 @@ export type UpdateSiteSettingsRepoInput = {
   readonly address?: string | null;
   readonly logoMediaId?: number | null;
   readonly faviconMediaId?: number | null;
+  readonly placeholderMediaId?: number | null;
+  readonly primaryColor?: string | null;
+  readonly accentColor?: string | null;
+  readonly backgroundColor?: string | null;
+  readonly textColor?: string | null;
+  readonly secondaryColor?: string | null;
+  readonly borderColor?: string | null;
 };

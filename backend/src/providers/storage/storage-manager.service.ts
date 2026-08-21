@@ -11,6 +11,7 @@ import {
   AllowedImageMimeType,
   OUTPUT_IMAGE_EXTENSION,
   OUTPUT_IMAGE_MIME_TYPE,
+  PASSTHROUGH_MIME_TYPES,
 } from '@/providers/storage/consts';
 import { StoreFileInput, StoredFile } from '@/providers/storage/defs/storage-manager.defs';
 import { StorageFileTooLargeException } from '@/providers/storage/exceptions/storage-file-too-large.exception';
@@ -27,6 +28,9 @@ export class StorageManagerService {
   async storeFile(input: StoreFileInput): Promise<StoredFile> {
     this.parseAllowedMimeType(input.mimeType, input.originalFileName);
     this.assertIsWithinSizeLimit(input.content.byteLength);
+    if (PASSTHROUGH_MIME_TYPES.has(input.mimeType)) {
+      return this.storePassthroughFile(input);
+    }
     const processed = await this.imageProcessorService.processUpload(input.content);
     const storedFileName = `${randomUUID()}${OUTPUT_IMAGE_EXTENSION}`;
     await this.writeStoredFile(storedFileName, processed.buffer);
@@ -35,6 +39,23 @@ export class StorageManagerService {
       storedFileName,
       mimeType: OUTPUT_IMAGE_MIME_TYPE,
       byteSize: processed.buffer.byteLength,
+      storageKey: storedFileName,
+    };
+  }
+
+  /**
+   * Store the file without any transformation, preserving the original format
+   * and extension (e.g. animated GIFs must not be re-encoded).
+   */
+  private async storePassthroughFile(input: StoreFileInput): Promise<StoredFile> {
+    const extension = path.extname(input.originalFileName).toLowerCase();
+    const storedFileName = `${randomUUID()}${extension}`;
+    await this.writeStoredFile(storedFileName, input.content);
+    return {
+      originalFileName: input.originalFileName,
+      storedFileName,
+      mimeType: input.mimeType,
+      byteSize: input.content.byteLength,
       storageKey: storedFileName,
     };
   }
