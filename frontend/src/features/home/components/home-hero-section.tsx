@@ -50,9 +50,9 @@ function PharmaVisual({ shouldReduceMotion }: PharmaVisualProps): ReactElement {
       />
       <div
         className="pointer-events-none absolute"
-        style={{ bottom: '2%', left: '-6%', width: 260, height: 260, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(110,136,232,0.18) 0%, transparent 70%)',
-          filter: 'blur(36px)' }}
+        style={{ bottom: '-8%', left: '5%', width: 300, height: 300, borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(110,136,232,0.16) 0%, transparent 65%)',
+          filter: 'blur(48px)' }}
       />
       <div
         className="pointer-events-none absolute"
@@ -251,7 +251,7 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
   return (
     <section
       aria-labelledby="home-hero-title"
-      className="relative isolate overflow-hidden border-b"
+      className="relative isolate overflow-hidden " 
       style={{ background: 'linear-gradient(140deg, #F8FCFC 0%, #FFFFFF 45%, #F0F7FF 100%)' }}
     >
       <div className="mx-auto grid max-w-6xl grid-cols-1 px-4 md:px-6 lg:grid-cols-2 lg:min-h-[88vh] lg:items-center">
@@ -311,6 +311,13 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
           <PharmaVisual shouldReduceMotion={shouldReduceMotion} />
         </motion.div>
       </div>
+
+      {/* Bottom gradient fade — dissolves the hero into the next section without a hard border */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-24"
+        style={{ background: 'linear-gradient(to bottom, transparent 0%, #ffffff 100%)' }}
+      />
     </section>
   );
 }
