@@ -54,7 +54,14 @@ export function AdminThemeSettingsPage(): ReactElement {
 
   // Live-preview: update CSS variables whenever the local state changes
   useEffect(() => {
-    applyDocumentColors(colors);
+    applyDocumentColors({
+      primaryColor: colors.primaryColor ?? undefined,
+      accentColor: colors.accentColor ?? undefined,
+      backgroundColor: colors.backgroundColor ?? undefined,
+      textColor: colors.textColor ?? undefined,
+      secondaryColor: colors.secondaryColor ?? undefined,
+      borderColor: colors.borderColor ?? undefined,
+    });
   }, [colors]);
 
   const handleColorChange = useCallback(
