@@ -33,7 +33,7 @@ export function PublicHomePage(): ReactElement {
       </div>
     );
   }
-  const { homePage, partners, products, services } = homePageQuery.data;
+  const { homePage, partners, services } = homePageQuery.data;
   return (
     <div>
       {homeSeo ? (
@@ -42,7 +42,7 @@ export function PublicHomePage(): ReactElement {
       <HomeHeroSection homePage={homePage} />
       <HomeAboutPreviewSection homePage={homePage} />
       <HomePartnersSection homePage={homePage} partners={partners} />
-      <HomeProductsSection homePage={homePage} products={products} />
+      <HomeProductsSection homePage={homePage} partners={partners} />
       <HomeServicesSection homePage={homePage} services={services} />
       <HomeWhySection
         companyName={siteSettings?.companyName}

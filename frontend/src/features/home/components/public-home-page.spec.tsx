@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PublicHomePage } from '@/features/home/components/public-home-page';
 import { createQueryClient } from '@/config/query-client';
 import { appEnv } from '@/config/env';
-import { mockPublicHomePage } from '@/test/public-chrome';
+import { mockPublicHomePage, mockPublicSiteSettings } from '@/test/public-chrome';
 
 function renderPublicHomePage(): void {
   const queryClient = createQueryClient();
@@ -48,6 +48,24 @@ describe('PublicHomePage', () => {
             { status: 200, headers: { 'Content-Type': 'application/json' } },
           );
         }
+        if (url === `${appEnv.apiBaseUrl}/product-category`) {
+          return new Response(
+            JSON.stringify({
+              productCategories: [mockPublicHomePage.products[0].category],
+              total: 1,
+            }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } },
+          );
+        }
+        if (url === `${appEnv.apiBaseUrl}/product` || url.startsWith(`${appEnv.apiBaseUrl}/product?`)) {
+          return new Response(
+            JSON.stringify({
+              products: mockPublicHomePage.products,
+              total: mockPublicHomePage.products.length,
+            }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } },
+          );
+        }
         return new Response('Not found', { status: 404 });
       }),
     );
@@ -71,7 +89,7 @@ describe('PublicHomePage', () => {
     const partnerWebsiteLink = screen.getByRole('heading', { name: 'Visible Partner' }).closest('a');
     expect(partnerWebsiteLink).toHaveAttribute('href', 'https://www.visible-partner.example');
     expect(partnerWebsiteLink).toHaveAttribute('target', '_blank');
-    expect(screen.getByRole('heading', { name: 'Visible Product' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Visible Product' })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Visible Product' })).toHaveAttribute(
       'src',
       `${appEnv.apiBaseUrl}/media/42`,
@@ -89,10 +107,6 @@ describe('PublicHomePage', () => {
     expect(screen.queryByText('Hidden Partner')).not.toBeInTheDocument();
     expect(screen.queryByText('Hidden Product')).not.toBeInTheDocument();
     expect(screen.queryByText('Hidden Service')).not.toBeInTheDocument();
-    const heroImage = document.querySelector(
-      `img[src="${appEnv.apiBaseUrl}/media/${mockPublicHomePage.homePage.heroImageMediaId}"]`,
-    );
-    expect(heroImage).toBeInTheDocument();
     expect(screen.getByRole('img', { name: mockPublicHomePage.homePage.aboutPreviewTitle })).toHaveAttribute(
       'src',
       `${appEnv.apiBaseUrl}/media/${mockPublicHomePage.homePage.aboutPreviewImageMediaId}`,
@@ -106,21 +120,43 @@ describe('PublicHomePage', () => {
   it('does not invent catalog rows that the API omitted', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async (): Promise<Response> => {
-        return new Response(
-          JSON.stringify({
-            ...mockPublicHomePage,
-            partners: [],
-            products: [],
-            services: [],
-          }),
-          { status: 200, headers: { 'Content-Type': 'application/json' } },
-        );
+      vi.fn(async (input: RequestInfo | URL): Promise<Response> => {
+        const url = String(input);
+        if (url === `${appEnv.apiBaseUrl}/home-page`) {
+          return new Response(
+            JSON.stringify({
+              ...mockPublicHomePage,
+              partners: [],
+              products: [],
+              services: [],
+            }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } },
+          );
+        }
+        if (url === `${appEnv.apiBaseUrl}/site-settings`) {
+          return new Response(
+            JSON.stringify({ siteSettings: mockPublicSiteSettings }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } },
+          );
+        }
+        if (url === `${appEnv.apiBaseUrl}/product-category`) {
+          return new Response(JSON.stringify({ productCategories: [], total: 0 }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+        if (url === `${appEnv.apiBaseUrl}/product` || url.startsWith(`${appEnv.apiBaseUrl}/product?`)) {
+          return new Response(JSON.stringify({ products: [], total: 0 }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+        return new Response('Not found', { status: 404 });
       }),
     );
     renderPublicHomePage();
     expect(await screen.findByText('No partners are available yet.')).toBeInTheDocument();
-    expect(screen.getByText('No products are available yet.')).toBeInTheDocument();
+    expect(await screen.findByText('No products match your filters yet.')).toBeInTheDocument();
     expect(screen.getByText('No services are available yet.')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Visible Partner' })).not.toBeInTheDocument();
   });

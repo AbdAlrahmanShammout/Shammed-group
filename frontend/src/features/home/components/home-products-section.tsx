@@ -1,20 +1,22 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Building2, Handshake } from 'lucide-react';
-import { useMemo, useRef, useState, type ReactElement } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ProgressiveImage } from '@/components/media/progressive-image';
 import { Button } from '@/components/ui/button';
 import { appPaths } from '@/config/app-paths';
+import {
+  useHomeSectionProductCategoriesQuery,
+  useHomeSectionProductsQuery,
+} from '@/features/home/hooks/use-home-section-products-query';
 import { ProductPartnerFilter } from '@/features/products/components/product-partner-filter';
 import { ProductSearchField } from '@/features/products/components/product-search-field';
-import { matchesProductSearch } from '@/features/products/lib/matches-product-search';
+import type { HomePageResponse, PublicPartnerResponse } from '@/generated/public-home.contract';
 import type {
-  HomePageResponse,
-  PublicPartnerResponse,
-  PublicProductCategoryResponse,
-  PublicProductResponse,
-} from '@/generated/public-home.contract';
+  ProductCategoryResponse,
+  ProductResponse,
+} from '@/generated/public-product.contract';
 import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
 import { cn } from '@/lib/utils';
 
@@ -24,6 +26,8 @@ import { cn } from '@/lib/utils';
 
 const FALLBACK_COLOR = '#394285';
 const DARKENING_STRENGTH = 0.5;
+const HOME_SECTION_PAGE_SIZE = 24;
+const SEARCH_DEBOUNCE_MS = 300;
 
 type HslColor = {
   readonly hue: number;
@@ -126,34 +130,8 @@ function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   Derive unique categories from the product list (preserves displayOrder)
-───────────────────────────────────────────────────────────────────────────── */
-
-function deriveCategories(
-  products: readonly PublicProductResponse[],
-): PublicProductCategoryResponse[] {
-  const seen = new Map<number, PublicProductCategoryResponse>();
-  for (const product of products) {
-    if (!seen.has(product.categoryId)) {
-      seen.set(product.categoryId, product.category);
-    }
-  }
-  return [...seen.values()].sort((a, b) => a.displayOrder - b.displayOrder);
-}
-
-function derivePartners(products: readonly PublicProductResponse[]): PublicPartnerResponse[] {
-  const seen = new Map<number, PublicPartnerResponse>();
-  for (const product of products) {
-    if (product.partner !== undefined) {
-      seen.set(product.partner.id, product.partner);
-    }
-  }
-  return [...seen.values()].sort((a, b) => a.displayOrder - b.displayOrder || a.id - b.id);
-}
-
 const homeFilterInputClassName =
-  'border-white/20 bg-white/10 text-white placeholder:text-white/50 focus-visible:border-white/40 focus-visible:ring-white/20';
+  'border-white/20 bg-white/10 text-white placeholder:text-white/50 focus-visible:border-white/40 focus-visible:ring-white/20 [&_option]:bg-background [&_option]:text-foreground';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Product media placeholder / image
@@ -202,7 +180,7 @@ function ProductMedia({
 ───────────────────────────────────────────────────────────────────────────── */
 
 type ProductTileProps = {
-  readonly product: PublicProductResponse;
+  readonly product: ProductResponse;
   readonly featured?: boolean;
   readonly index: number;
   readonly shouldReduceMotion: boolean | null;
@@ -333,7 +311,7 @@ function ProductTile({
 ───────────────────────────────────────────────────────────────────────────── */
 
 type CategoryTabsProps = {
-  readonly categories: PublicProductCategoryResponse[];
+  readonly categories: readonly ProductCategoryResponse[];
   readonly activeCategoryId: number;
   readonly onSelect: (id: number) => void;
   readonly shouldReduceMotion: boolean | null;
@@ -407,36 +385,47 @@ function CategoryTabs({
 
 type HomeProductsSectionProps = {
   readonly homePage: HomePageResponse;
-  readonly products: readonly PublicProductResponse[];
+  readonly partners: readonly PublicPartnerResponse[];
 };
 
 export function HomeProductsSection({
   homePage,
-  products,
+  partners,
 }: HomeProductsSectionProps): ReactElement {
   const shouldReduceMotion = useReducedMotion();
-  const categories = useMemo(() => deriveCategories(products), [products]);
-  const partners = useMemo(() => derivePartners(products), [products]);
+  const categoriesQuery = useHomeSectionProductCategoriesQuery();
+  const categories = categoriesQuery.data?.productCategories ?? [];
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
   const [selectedPartnerId, setSelectedPartnerId] = useState<number | undefined>(undefined);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearch(searchInput.trim());
+    }, SEARCH_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
 
   const effectiveCategoryId = activeCategoryId ?? categories[0]?.id ?? null;
-  const activeCategory = categories.find((c) => c.id === effectiveCategoryId);
+  const activeCategory = categories.find((category) => category.id === effectiveCategoryId);
   const activeColor = resolveColor(activeCategory?.color);
   const activeAtmosphere = useMemo(() => deriveDarkCategoryAtmosphere(activeColor), [activeColor]);
 
-  const filteredProducts = useMemo(() => {
-    let result = products.filter((product) => product.categoryId === effectiveCategoryId);
-    if (selectedPartnerId !== undefined) {
-      result = result.filter((product) => product.partnerId === selectedPartnerId);
-    }
-    if (searchQuery.trim().length > 0) {
-      result = result.filter((product) => matchesProductSearch(product, searchQuery));
-    }
-    return result;
-  }, [products, effectiveCategoryId, selectedPartnerId, searchQuery]);
+  const productsQuery = useHomeSectionProductsQuery(
+    {
+      categoryId: effectiveCategoryId ?? undefined,
+      partnerId: selectedPartnerId,
+      search: debouncedSearch.length > 0 ? debouncedSearch : undefined,
+      limit: HOME_SECTION_PAGE_SIZE,
+      offset: 0,
+    },
+    {
+      enabled: !categoriesQuery.isPending && (categories.length === 0 || effectiveCategoryId !== null),
+    },
+  );
 
+  const filteredProducts = productsQuery.data?.products ?? [];
   const [featuredProduct, ...remainingProducts] = filteredProducts;
 
   return (
@@ -582,8 +571,8 @@ export function HomeProductsSection({
             <ProductSearchField
               className="[&_label]:text-white/80"
               inputClassName={homeFilterInputClassName}
-              onChange={setSearchQuery}
-              value={searchQuery}
+              onChange={setSearchInput}
+              value={searchInput}
             />
             {partners.length > 0 ? (
               <ProductPartnerFilter
@@ -599,7 +588,29 @@ export function HomeProductsSection({
 
         {/* ── Product grid with animated transitions ───────────────────── */}
         <AnimatePresence mode="wait">
-          {filteredProducts.length === 0 ? (
+          {categoriesQuery.isPending || productsQuery.isLoading ? (
+            <motion.p
+              key="loading"
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              role="status"
+              transition={{ duration: 0.25 }}
+            >
+              Loading products…
+            </motion.p>
+          ) : productsQuery.isError ? (
+            <motion.p
+              key="error"
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              role="alert"
+              transition={{ duration: 0.25 }}
+            >
+              Unable to load products.
+            </motion.p>
+          ) : filteredProducts.length === 0 ? (
             <motion.p
               key="empty"
               animate={{ opacity: 1 }}
@@ -612,7 +623,7 @@ export function HomeProductsSection({
             </motion.p>
           ) : (
             <motion.ul
-              key={effectiveCategoryId}
+              key={`${effectiveCategoryId}-${selectedPartnerId ?? 'all'}-${debouncedSearch}`}
               animate={{ opacity: 1 }}
               aria-label={`Products in ${activeCategory?.name ?? 'this category'}`}
               className="grid gap-5 md:grid-cols-2"
