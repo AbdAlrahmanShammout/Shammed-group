@@ -6,10 +6,8 @@
  *
  * What this script does
  * 1. Deletes all existing products (as instructed).
- * 2. Upserts the two new source-catalogue partners:
- *    - Al Inmaa Drug Store & Medical Equipment LLC
- *    - Marinas Official
- * 3. Imports 94 source-catalogue product candidates (isVisible = true).
+ * 2. Upserts the Marinas Official source-catalogue partner.
+ * 3. Imports 50 source-catalogue product candidates (isVisible = true).
  *
  * Important: All product records reference external source-catalogue images
  * via detailedDescription (provenance). Do not hotlink those URLs permanently
@@ -33,18 +31,6 @@ function findOrCreate(existing, name) {
 
 const NEW_PARTNERS = [
   {
-    name: 'Al Inmaa Drug Store & Medical Equipment LLC',
-    shortDescription:
-      'Public source site describes Al Inmaa as a GCC distribution partner for international pharmaceutical, medical, and beauty brands. The supplied Shammed deck identifies INMAA as a sister company; current product-level Syrian rights need confirmation.',
-    fullDescription:
-      'Official source catalogue, product-source links, and a direct logo reference are recorded in PARTNER-CATALOGUE-SOURCE-IMPORT.md. Website statements do not establish Shammed agency, territory, or product availability in Syria.',
-    specialization: 'Pharmaceutical, medical, and beauty distribution',
-    websiteUrl: 'https://inmaa.ae/',
-    country: 'United Arab Emirates',
-    isVisible: false,
-    displayOrder: 9,
-  },
-  {
     name: 'Marinas Official',
     shortDescription:
       'Public source site lists dietary supplements and personal-care products. The supplied Shammed materials refer to Earth Creation / MARRINAS; the exact current legal entity and the Shammed relationship require confirmation.',
@@ -54,320 +40,7 @@ const NEW_PARTNERS = [
     websiteUrl: 'https://marinasofficial.com/',
     country: 'Lebanon — site market; legal manufacturing country needs client confirmation',
     isVisible: false,
-    displayOrder: 10,
-  },
-];
-
-// ── Al Inmaa — 44 products ────────────────────────────────────────────────────
-
-const AL_INMAA_PRODUCTS = [
-  {
-    name: 'Carbowhite tablets 24\'s',
-    shortDescription: 'Source segment: Elementary Care.',
-    manufacturer: 'Omnifarma Europe (Ukraine)',
-    sourceUrl: 'https://inmaa.ae/product/carbowhite-tablets-24s/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Carbowhite.jpg',
-  },
-  {
-    name: 'Saffrox',
-    shortDescription: 'Source segment: Vital Care.',
-    manufacturer: 'Naveh Pharma Ltd. (Israel)',
-    sourceUrl: 'https://inmaa.ae/product/saffrox/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2026/01/Saffrox-Logo-2X.png',
-  },
-  {
-    name: 'MAGNOX VITAL',
-    shortDescription: 'Source segment: Vital Care.',
-    manufacturer: 'Naveh Pharma Ltd. (Israel)',
-    sourceUrl: 'https://inmaa.ae/product/magnox-vital/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2023/11/logos-03.jpg',
-  },
-  {
-    name: 'MAGNOX ANTI LEG CRAMPS',
-    shortDescription: 'Source segment: Vital Care.',
-    manufacturer: 'Naveh Pharma Ltd. (Israel)',
-    sourceUrl: 'https://inmaa.ae/product/magnox-anti-leg-cramps/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2023/11/logos-01.jpg',
-  },
-  {
-    name: 'MAGNOX OSTEO',
-    shortDescription: 'Source segment: Vital Care.',
-    manufacturer: 'Naveh Pharma Ltd. (Israel)',
-    sourceUrl: 'https://inmaa.ae/product/magnox-osteo/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2023/11/logos-02.jpg',
-  },
-  {
-    name: 'Bluecap Shower gel 150 ml',
-    shortDescription: 'Source segment: Derma Care.',
-    manufacturer: 'Catalysis S.L. (Spain)',
-    sourceUrl: 'https://inmaa.ae/product/bluecap-shower-gel-150-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__bluecap.jpg',
-  },
-  {
-    name: 'Bluecap Foam 100 ml',
-    shortDescription: 'Source segment: Derma Care.',
-    manufacturer: 'Catalysis S.L. (Spain)',
-    sourceUrl: 'https://inmaa.ae/product/bluecap_foam_100ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__bluecap.jpg',
-  },
-  {
-    name: 'Bluecap Spray 100 ml',
-    shortDescription: 'Source segment: Derma Care.',
-    manufacturer: 'Catalysis S.L. (Spain)',
-    sourceUrl: 'https://inmaa.ae/product/blueecap-spray-100-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__bluecap-1.jpg',
-  },
-  {
-    name: 'Bluecap Cream 50 gm',
-    shortDescription: 'Source segment: Derma Care.',
-    manufacturer: 'Catalysis S.L. (Spain)',
-    sourceUrl: 'https://inmaa.ae/product/bluecap-cream-50-gm/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__bluecap.jpg',
-  },
-  {
-    name: 'Blucap Shampoo 150 ml',
-    shortDescription: 'Source segment: Derma Care.',
-    manufacturer: 'Catalysis S.L. (Spain)',
-    sourceUrl: 'https://inmaa.ae/product/blucap-shampoo-150-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__bluecap.jpg',
-  },
-  {
-    name: 'Isosupra Lidose 16 mg — hard gelatin capsule',
-    shortDescription: 'Source segment: Derma Care.',
-    manufacturer: 'Laboratoires SMB S.A. (Belgium)',
-    sourceUrl: 'https://inmaa.ae/product/isosupra-lidose-16-mg-hard-gelatin-capsule/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__ISOSUPRA.jpg',
-  },
-  {
-    name: 'Alline Procap 60\'s',
-    shortDescription: 'Source segment: Derma Care.',
-    manufacturer: 'Laboratoires Trenker (Belgium)',
-    sourceUrl: 'https://inmaa.ae/product/alline-procap-60s/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Alline.jpg',
-  },
-  {
-    name: 'Auracos — Pro-Collagenium',
-    shortDescription: 'Source segment: Derma Care.',
-    manufacturer: 'Auracos (Switzerland)',
-    sourceUrl: 'https://inmaa.ae/product/auracos-pro-collagenium/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/auracos.jpg',
-  },
-  {
-    name: 'Hyaflex Forte',
-    shortDescription: 'Source segment: Joint Care.',
-    manufacturer: 'Laboratoires Trenker (Belgium)',
-    sourceUrl: 'https://inmaa.ae/product/hyaflex-forte/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2025/07/hyaflex.png',
-  },
-  {
-    name: 'CH-Alpha',
-    shortDescription: 'Source segment: Joint Care.',
-    manufacturer: 'GELITA Health GmbH (Germany)',
-    sourceUrl: 'https://inmaa.ae/product/ch-alpha/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__CHalpha.jpg',
-  },
-  {
-    name: 'CH-Alpha Sport',
-    shortDescription: 'Source segment: Joint Care.',
-    manufacturer: 'GELITA Health GmbH (Germany)',
-    sourceUrl: 'https://inmaa.ae/product/ch-alpha-sport/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__CHalphaSPORT.jpg',
-  },
-  {
-    name: 'CH-Alpha Plus',
-    shortDescription: 'Source segment: Joint Care.',
-    manufacturer: 'GELITA Health GmbH (Germany)',
-    sourceUrl: 'https://inmaa.ae/product/ch-alpha-plus/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__CHalphaPLUS.jpg',
-  },
-  {
-    name: 'MEPTID®',
-    shortDescription: 'Source segment: Hospital Care.',
-    manufacturer: 'Biosyn Arzneimittel GmbH (Germany)',
-    sourceUrl: 'https://inmaa.ae/product/meptid/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2025/09/MEPTID1.jpg',
-  },
-  {
-    name: 'Kadermin',
-    shortDescription: 'Source segment: Hospital Care.',
-    manufacturer: 'Pavia Farmaceutici S.r.l. (Italy)',
-    sourceUrl: 'https://inmaa.ae/product/kadermin/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2023/11/Kadermin-JPG.jpg',
-  },
-  {
-    name: 'Octaplex',
-    shortDescription: 'Source segment: Hospital Care.',
-    manufacturer: 'Octapharma AG (Switzerland)',
-    sourceUrl: 'https://inmaa.ae/product/octaplex/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo_octaplex.jpg',
-  },
-  {
-    name: 'Human Albumin',
-    shortDescription: 'Source segment: Hospital Care.',
-    manufacturer: 'Octapharma AG (Switzerland)',
-    sourceUrl: 'https://inmaa.ae/product/human-albumin/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo_human_albumin.jpg',
-  },
-  {
-    name: 'Wilate',
-    shortDescription: 'Source segment: Hospital Care.',
-    manufacturer: 'Octapharma AG (Switzerland)',
-    sourceUrl: 'https://inmaa.ae/product/wilate/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo_wilate.jpg',
-  },
-  {
-    name: 'Pofol',
-    shortDescription: 'Source segment: Hospital Care.',
-    manufacturer: 'Dongkook Pharmaceutical Co., Ltd. (South Korea)',
-    sourceUrl: 'https://inmaa.ae/product/pofol/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__POFOL.jpg',
-  },
-  {
-    name: 'Sinomarin Isotonic Mini spray 30 ml',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-isotonic-mini-spray-30-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Sinomarin.jpg',
-  },
-  {
-    name: 'Sinomarin Isotonic Children spray 100 ml',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-isotonic-children-spray-100-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Sinomarin.jpg',
-  },
-  {
-    name: 'Sinomarin Isotonic Adults spray 125 ml',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-isotonic-adults-spray-125-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Sinomarin.jpg',
-  },
-  {
-    name: 'Sinomarin Babies 5 ml Vials',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-babies-5ml-vials/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Sinomarin.jpg',
-  },
-  {
-    name: 'Avita nasal aspirator',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/avita-nasal-aspirator/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__AViTA.jpg',
-  },
-  {
-    name: 'Sinomarin Cold and Flu spray 30 ml',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-cold-and-flu-spray-30-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Sinomarin-1.jpg',
-  },
-  {
-    name: 'Sinomarin Children spray 100 ml',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-children-spray-100-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Sinomarin.jpg',
-  },
-  {
-    name: 'Sinomarin ENT 200 ml',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-ent-200-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/11/Al_Inmaa_site_Termekek_logo__Sinomarin.jpg',
-  },
-  {
-    name: 'Sinomarin Adults spray 125 ml',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-adults-spray-125-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/11/Al_Inmaa_site_Termekek_logo__Sinomarin.jpg',
-  },
-  {
-    name: 'Sinomarin Mini spray 30 ml',
-    shortDescription: 'Source segment: Nasal Care.',
-    manufacturer: 'Gerolymatos International S.A. (Greece)',
-    sourceUrl: 'https://inmaa.ae/product/sinomarin-mini-spray-30-ml/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/11/Al_Inmaa_site_Termekek_logo__Sinomarin.jpg',
-  },
-  {
-    name: 'R.O.C.S Baby Mineral Protection Mild care 0–3 toothpaste',
-    shortDescription: 'Source segment: Oral Care.',
-    manufacturer: 'R.O.C.S / OOO Evobio (Russia)',
-    sourceUrl: 'https://inmaa.ae/product/r-o-c-s-baby-mineral-protection-mild-care-0-3-toothpaste/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__ROCS.jpg',
-  },
-  {
-    name: 'R.O.C.S Baby Mild Care with Lime Blossom 0–3 toothpaste',
-    shortDescription: 'Source segment: Oral Care.',
-    manufacturer: 'R.O.C.S / OOO Evobio (Russia)',
-    sourceUrl: 'https://inmaa.ae/product/r-o-c-s-baby-mild-care-with-lime-blossom-0-3-toothpaste/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__ROCS.jpg',
-  },
-  {
-    name: 'R.O.C.S Baby Mild Care with Chamomile 0–3 toothpaste',
-    shortDescription: 'Source segment: Oral Care.',
-    manufacturer: 'R.O.C.S / OOO Evobio (Russia)',
-    sourceUrl: 'https://inmaa.ae/product/r-o-c-s-baby-mild-care-with-chamomile-0-3-toothpaste/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__ROCS.jpg',
-  },
-  {
-    name: 'R.O.C.S Kids 3–7 toothpaste',
-    shortDescription: 'Source segment: Oral Care.',
-    manufacturer: 'R.O.C.S / OOO Evobio (Russia)',
-    sourceUrl: 'https://inmaa.ae/product/r-o-c-s-kids-3-7-toothpaste/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__ROCS.jpg',
-  },
-  {
-    name: 'R.O.C.S Kids 4–7 toothpaste',
-    shortDescription: 'Source segment: Oral Care.',
-    manufacturer: 'R.O.C.S / OOO Evobio (Russia)',
-    sourceUrl: 'https://inmaa.ae/product/r-o-c-s-kids-4-7-toothpaste/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__ROCS.jpg',
-  },
-  {
-    name: 'Venolen idrogel',
-    shortDescription: 'Source segment: Vascular Care.',
-    manufacturer: 'Pharma Line S.R.L. (Italy)',
-    sourceUrl: 'https://inmaa.ae/product/venolen-idrogel/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2023/11/Venolen-idrogel.jpg',
-  },
-  {
-    name: 'Vagi-C 6\'s',
-    shortDescription: 'Listed in sitemap; no front-end business-unit assignment.',
-    manufacturer: 'Polichem SA (Luxembourg)',
-    sourceUrl: 'https://inmaa.ae/product/vagi-c-6s/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__Vagi-c.jpg',
-  },
-  {
-    name: 'Isolone effervescent tablet 5 mg',
-    shortDescription: 'Listed in sitemap; no front-end business-unit assignment.',
-    manufacturer: 'Laboratoire Sothema (Morocco)',
-    sourceUrl: 'https://inmaa.ae/product/isolone-effervescent-tablet-5-mg/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__ISOLONE.jpg',
-  },
-  {
-    name: 'Isolone effervescent tablet 20 mg',
-    shortDescription: 'Listed in sitemap; no front-end business-unit assignment.',
-    manufacturer: 'Laboratoire Sothema (Morocco)',
-    sourceUrl: 'https://inmaa.ae/product/isolone-effervescent-tablet-20-mg/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__ISOLONE-1.jpg',
-  },
-  {
-    name: 'Soclav sachet 500 mg',
-    shortDescription: 'Listed in sitemap; no front-end business-unit assignment.',
-    manufacturer: 'Laboratoire Sothema (Morocco)',
-    sourceUrl: 'https://inmaa.ae/product/soclav-sachet-500-mg/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__SOCLAV-1.jpg',
-  },
-  {
-    name: 'Soclav sachet 1 gm',
-    shortDescription: 'Listed in sitemap; no front-end business-unit assignment.',
-    manufacturer: 'Laboratoire Sothema (Morocco)',
-    sourceUrl: 'https://inmaa.ae/product/soclav-sachet-1-gm/',
-    imageUrl: 'https://inmaa.ae/wp-content/uploads/2022/12/Al_Inmaa_site_Termekek_logo__SOCLAV.jpg',
+    displayOrder: 9,
   },
 ];
 
@@ -699,7 +372,7 @@ async function main() {
   const deleted = await prisma.product.deleteMany();
   console.log(`✅ Deleted ${deleted.count} existing products.\n`);
 
-  // ── Step 2: Upsert 2 new partners ───────────────────────────────────────────
+  // ── Step 2: Upsert Marinas Official partner ────────────────────────────────
   let newPartnersAdded = 0;
 
   for (const pd of NEW_PARTNERS) {
@@ -727,11 +400,9 @@ async function main() {
   // ── Step 4: Resolve partner IDs ─────────────────────────────────────────────
   const allPartners = await prisma.partner.findMany();
   const storzPartner = allPartners.find((p) => p.name === 'STORZ Medical AG');
-  const alInmaaPartner = allPartners.find((p) => p.name === 'Al Inmaa Drug Store & Medical Equipment LLC');
   const marinasPartner = allPartners.find((p) => p.name === 'Marinas Official');
 
   if (!storzPartner) throw new Error('Partner "STORZ Medical AG" not found.');
-  if (!alInmaaPartner) throw new Error('Partner "Al Inmaa Drug Store & Medical Equipment LLC" not found.');
   if (!marinasPartner) throw new Error('Partner "Marinas Official" not found.');
 
   // ── Step 5: Build product rows ───────────────────────────────────────────────
@@ -742,17 +413,6 @@ async function main() {
   }
 
   const productRows = [
-    // Al Inmaa — 44 — Pharmaceutical Equipment
-    ...AL_INMAA_PRODUCTS.map((p, i) => ({
-      name: p.name,
-      shortDescription: p.shortDescription,
-      detailedDescription: provenance(p.sourceUrl, p.imageUrl),
-      manufacturer: p.manufacturer,
-      categoryId: pharmEquip.id,
-      partnerId: alInmaaPartner.id,
-      isVisible: true,
-      displayOrder: i + 1,
-    })),
     // Marinas Official — 30 — Pharmaceutical Equipment
     ...MARINAS_PRODUCTS.map((p, i) => ({
       name: p.name,
@@ -762,7 +422,7 @@ async function main() {
       categoryId: pharmEquip.id,
       partnerId: marinasPartner.id,
       isVisible: true,
-      displayOrder: 44 + i + 1,
+      displayOrder: i + 1,
     })),
     // STORZ MEDICAL — 20 — Medical Equipment
     ...STORZ_PRODUCTS.map((p, i) => ({
@@ -807,7 +467,6 @@ async function main() {
     _count: { _all: true },
   });
 
-  const alInmaaCount = await prisma.product.count({ where: { partnerId: alInmaaPartner.id } });
   const marinasCount = await prisma.product.count({ where: { partnerId: marinasPartner.id } });
   const storzCount = await prisma.product.count({ where: { partnerId: storzPartner.id } });
 
@@ -824,7 +483,6 @@ async function main() {
   console.log(`Total products now:             ${finalCount}`);
   console.log('');
   console.log('By source:');
-  console.log(`  Al Inmaa:         ${alInmaaCount}`);
   console.log(`  Marinas Official: ${marinasCount}`);
   console.log(`  STORZ MEDICAL:    ${storzCount}`);
   console.log('');
@@ -840,8 +498,8 @@ async function main() {
     console.log('No duplicate names detected.');
   }
   console.log('');
-  console.log('isVisible for new partners (Al Inmaa, Marinas):  false ✓');
-  console.log('isVisible for all 94 products:                   true  ✓');
+  console.log('isVisible for new partners (Marinas):  false ✓');
+  console.log('isVisible for all 50 products:         true  ✓');
   console.log('Source image URLs stored in detailedDescription  ✓');
   console.log('No images uploaded to CMS storage (pending permission) ✓');
   console.log('══════════════════════════════════════════════\n');

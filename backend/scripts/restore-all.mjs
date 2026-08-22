@@ -11,8 +11,8 @@
  *   1. Brand assets  — upload logo + favicon from tmp/brand-assets/
  *   2. Content media — upload page + service images from tmp/content-media/
  *   3. Partner logos (local files) — from tmp/content-media/partner-*.{png,webp}
- *   4. Partner logos (web download) — Al Inmaa and Marinas Official
- *   5. Product images (web download) — all 94 catalogue products via source URLs
+ *   4. Partner logos (web download) — Marinas Official and related web logos
+ *   5. Product images (web download) — all 50 catalogue products via source URLs
  *      stored in each product's detailedDescription field
  *   6. Cleanup — delete all unreferenced media via the backend API
  *
@@ -46,6 +46,12 @@ const { PrismaClient } = require('@prisma/client');
 
 /** Max bytes to send in a single upload — stay well under nginx's default 1 MB limit. */
 const UPLOAD_SIZE_LIMIT = 900_000;
+/** Pause between product upload+patch cycles to stay under the API throttle (100 req / 60s). */
+const PRODUCT_UPLOAD_PACING_MS = 800;
+/** Max attempts for a single API call when the server returns 429. */
+const RATE_LIMIT_MAX_ATTEMPTS = 8;
+/** Base wait used for exponential backoff on 429 responses. */
+const RATE_LIMIT_BASE_DELAY_MS = 5_000;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BACKEND_DIR = resolve(__dirname, '..');
@@ -57,6 +63,53 @@ const CONTENT_MEDIA_DIR = resolve(BACKEND_DIR, 'tmp/content-media');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+function sleep(ms) {
+  return new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
+}
+
+/**
+ * Parse Retry-After (seconds or HTTP date). Falls back to exponential backoff.
+ * @param {Response} response
+ * @param {number} attempt 1-based attempt number
+ */
+function resolveRetryDelayMs(response, attempt) {
+  const retryAfter = response.headers.get('retry-after');
+  if (retryAfter) {
+    const asSeconds = Number(retryAfter);
+    if (Number.isFinite(asSeconds) && asSeconds >= 0) {
+      return Math.max(asSeconds * 1000, 1_000);
+    }
+    const asDate = Date.parse(retryAfter);
+    if (Number.isFinite(asDate)) {
+      return Math.max(asDate - Date.now(), 1_000);
+    }
+  }
+  return RATE_LIMIT_BASE_DELAY_MS * 2 ** (attempt - 1);
+}
+
+/**
+ * fetch wrapper that retries on HTTP 429 with backoff.
+ * @param {string} url
+ * @param {RequestInit} init
+ * @param {string} label
+ */
+async function fetchWithRateLimitRetry(url, init, label) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= RATE_LIMIT_MAX_ATTEMPTS; attempt++) {
+    const response = await fetch(url, init);
+    if (response.status !== 429) {
+      return response;
+    }
+    const delayMs = resolveRetryDelayMs(response, attempt);
+    const bodyPreview = (await response.text()).slice(0, 120);
+    console.log(
+      `  rate-limited on ${label} (attempt ${attempt}/${RATE_LIMIT_MAX_ATTEMPTS}); waiting ${Math.round(delayMs / 1000)}s… (${bodyPreview})`,
+    );
+    lastError = new Error(`Too Many Requests for ${label}: ${bodyPreview}`);
+    await sleep(delayMs);
+  }
+  throw lastError ?? new Error(`Too Many Requests for ${label}`);
+}
 function readAdminPassword() {
   const envText = readFileSync(ENV_PATH, 'utf8');
   const match = envText.match(/^ADMIN_PASSWORD=(.*)$/m);
@@ -108,11 +161,15 @@ async function uploadBytes(token, bytes, fileName, mimeType) {
 
   const form = new FormData();
   form.append('file', new Blob([finalBytes], { type: finalMime }), finalName);
-  const response = await fetch(`${API_BASE}/admin/media`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
-    body: form,
-  });
+  const response = await fetchWithRateLimitRetry(
+    `${API_BASE}/admin/media`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    },
+    `POST /admin/media (${fileName})`,
+  );
   if (!response.ok) {
     throw new Error(`Upload failed for ${fileName}: ${response.status} ${await response.text()}`);
   }
@@ -134,19 +191,27 @@ async function uploadFile(token, absolutePath) {
 }
 
 async function getJson(token, path) {
-  const response = await fetch(`${API_BASE}${path}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await fetchWithRateLimitRetry(
+    `${API_BASE}${path}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+    `GET ${path}`,
+  );
   if (!response.ok) throw new Error(`GET ${path} failed: ${response.status} ${await response.text()}`);
   return response.json();
 }
 
 async function patchJson(token, path, body) {
-  const response = await fetch(`${API_BASE}${path}`, {
-    method: 'PATCH',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  const response = await fetchWithRateLimitRetry(
+    `${API_BASE}${path}`,
+    {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+    `PATCH ${path}`,
+  );
   if (!response.ok) {
     throw new Error(`PATCH ${path} failed: ${response.status} ${await response.text()}`);
   }
@@ -275,11 +340,6 @@ async function restoreWebPartnerLogos(token) {
 
   const webLogos = [
     {
-      partnerName: 'Al Inmaa Drug Store & Medical Equipment LLC',
-      url: 'https://inmaa.ae/wp-content/uploads/2026/03/header-logo.png',
-      fileName: 'partner-al-inmaa-logo.png',
-    },
-    {
       partnerName: 'Marinas Official',
       url: 'https://marinasofficial.com/wp-content/uploads/2023/08/MarinasOfficial-1.png',
       fileName: 'partner-marinas-logo.png',
@@ -381,9 +441,12 @@ async function restoreProductImages(token, prisma) {
       await patchJson(token, `/admin/product/${product.id}`, { imageMediaId: mediaId });
       console.log(`→ media id=${mediaId}`);
       attached++;
+      await sleep(PRODUCT_UPLOAD_PACING_MS);
     } catch (err) {
       console.log(`→ FAILED: ${err.message}`);
       failed++;
+      // After a hard failure (including exhausted 429 retries), pause before the next product.
+      await sleep(RATE_LIMIT_BASE_DELAY_MS);
     } finally {
       if (existsSync(tmpPath)) unlinkSync(tmpPath);
     }
@@ -396,10 +459,14 @@ async function restoreProductImages(token, prisma) {
 
 async function cleanupUnusedMedia(token) {
   console.log('\n── 6. Cleanup unreferenced media ──');
-  const response = await fetch(`${API_BASE}/admin/media`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await fetchWithRateLimitRetry(
+    `${API_BASE}/admin/media`,
+    {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    },
+    'DELETE /admin/media',
+  );
   if (!response.ok) {
     throw new Error(`Cleanup failed: ${response.status} ${await response.text()}`);
   }

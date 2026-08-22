@@ -259,20 +259,6 @@ STATUS: FILLED
 
 | Field | Type | Priority | Value to fill |
 |-------|------|----------|---------------|
-| name | TEXT | REQUIRED | Al Inmaa Drug Store & Medical Equipment LLC |
-| shortDescription | TEXT | REQUIRED | Public source site describes Al Inmaa as a GCC distribution partner for international pharmaceutical, medical, and beauty brands. The supplied Shammed deck identifies INMAA as a sister company; current product-level Syrian rights need confirmation. |
-| fullDescription | TEXT | OPTIONAL | Official source catalogue, product-source links, and a direct logo reference are recorded in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. Website statements do not establish Shammed agency, territory, or product availability in Syria. |
-| specialization | TEXT | OPTIONAL | Pharmaceutical, medical, and beauty distribution |
-| websiteUrl | LINK | OPTIONAL | https://inmaa.ae/ |
-| country | TEXT | OPTIONAL | United Arab Emirates |
-| logo | IMAGE | RECOMMENDED | https://inmaa.ae/wp-content/uploads/2026/03/header-logo.png — verify logo-display permission before upload/publication |
-| isVisible | CONFIG | REQUIRED | false |
-| displayOrder | CONFIG | REQUIRED | 9 |
-
-### Partner 10
-
-| Field | Type | Priority | Value to fill |
-|-------|------|----------|---------------|
 | name | TEXT | REQUIRED | Marinas Official |
 | shortDescription | TEXT | REQUIRED | Public source site lists dietary supplements and personal-care products. The supplied Shammed materials refer to Earth Creation / MARRINAS; the exact current legal entity and the Shammed relationship require confirmation. |
 | fullDescription | TEXT | OPTIONAL | Official source catalogue, product-source links, and a direct logo reference are recorded in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. The public site appears oriented to the Lebanon market; it does not establish Shammed distribution rights in Syria. |
@@ -281,9 +267,9 @@ STATUS: FILLED
 | country | TEXT | OPTIONAL | Lebanon — site market; legal manufacturing country needs client confirmation |
 | logo | IMAGE | RECOMMENDED | https://marinasofficial.com/wp-content/uploads/2023/08/MarinasOfficial-1.png — verify logo-display permission before upload/publication |
 | isVisible | CONFIG | REQUIRED | false |
-| displayOrder | CONFIG | REQUIRED | 10 |
+| displayOrder | CONFIG | REQUIRED | 9 |
 
-STATUS: PARTIAL — ten partner records are staged but hidden pending client confirmation of current relationship, exclusivity, territory, and logo permission. Al Inmaa and Marinas Official are source-catalogue records only; missing websites, countries, descriptions, and logos remain UNKNOWN — needs client for OES, SMD MEDICARE, and Bistos.
+STATUS: PARTIAL — nine partner records are staged but hidden pending client confirmation of current relationship, exclusivity, territory, and logo permission. Marinas Official is a source-catalogue record only; missing websites, countries, descriptions, and logos remain UNKNOWN — needs client for OES, SMD MEDICARE, and Bistos.
 
 ---
 
@@ -291,7 +277,7 @@ STATUS: PARTIAL — ten partner records are staged but hidden pending client con
 
 ### Source-catalogue update — 21 August 2026
 
-The client supplied three public partner/catalogue websites after this sheet was first prepared. A separate, traceable intake sheet now documents **94 source-catalogue candidates** — 44 from Al Inmaa, 30 from Marinas Official, and 20 from STORZ MEDICAL — including the source page, source partner/manufacturer, and direct official image reference for every product:
+The client supplied public partner/catalogue websites after this sheet was first prepared. A separate, traceable intake sheet now documents **50 source-catalogue candidates** — 30 from Marinas Official and 20 from STORZ MEDICAL — including the source page, source partner/manufacturer, and direct official image reference for every product:
 
 `PARTNER-CATALOGUE-SOURCE-IMPORT.md`
 
@@ -327,7 +313,7 @@ The legacy staging records below remain superseded placeholders and must not be 
 | isVisible | CONFIG | REQUIRED | false |
 | displayOrder | CONFIG | REQUIRED | 2 |
 
-STATUS: PARTIAL — 94 source-catalogue candidates with manufacturer/source-partner, product-page, and direct image references are documented in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. The two legacy blank records are hidden placeholders and must not be published. No source-catalogue candidate is approved for publication until relationship, Syria territory, registration, claims, image permission, and availability are confirmed.
+STATUS: PARTIAL — 50 source-catalogue candidates with manufacturer/source-partner, product-page, and direct image references are documented in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. The two legacy blank records are hidden placeholders and must not be published. No source-catalogue candidate is approved for publication until relationship, Syria territory, registration, claims, image permission, and availability are confirmed.
 
 ---
 
@@ -546,12 +532,11 @@ STATUS: FILLED
 | Home about preview image | Home CMS | UNKNOWN — needs client |
 | Home why image | Home CMS | UNKNOWN — needs client |
 | About overview image | About CMS | UNKNOWN — needs client |
-| Al Inmaa partner logo | Partners (hidden source record) | https://inmaa.ae/wp-content/uploads/2026/03/header-logo.png — verify relationship and logo-display permission |
 | Marinas Official partner logo | Partners (hidden source record) | https://marinasofficial.com/wp-content/uploads/2023/08/MarinasOfficial-1.png — verify relationship and logo-display permission |
-| Source-catalogue product images | Products (hidden source candidates) | 94 direct official source-image references are listed per product in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`; do not hotlink permanently or publish before permission |
+| Source-catalogue product images | Products (hidden source candidates) | 50 direct official source-image references are listed per product in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`; do not hotlink permanently or publish before permission |
 | Service images | Services (list) | UNKNOWN — needs client |
 
-STATUS: PARTIAL — original company media still requires approved assets. Official public source references were added for two hidden partner records and 94 hidden source-catalogue candidates; each must be licensed/approved and copied to Shammed storage before publication.
+STATUS: PARTIAL — original company media still requires approved assets. Official public source references were added for one hidden partner record and 50 hidden source-catalogue candidates; each must be licensed/approved and copied to Shammed storage before publication.
 
 ---
 
@@ -615,8 +600,8 @@ STATUS: PARTIAL — SMTP host, port, username, secure mode, sender, CONTACT_EMAI
 - Homepage copy for hero, About preview, partners, products, services, Why Shammed, and contact sections.
 - About overview, mission, vision, capabilities, and all four source-supported product categories.
 - Five source-supported services.
-- Ten partner records, staged as hidden until current relationships and logo permissions are confirmed.
-- A 94-record, source-traceable product-catalogue intake sheet with official product-page and image references from Al Inmaa, Marinas Official, and STORZ MEDICAL.
+- Nine partner records, staged as hidden until current relationships and logo permissions are confirmed.
+- A 50-record, source-traceable product-catalogue intake sheet with official product-page and image references from Marinas Official and STORZ MEDICAL.
 - One visible Damascus headquarters location and five hidden branch records using the branch names supplied in the corporate deck.
 - Navigation paths and preferred SEO titles/meta descriptions.
 - `CONTACT_EMAIL` and the existing 5 MB storage limit.
@@ -633,4 +618,4 @@ STATUS: PARTIAL — SMTP host, port, username, secure mode, sender, CONTACT_EMAI
 
 ### Image URLs used
 
-Official source-image references for two hidden partner records and 94 hidden source-catalogue candidates are listed in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. They are not Shammed-hosted assets and must not be treated as publication approval.
+Official source-image references for one hidden partner record and 50 hidden source-catalogue candidates are listed in `PARTNER-CATALOGUE-SOURCE-IMPORT.md`. They are not Shammed-hosted assets and must not be treated as publication approval.
