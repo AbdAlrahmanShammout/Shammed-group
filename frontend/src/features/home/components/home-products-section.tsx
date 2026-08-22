@@ -6,8 +6,12 @@ import { Link } from 'react-router-dom';
 import { ProgressiveImage } from '@/components/media/progressive-image';
 import { Button } from '@/components/ui/button';
 import { appPaths } from '@/config/app-paths';
+import { ProductPartnerFilter } from '@/features/products/components/product-partner-filter';
+import { ProductSearchField } from '@/features/products/components/product-search-field';
+import { matchesProductSearch } from '@/features/products/lib/matches-product-search';
 import type {
   HomePageResponse,
+  PublicPartnerResponse,
   PublicProductCategoryResponse,
   PublicProductResponse,
 } from '@/generated/public-home.contract';
@@ -137,6 +141,19 @@ function deriveCategories(
   }
   return [...seen.values()].sort((a, b) => a.displayOrder - b.displayOrder);
 }
+
+function derivePartners(products: readonly PublicProductResponse[]): PublicPartnerResponse[] {
+  const seen = new Map<number, PublicPartnerResponse>();
+  for (const product of products) {
+    if (product.partner !== undefined) {
+      seen.set(product.partner.id, product.partner);
+    }
+  }
+  return [...seen.values()].sort((a, b) => a.displayOrder - b.displayOrder || a.id - b.id);
+}
+
+const homeFilterInputClassName =
+  'border-white/20 bg-white/10 text-white placeholder:text-white/50 focus-visible:border-white/40 focus-visible:ring-white/20';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Product media placeholder / image
@@ -399,17 +416,26 @@ export function HomeProductsSection({
 }: HomeProductsSectionProps): ReactElement {
   const shouldReduceMotion = useReducedMotion();
   const categories = useMemo(() => deriveCategories(products), [products]);
+  const partners = useMemo(() => derivePartners(products), [products]);
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
+  const [selectedPartnerId, setSelectedPartnerId] = useState<number | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const effectiveCategoryId = activeCategoryId ?? categories[0]?.id ?? null;
   const activeCategory = categories.find((c) => c.id === effectiveCategoryId);
   const activeColor = resolveColor(activeCategory?.color);
   const activeAtmosphere = useMemo(() => deriveDarkCategoryAtmosphere(activeColor), [activeColor]);
 
-  const filteredProducts = useMemo(
-    () => products.filter((p) => p.categoryId === effectiveCategoryId),
-    [products, effectiveCategoryId],
-  );
+  const filteredProducts = useMemo(() => {
+    let result = products.filter((product) => product.categoryId === effectiveCategoryId);
+    if (selectedPartnerId !== undefined) {
+      result = result.filter((product) => product.partnerId === selectedPartnerId);
+    }
+    if (searchQuery.trim().length > 0) {
+      result = result.filter((product) => matchesProductSearch(product, searchQuery));
+    }
+    return result;
+  }, [products, effectiveCategoryId, selectedPartnerId, searchQuery]);
 
   const [featuredProduct, ...remainingProducts] = filteredProducts;
 
@@ -545,6 +571,30 @@ export function HomeProductsSection({
               />
             </motion.div>
           ) : null}
+
+          <motion.div
+            className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+            transition={{ duration: 0.4, delay: 0.15, ease: 'easeOut' }}
+            viewport={{ once: true }}
+            whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          >
+            <ProductSearchField
+              className="[&_label]:text-white/80"
+              inputClassName={homeFilterInputClassName}
+              onChange={setSearchQuery}
+              value={searchQuery}
+            />
+            {partners.length > 0 ? (
+              <ProductPartnerFilter
+                className="[&_label]:text-white/80"
+                onSelectPartnerId={setSelectedPartnerId}
+                partners={partners}
+                selectClassName={homeFilterInputClassName}
+                selectedPartnerId={selectedPartnerId}
+              />
+            ) : null}
+          </motion.div>
         </div>
 
         {/* ── Product grid with animated transitions ───────────────────── */}
@@ -558,7 +608,7 @@ export function HomeProductsSection({
               role="status"
               transition={{ duration: 0.25 }}
             >
-              No products are available in this category yet.
+              No products match your filters yet.
             </motion.p>
           ) : (
             <motion.ul

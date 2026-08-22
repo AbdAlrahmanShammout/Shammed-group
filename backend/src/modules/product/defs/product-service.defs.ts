@@ -26,6 +26,8 @@ export type UpdateProductServiceInput = {
 export type GetProductsServiceInput = {
   readonly isVisible?: boolean;
   readonly categoryId?: number;
+  readonly partnerId?: number;
+  readonly search?: string;
   readonly limit?: number;
   readonly offset?: number;
 };

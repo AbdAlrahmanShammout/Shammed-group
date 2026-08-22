@@ -64,16 +64,21 @@ export class ProductService {
     return this.productRepository.findAll({
       isVisible: input.isVisible,
       categoryId: input.categoryId,
+      partnerId: input.partnerId,
+      search: input.search,
       limit: input.limit ?? DEFAULT_PAGE_LIMIT,
       offset: input.offset ?? DEFAULT_PAGE_OFFSET,
     });
   }
 
   async findPublicProducts(input: GetProductsServiceInput = {}): Promise<ProductPage> {
+    await this.assertPartnerReference(input.partnerId);
     const page = await this.productRepository.findAll({
       isVisible: true,
       isCategoryVisible: true,
       categoryId: input.categoryId,
+      partnerId: input.partnerId,
+      search: input.search,
       limit: input.limit ?? DEFAULT_PAGE_LIMIT,
       offset: input.offset ?? DEFAULT_PAGE_OFFSET,
     });

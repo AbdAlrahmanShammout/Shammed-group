@@ -67,6 +67,8 @@ export class ProductAdminController {
       limit: query.limit,
       offset: query.offset,
       categoryId: query.categoryId,
+      partnerId: query.partnerId,
+      search: query.search,
     });
     return new GetProductsResponseDto(page);
   }

@@ -252,6 +252,9 @@ All media source files live in `backend/tmp/` (not committed to git). You must s
 | `partner-karlstorz.png` | KARL STORZ logo |
 | `partner-kls.png` | KLS Martin Group logo |
 | `partner-dialife.png` | Dialife Group logo |
+| `partner-oes.webp` | OES logo (white on brand navy — generate with `pnpm generate:oes-logo` if missing) |
+| `partner-smd-medicare.webp` | SMD Medicare logo |
+| `partner-bistos.png` | Bistos Co logo |
 
 > **Product images** are downloaded automatically from source URLs embedded in each product's
 > `detailedDescription` field when you run `pnpm restore`. No local product image files are needed.

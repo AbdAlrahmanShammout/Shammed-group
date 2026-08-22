@@ -12,6 +12,12 @@ function createProductsPath(query: GetPublicProductsQuery = {}): string {
   if (query.categoryId !== undefined) {
     searchParams.set('categoryId', String(query.categoryId));
   }
+  if (query.partnerId !== undefined) {
+    searchParams.set('partnerId', String(query.partnerId));
+  }
+  if (query.search !== undefined && query.search.length > 0) {
+    searchParams.set('search', query.search);
+  }
   if (query.limit !== undefined) {
     searchParams.set('limit', String(query.limit));
   }

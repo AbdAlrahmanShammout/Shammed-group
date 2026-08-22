@@ -17,6 +17,8 @@ import type { HomePageResponse } from '@/generated/public-home.contract';
 
 type PharmaVisualProps = {
   readonly shouldReduceMotion: boolean | null;
+  readonly minHeight?: number;
+  readonly showExperienceLabel?: boolean;
 };
 
 /** Center a fixed-size box around the visual focal point (50 % x, 46 % y). */
@@ -32,14 +34,18 @@ function centeredStyle(size: number, dx = 0, dy = 0): CSSProperties {
   };
 }
 
-function PharmaVisual({ shouldReduceMotion }: PharmaVisualProps): ReactElement {
+function PharmaVisual({
+  shouldReduceMotion,
+  minHeight = 400,
+  showExperienceLabel = true,
+}: PharmaVisualProps): ReactElement {
   const rm = shouldReduceMotion;
 
   return (
     <div
       aria-hidden="true"
       className="relative overflow-hidden"
-      style={{ minHeight: 400, height: '100%' }}
+      style={{ minHeight, height: '100%' }}
     >
       {/* ── Background colour blobs ──────────────────────────────────────── */}
       <div
@@ -209,24 +215,26 @@ function PharmaVisual({ shouldReduceMotion }: PharmaVisualProps): ReactElement {
       </div>
 
       {/* ── Experience label — upper-right editorial annotation ─────────── */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '7%',
-          right: '7%',
-          textAlign: 'right',
-          lineHeight: 1.45,
-          pointerEvents: 'none',
-        }}
-      >
-        <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(44,52,112,0.52)', letterSpacing: '0.01em' }}>
-          <span style={{ fontSize: 15, fontWeight: 700, color: 'rgba(44,52,112,0.72)' }}>+20</span>
-          {' '}years of advancing
-        </p>
-        <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(44,52,112,0.52)', letterSpacing: '0.01em' }}>
-          healthcare in Syria
-        </p>
-      </div>
+      {showExperienceLabel ? (
+        <div
+          style={{
+            position: 'absolute',
+            top: '7%',
+            right: '7%',
+            textAlign: 'right',
+            lineHeight: 1.45,
+            pointerEvents: 'none',
+          }}
+        >
+          <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(44,52,112,0.52)', letterSpacing: '0.01em' }}>
+            <span style={{ fontSize: 15, fontWeight: 700, color: 'rgba(44,52,112,0.72)' }}>+20</span>
+            {' '}years of advancing
+          </p>
+          <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(44,52,112,0.52)', letterSpacing: '0.01em' }}>
+            healthcare in Syria
+          </p>
+        </div>
+      ) : null}
 
       {/* ── Small accent dots ─────────────────────────────────────────────── */}
       <div style={{ position: 'absolute', top: '32%', right: '10%', width: 10, height: 10, borderRadius: '50%', background: '#F09A8E', opacity: 0.65 }} />
@@ -258,7 +266,7 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
 
         {/* ── Left: editorial text ──────────────────────────────────────── */}
         <motion.div
-          className="flex flex-col gap-6 py-20 lg:py-28 lg:pr-10"
+          className="flex flex-col gap-6 py-12 sm:py-16 lg:py-28 lg:pr-10"
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           transition={{ duration: 0.55, ease: 'easeOut' }}
           viewport={{ once: true }}
@@ -288,6 +296,33 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
             {homePage.heroDescription}
           </p>
 
+          {/* Mobile / tablet pharma visual — between copy and CTAs */}
+          <motion.div
+            className="relative w-full overflow-hidden rounded-2xl lg:hidden"
+            initial={shouldReduceMotion ? false : { opacity: 0 }}
+            style={{
+              minHeight: 280,
+              background: 'linear-gradient(140deg, rgba(248,252,252,0.6) 0%, rgba(240,247,255,0.9) 100%)',
+            }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            whileInView={shouldReduceMotion ? undefined : { opacity: 1 }}
+          >
+            <PharmaVisual minHeight={280} shouldReduceMotion={shouldReduceMotion} showExperienceLabel={false} />
+            <p
+              className="pointer-events-none absolute right-4 top-4 text-right text-[11px] font-medium leading-snug"
+              style={{ color: 'rgba(44,52,112,0.52)' }}
+            >
+              <span className="text-[15px] font-bold" style={{ color: 'rgba(44,52,112,0.72)' }}>
+                +20
+              </span>
+              {' '}
+              years of advancing
+              <br />
+              healthcare in Syria
+            </p>
+          </motion.div>
+
           {/* CTAs */}
           <div className="flex flex-wrap gap-3">
             <HomeCtaLink href={homePage.primaryCtaUrl} size="lg">
@@ -299,9 +334,9 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
           </div>
         </motion.div>
 
-        {/* ── Right: pharma visual — hidden on small mobile ─────────────── */}
+        {/* ── Right: pharma visual — desktop only ───────────────────────── */}
         <motion.div
-          className="hidden sm:block lg:block"
+          className="hidden lg:block"
           initial={shouldReduceMotion ? false : { opacity: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
           viewport={{ once: true }}

@@ -22,6 +22,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "prisma db seed",
     "restore": "pnpm seed && node scripts/restore-all.mjs",
+    "generate:oes-logo": "node scripts/generate-partner-oes-logo.mjs",
     "cleanup:media": "node scripts/cleanup-unused-media.mjs",
     "postinstall": "prisma generate"
   },

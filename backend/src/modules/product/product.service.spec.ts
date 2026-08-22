@@ -122,11 +122,20 @@ describe('ProductService', () => {
   });
 
   it('lists only visible products in visible categories for the public audience', async () => {
-    await productService.findPublicProducts({ categoryId: 1, limit: 10, offset: 0 });
+    await productService.findPublicProducts({
+      categoryId: 1,
+      partnerId: 2,
+      search: 'amoxicillin',
+      limit: 10,
+      offset: 0,
+    });
+    expect(partnerService.getPartnerById).toHaveBeenCalledWith(2);
     expect(productRepository.findAll).toHaveBeenCalledWith({
       isVisible: true,
       isCategoryVisible: true,
       categoryId: 1,
+      partnerId: 2,
+      search: 'amoxicillin',
       limit: 10,
       offset: 0,
     });

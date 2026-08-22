@@ -30,8 +30,13 @@ export const queryKeys = {
     aboutPage: () => ['public', 'about-page'] as const,
     partners: () => ['public', 'partners'] as const,
     productCategories: () => ['public', 'product-categories'] as const,
-    products: (filters: { readonly categoryId?: number } = {}) =>
-      ['public', 'products', filters] as const,
+    products: (filters: {
+      readonly categoryId?: number;
+      readonly partnerId?: number;
+      readonly search?: string;
+      readonly limit?: number;
+      readonly offset?: number;
+    } = {}) => ['public', 'products', filters] as const,
     product: (productId: number) => ['public', 'product', productId] as const,
     services: () => ['public', 'services'] as const,
     locations: () => ['public', 'locations'] as const,

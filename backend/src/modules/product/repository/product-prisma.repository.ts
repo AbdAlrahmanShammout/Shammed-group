@@ -99,6 +99,17 @@ export class ProductPrismaRepository implements ProductRepository {
     if (input.isCategoryVisible !== undefined) {
       where.category = { isVisible: input.isCategoryVisible };
     }
+    if (input.partnerId !== undefined) {
+      where.partnerId = input.partnerId;
+    }
+    if (input.search !== undefined) {
+      where.OR = [
+        { name: { contains: input.search, mode: 'insensitive' } },
+        { shortDescription: { contains: input.search, mode: 'insensitive' } },
+        { detailedDescription: { contains: input.search, mode: 'insensitive' } },
+        { manufacturer: { contains: input.search, mode: 'insensitive' } },
+      ];
+    }
     return where;
   }
 

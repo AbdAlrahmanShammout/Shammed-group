@@ -22,6 +22,21 @@ const mockCategories = {
   total: 1,
 };
 
+const mockPartners = {
+  partners: [
+    {
+      id: 1,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+      name: 'Visible Partner',
+      shortDescription: 'Partner',
+      isVisible: true,
+      displayOrder: 0,
+    },
+  ],
+  total: 1,
+};
+
 const mockAllProducts = {
   products: [
     {
@@ -58,7 +73,25 @@ function createProductsFetchMock(): typeof fetch {
         headers: { 'Content-Type': 'application/json' },
       });
     }
+    if (url === `${appEnv.apiBaseUrl}/partner`) {
+      return new Response(JSON.stringify(mockPartners), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
     if (url.startsWith(`${appEnv.apiBaseUrl}/product`)) {
+      if (url.includes('search=stethoscope')) {
+        return new Response(JSON.stringify({ products: [], total: 0 }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      if (url.includes('partnerId=1')) {
+        return new Response(JSON.stringify(mockAllProducts), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
       if (url.includes('categoryId=10')) {
         return new Response(JSON.stringify(mockAllProducts), {
           status: 200,
@@ -106,11 +139,10 @@ describe('PublicProductsPage', () => {
     const user = userEvent.setup();
     renderPublicProductsPage();
     expect(await screen.findByRole('heading', { name: 'Visible Product' })).toBeInTheDocument();
-    expect(screen.getByText('Partner: Visible Partner')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Pharmaceutical Products' }));
     await waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(
-        `${appEnv.apiBaseUrl}/product?categoryId=10`,
+        `${appEnv.apiBaseUrl}/product?categoryId=10&limit=24&offset=0`,
         expect.objectContaining({ method: 'GET' }),
       );
     });
@@ -123,11 +155,36 @@ describe('PublicProductsPage', () => {
     renderPublicProductsPage('/products?categoryId=99');
     expect(await screen.findByText('No products are available for this selection.')).toBeInTheDocument();
   });
+  it('requests the API again when partner and search filters change', async () => {
+    const user = userEvent.setup();
+    renderPublicProductsPage();
+    expect(await screen.findByRole('heading', { name: 'Visible Product' })).toBeInTheDocument();
+    await user.selectOptions(screen.getByLabelText('Partner'), '1');
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        `${appEnv.apiBaseUrl}/product?partnerId=1&limit=24&offset=0`,
+        expect.objectContaining({ method: 'GET' }),
+      );
+    });
+    await user.type(screen.getByLabelText('Search products'), 'stethoscope');
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining('search=stethoscope'),
+        expect.objectContaining({ method: 'GET' }),
+      );
+    });
+  });
   it('shows an error state when the products API fails', async () => {
     fetchMock.mockImplementation(async (input: RequestInfo | URL): Promise<Response> => {
       const url = String(input);
       if (url === `${appEnv.apiBaseUrl}/product-category`) {
         return new Response(JSON.stringify(mockCategories), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      if (url === `${appEnv.apiBaseUrl}/partner`) {
+        return new Response(JSON.stringify(mockPartners), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
         });

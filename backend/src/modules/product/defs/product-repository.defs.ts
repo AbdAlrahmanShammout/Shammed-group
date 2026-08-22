@@ -29,6 +29,8 @@ export type GetProductsRepoInput = {
   readonly isVisible?: boolean;
   readonly isCategoryVisible?: boolean;
   readonly categoryId?: number;
+  readonly partnerId?: number;
+  readonly search?: string;
   readonly limit: number;
   readonly offset: number;
 };

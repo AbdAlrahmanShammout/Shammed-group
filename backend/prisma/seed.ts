@@ -108,22 +108,39 @@ const PARTNERS: readonly SeedPartner[] = [
   {
     name: 'OES',
     shortDescription:
-      'Listed in the supplied corporate deck under “Exclusive Partners.” Current relationship and company details require client confirmation.',
-    isVisible: true,
+      'Electronic Manufacturing Services (EMS) partner serving healthcare and medical-electronics applications.',
+    fullDescription:
+      'OES provides electronic manufacturing services for healthcare applications, including printed circuit board assemblies and box-build services. Its healthcare page references applications such as hospital bed controllers, programmable breathing simulators, and radiotherapy systems. This description is based on the public OES healthcare page and does not establish a Shammed agency, exclusivity, Syria availability, regulatory approval, or product authorization.\n\nRELATIONSHIP STATUS: unverified\nPARTNER WEBSITE: https://www.oes-ems.com/\nHEALTHCARE PAGE: https://www.oes-ems.com/healthcare/\nLOGO SOURCE (unapproved — permission required): https://www.oes-inc.com/app/uploads/sites/4/2020/08/OES-Manufacturing-Logo-WHT-noWhiteSpace.svg\nAPPLICATION REFERENCES (not products): hospital bed controllers, programmable breathing simulators, radiotherapy systems',
+    specialization:
+      'Electronic Manufacturing Services (EMS), PCB assemblies, box-build services, and healthcare electronic systems.',
+    websiteUrl: 'https://www.oes-ems.com/',
+    country: 'UNKNOWN — needs client confirmation',
+    isVisible: false,
     displayOrder: 6,
   },
   {
-    name: 'SMD MEDICARE',
+    name: 'SMD Medicare',
     shortDescription:
-      'Listed in the supplied corporate deck under “Exclusive Partners.” Current relationship and company details require client confirmation.',
-    isVisible: true,
+      'Healthcare distribution and solutions company supplying medical equipment, professional devices, pharmaceuticals, and healthcare supplies.',
+    fullDescription:
+      'SMD Medicare is described in the supplied company profile as a healthcare distribution and solutions company headquartered in Roorkee, Uttarakhand, India. Its stated areas include diagnostic equipment, hospital furniture, surgical instruments, specialized medical consumables, professional medical devices, and pharmaceuticals. This information is currently an unverified company profile and does not establish a current Shammed Group agency, exclusivity, Syria distribution rights, product registration, or product availability.\n\nRELATIONSHIP STATUS: unverified\nHEADQUARTERS: Roorkee, Uttarakhand, India\nPHONE: +91-95554 22455\nCONTACT CHANNEL: WhatsApp / mobile — source provided, requires confirmation\nWEBSITE: UNKNOWN — needs official URL confirmation\nLOGO SOURCE: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo7L6Iqnx9E9v393KYdv1GvuskjUY4VVBqKrDRFAFU3A&s',
+    specialization:
+      'Healthcare distribution, diagnostic equipment, hospital furniture, surgical instruments, medical consumables, professional medical devices, and pharmaceuticals.',
+    country: 'India',
+    isVisible: false,
     displayOrder: 7,
   },
   {
-    name: 'Bistos',
+    name: 'Bistos Co',
     shortDescription:
-      'Listed in the supplied corporate deck under “Exclusive Partners.” Current relationship and company details require client confirmation.',
-    isVisible: true,
+      'South Korean medical equipment manufacturer developing and manufacturing healthcare and biomedical equipment.',
+    fullDescription:
+      'Bistos Co., Ltd. is a South Korean medical equipment manufacturer that researches, develops, and manufactures medical equipment. Its official website presents solutions and equipment for fetal monitoring, patient monitoring, neonatal care, phototherapy, infant incubators, infant warmers, breast pumps, thermometers, head-worn lights, X-ray applications, and other healthcare-related equipment. This description is based on the official Bistos website and does not establish a current Shammed agency, exclusivity, Syria distribution rights, regulatory approval, or product availability.\n\nRELATIONSHIP STATUS: unverified\nHEADQUARTERS: 7th Fl., A Bldg., 302, Galmachi-ro, Jungwon-gu, Seongnam-si, Gyeonggi-do, Republic of Korea, Postal code 13201\nPHONE: +82-31-750-0340\nFAX: +82-31-750-0344\nEMAIL: bistos@bistos.co.kr\nLOGO SOURCE: https://www.bistos.co.kr/wp-content/uploads/2023/08/00.logo-bistos-1.png',
+    specialization:
+      'Medical equipment manufacturing, fetal monitoring, patient monitoring, neonatal care, infant care, biomedical diagnostic equipment, and healthcare devices.',
+    websiteUrl: 'https://www.bistos.co.kr/',
+    country: 'South Korea',
+    isVisible: false,
     displayOrder: 8,
   },
   {

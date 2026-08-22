@@ -25,7 +25,8 @@
  *                          service-supplies.jpg
  *                          partner-storz.png  partner-technix.webp
  *                          partner-karlstorz.png  partner-kls.png
- *                          partner-dialife.png
+ *                          partner-dialife.png  partner-oes.webp
+ *                          partner-smd-medicare.webp
  *
  * NOTE: No direct writes to the storage directory are performed.
  * Every media file is created through the backend API so that file
@@ -240,12 +241,22 @@ async function restoreContentMedia(token) {
 
 async function restoreLocalPartnerLogos(token) {
   console.log('\n── 3. Partner logos (local files) ──');
+
+  const oesLogoPath = resolve(CONTENT_MEDIA_DIR, 'partner-oes.webp');
+  if (!existsSync(oesLogoPath)) {
+    console.log('  partner-oes.webp missing — generating from official SVG source …');
+    execFileSync('node', [resolve(__dirname, 'generate-partner-oes-logo.mjs')], { stdio: 'inherit' });
+  }
+
   const partnerLogoByName = {
     'STORZ Medical AG':  await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-storz.png')),
     'Technix':           await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-technix.webp')),
     'KARL STORZ':        await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-karlstorz.png')),
     'KLS Martin Group':  await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-kls.png')),
     'Dialife Group':     await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-dialife.png')),
+    'OES':               await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-oes.webp')),
+    'SMD Medicare':      await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-smd-medicare.webp')),
+    'Bistos Co':         await uploadFile(token, resolve(CONTENT_MEDIA_DIR, 'partner-bistos.png')),
   };
 
   const { partners } = await getJson(token, '/admin/partner?limit=100&offset=0');
@@ -272,6 +283,16 @@ async function restoreWebPartnerLogos(token) {
       partnerName: 'Marinas Official',
       url: 'https://marinasofficial.com/wp-content/uploads/2023/08/MarinasOfficial-1.png',
       fileName: 'partner-marinas-logo.png',
+    },
+    {
+      partnerName: 'SMD Medicare',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo7L6Iqnx9E9v393KYdv1GvuskjUY4VVBqKrDRFAFU3A&s',
+      fileName: 'partner-smd-medicare.jpg',
+    },
+    {
+      partnerName: 'Bistos Co',
+      url: 'https://www.bistos.co.kr/wp-content/uploads/2023/08/00.logo-bistos-1.png',
+      fileName: 'partner-bistos.png',
     },
   ];
 
