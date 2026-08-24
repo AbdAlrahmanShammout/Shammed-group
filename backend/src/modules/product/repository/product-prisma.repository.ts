@@ -104,10 +104,10 @@ export class ProductPrismaRepository implements ProductRepository {
     }
     if (input.search !== undefined) {
       where.OR = [
-        { name: { contains: input.search, mode: 'insensitive' } },
-        { shortDescription: { contains: input.search, mode: 'insensitive' } },
-        { detailedDescription: { contains: input.search, mode: 'insensitive' } },
-        { manufacturer: { contains: input.search, mode: 'insensitive' } },
+        { name: { contains: input.search } },
+        { shortDescription: { contains: input.search } },
+        { detailedDescription: { contains: input.search } },
+        { manufacturer: { contains: input.search } },
       ];
     }
     return where;

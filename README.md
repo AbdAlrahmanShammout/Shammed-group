@@ -4,7 +4,7 @@ Full-stack website for Shammed Group, a medical equipment and pharmaceutical ser
 
 - **Public site** — marketing pages (home, about, services, products, partners, contact)
 - **Admin panel** — CMS for all content, media, catalog, and company information
-- **Backend API** — NestJS REST API with PostgreSQL and local file storage
+- **Backend API** — NestJS REST API with MariaDB and local file storage
 
 ---
 
@@ -31,7 +31,7 @@ Full-stack website for Shammed Group, a medical equipment and pharmaceutical ser
 | Layer | Technology |
 |-------|-----------|
 | Backend framework | [NestJS](https://nestjs.com/) |
-| Database | PostgreSQL via [Prisma ORM](https://www.prisma.io/) |
+| Database | MariaDB (MySQL-compatible) via [Prisma ORM](https://www.prisma.io/) |
 | File storage | Local filesystem (configurable path) |
 | Frontend framework | [React](https://react.dev/) + [Vite](https://vitejs.dev/) |
 | UI components | [shadcn/ui](https://ui.shadcn.com/) + [Tailwind CSS](https://tailwindcss.com/) |
@@ -51,7 +51,7 @@ Install these before starting:
 |------|-----------------|---------|
 | Node.js | ≥ 20.0.0 | https://nodejs.org |
 | pnpm | ≥ 11.0.0 | `npm install -g pnpm` |
-| PostgreSQL | ≥ 14 | https://www.postgresql.org/download/ |
+| MariaDB | ≥ 10.6 (or MySQL ≥ 8) | Plesk, Homebrew, or https://mariadb.org/download/ |
 
 ---
 
@@ -106,8 +106,8 @@ cp backend/.env.example backend/.env   # if .env.example exists
 NODE_ENV=development
 PORT=3000
 
-# PostgreSQL connection string
-DATABASE_URL=postgresql://YOUR_USER@localhost:5432/shammed_group
+# MariaDB connection string (Prisma uses the mysql:// protocol for MariaDB)
+DATABASE_URL=mysql://YOUR_USER:YOUR_PASSWORD@localhost:3306/shammed_group
 
 # Allowed frontend origin (CORS)
 ALLOWED_ORIGINS=http://localhost:5173
@@ -177,10 +177,24 @@ Run both together in two separate terminal tabs.
 
 ### Create the database
 
-```bash
-# In PostgreSQL (psql or your preferred client):
-CREATE DATABASE shammed_group;
+**Local MariaDB:**
+
+```sql
+CREATE DATABASE shammed_group CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'shammed'@'localhost' IDENTIFIED BY 'your-password';
+GRANT ALL PRIVILEGES ON shammed_group.* TO 'shammed'@'localhost';
+FLUSH PRIVILEGES;
 ```
+
+**Plesk:**
+
+1. Open **Databases** → **Add Database**.
+2. Create a MariaDB database and user; grant the user full access to that database.
+3. Copy the connection details into `DATABASE_URL`:
+
+   `mysql://DB_USER:DB_PASSWORD@localhost:3306/DB_NAME`
+
+   URL-encode special characters in the password (e.g. `@` → `%40`, `#` → `%23`).
 
 ### Run migrations
 
@@ -349,12 +363,11 @@ pnpm backend:test && pnpm frontend:test
 # 1. Install dependencies
 pnpm install
 
-# 2. Create the database
-createdb shammed_group
+# 2. Create the MariaDB database (see Database section — Plesk or local SQL)
 
 # 3. Configure environment
 cp backend/.env.example backend/.env
-# Edit backend/.env — set DATABASE_URL, ADMIN_PASSWORD, TOKEN_SECRET_KEY
+# Edit backend/.env — set DATABASE_URL (mysql://…), ADMIN_PASSWORD, TOKEN_SECRET_KEY
 
 cp frontend/.env.example frontend/.env
 # Edit frontend/.env — set VITE_API_BASE_URL to your production domain
@@ -364,10 +377,11 @@ pnpm --filter backend prisma migrate deploy
 
 # 5. Place media files in backend/tmp/ (see Media Files section above)
 
-# 6. Restore all data + media in one command
+# 6. Start the backend API, then seed + restore media
+pnpm --filter backend seed
+API_BASE_URL=https://your-api.com node backend/scripts/restore-all.mjs
+# Or locally with backend running on :3000:
 pnpm --filter backend restore
-# Or for a remote API server:
-API_BASE_URL=https://your-api.com pnpm --filter backend restore
 
 # 7. Build for production
 pnpm backend:build
@@ -375,6 +389,15 @@ pnpm frontend:build
 # Built frontend is at frontend/dist/ — serve with nginx/Caddy/etc.
 # Backend: node backend/dist/main.js
 ```
+
+### Plesk production checklist
+
+1. Create MariaDB database + user in Plesk; set `DATABASE_URL` in the Node.js app environment.
+2. Deploy the app and run `pnpm install` + `pnpm backend:build` (Prisma client generates on postinstall).
+3. `pnpm --filter backend prisma migrate deploy` — creates all tables on the empty database.
+4. `pnpm --filter backend seed` — loads CMS text data (partners, products, pages, etc.).
+5. With the API running: `API_BASE_URL=https://your-domain.com node backend/scripts/restore-all.mjs` — uploads and attaches media.
+6. Verify `/health` and admin login.
 
 ### Production environment notes
 

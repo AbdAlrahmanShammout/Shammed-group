@@ -3,63 +3,63 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Media {
-  id                     Int           @id @default(autoincrement())
-  createdAt              DateTime      @default(now())
-  updatedAt              DateTime      @updatedAt
-  originalFileName       String
-  storedFileName         String
-  mimeType               String
-  byteSize               Int
-  storageKey             String        @unique
+  id                      Int           @id @default(autoincrement())
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+  originalFileName        String        @db.Text
+  storedFileName          String        @db.Text
+  mimeType                String        @db.Text
+  byteSize                Int
+  storageKey              String        @unique @db.VarChar(255)
   siteSettingsLogo        SiteSettings? @relation("SiteSettingsLogo")
-  siteSettingsFavicon     SiteSettings? @relation("SiteSettingsFavicon")
+  siteSettingsFavicon       SiteSettings? @relation("SiteSettingsFavicon")
   siteSettingsPlaceholder SiteSettings? @relation("SiteSettingsPlaceholder")
-  partnerLogo            Partner?      @relation("PartnerLogo")
-  productImage           Product?      @relation("ProductImage")
-  serviceImage           Service?      @relation("ServiceImage")
-  homePageHeroImage      HomePage?     @relation("HomePageHeroImage")
-  homePageAboutImage     HomePage?     @relation("HomePageAboutPreviewImage")
-  homePageWhyImage       HomePage?     @relation("HomePageWhyImage")
-  aboutPageOverviewImage AboutPage?    @relation("AboutPageOverviewImage")
+  partnerLogo             Partner?      @relation("PartnerLogo")
+  productImage            Product?      @relation("ProductImage")
+  serviceImage            Service?      @relation("ServiceImage")
+  homePageHeroImage       HomePage?     @relation("HomePageHeroImage")
+  homePageAboutImage      HomePage?     @relation("HomePageAboutPreviewImage")
+  homePageWhyImage        HomePage?     @relation("HomePageWhyImage")
+  aboutPageOverviewImage  AboutPage?    @relation("AboutPageOverviewImage")
 }
 
 model SiteSettings {
   id                 Int      @id @default(autoincrement())
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
-  companyName        String
-  companyNameEnglish String
-  companyNameArabic  String?
-  email              String
-  phone              String
-  whatsApp           String?
-  address            String?
-  logoMediaId           Int?     @unique
-  faviconMediaId        Int?     @unique
-  placeholderMediaId    Int?     @unique
-  primaryColor          String?
-  accentColor           String?
-  backgroundColor       String?
-  textColor             String?
-  secondaryColor        String?
-  borderColor           String?
-  logo                  Media?   @relation("SiteSettingsLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
-  favicon               Media?   @relation("SiteSettingsFavicon", fields: [faviconMediaId], references: [id], onDelete: SetNull)
-  placeholder           Media?   @relation("SiteSettingsPlaceholder", fields: [placeholderMediaId], references: [id], onDelete: SetNull)
+  companyName        String   @db.Text
+  companyNameEnglish String   @db.Text
+  companyNameArabic  String?  @db.Text
+  email              String   @db.Text
+  phone              String   @db.Text
+  whatsApp           String?  @db.Text
+  address            String?  @db.Text
+  logoMediaId        Int?     @unique
+  faviconMediaId     Int?     @unique
+  placeholderMediaId Int?     @unique
+  primaryColor       String?
+  accentColor        String?
+  backgroundColor    String?
+  textColor          String?
+  secondaryColor     String?
+  borderColor        String?
+  logo               Media?   @relation("SiteSettingsLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
+  favicon            Media?   @relation("SiteSettingsFavicon", fields: [faviconMediaId], references: [id], onDelete: SetNull)
+  placeholder        Media?   @relation("SiteSettingsPlaceholder", fields: [placeholderMediaId], references: [id], onDelete: SetNull)
 }
 
 model Location {
   id            Int             @id @default(autoincrement())
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  name          String
-  address       String
-  googleMapsUrl String?
+  name          String          @db.Text
+  address       String          @db.Text
+  googleMapsUrl String?         @db.Text
   latitude      Decimal?        @db.Decimal(10, 7)
   longitude     Decimal?        @db.Decimal(10, 7)
   isVisible     Boolean         @default(true)
@@ -72,7 +72,7 @@ model LocationPhone {
   id           Int      @id @default(autoincrement())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  phone        String
+  phone        String   @db.Text
   displayOrder Int      @default(0)
   locationId   Int
   location     Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
@@ -82,8 +82,8 @@ model SocialLink {
   id           Int      @id @default(autoincrement())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  platform     String
-  url          String
+  platform     String   @db.Text
+  url          String   @db.Text
   isVisible    Boolean  @default(true)
   displayOrder Int      @default(0)
 }
@@ -92,12 +92,12 @@ model Partner {
   id               Int       @id @default(autoincrement())
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
-  name             String
-  shortDescription String
-  fullDescription  String?
-  specialization   String?
-  websiteUrl       String?
-  country          String?
+  name             String    @db.Text
+  shortDescription String    @db.Text
+  fullDescription  String?   @db.Text
+  specialization   String?   @db.Text
+  websiteUrl       String?   @db.Text
+  country          String?   @db.Text
   isVisible        Boolean   @default(true)
   displayOrder     Int       @default(0)
   logoMediaId      Int?      @unique
@@ -109,8 +109,8 @@ model ProductCategory {
   id           Int       @id @default(autoincrement())
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  name         String
-  description  String?
+  name         String    @db.Text
+  description  String?   @db.Text
   isVisible    Boolean   @default(true)
   displayOrder Int       @default(0)
   color        String?
@@ -121,10 +121,10 @@ model Product {
   id                  Int             @id @default(autoincrement())
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
-  name                String
-  shortDescription    String
-  detailedDescription String?
-  manufacturer        String?
+  name                String          @db.Text
+  shortDescription    String          @db.Text
+  detailedDescription String?         @db.Text
+  manufacturer        String?         @db.Text
   isVisible           Boolean         @default(true)
   displayOrder        Int             @default(0)
   categoryId          Int
@@ -139,8 +139,8 @@ model Service {
   id           Int      @id @default(autoincrement())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  title        String
-  description  String
+  title        String   @db.Text
+  description  String   @db.Text
   isVisible    Boolean  @default(true)
   displayOrder Int      @default(0)
   imageMediaId Int?     @unique
@@ -152,46 +152,46 @@ model HomePage {
   createdAt                  DateTime @default(now())
   updatedAt                  DateTime @updatedAt
   singletonKey               String   @unique @default("default")
-  heroTitle                  String
-  heroDescription            String
+  heroTitle                  String   @db.Text
+  heroDescription            String   @db.Text
   heroImageMediaId           Int?     @unique
-  primaryCtaText             String
-  primaryCtaUrl              String
-  secondaryCtaText           String
-  secondaryCtaUrl            String
-  aboutPreviewTitle          String
-  aboutPreviewDescription    String
+  primaryCtaText             String   @db.Text
+  primaryCtaUrl              String   @db.Text
+  secondaryCtaText           String   @db.Text
+  secondaryCtaUrl            String   @db.Text
+  aboutPreviewTitle          String   @db.Text
+  aboutPreviewDescription    String   @db.Text
   aboutPreviewImageMediaId   Int?     @unique
-  aboutPreviewCtaText        String
-  aboutPreviewCtaUrl         String
-  partnersSectionTitle       String
-  partnersSectionDescription String?
-  productsSectionTitle       String
-  productsSectionDescription String?
-  servicesSectionTitle       String
-  servicesSectionDescription String?
-  whyTitle                   String
-  whyDescription             String
-  whyEyebrow                 String   @default("Our identity")
-  whyReason1Title            String   @default("Quality-Certified Portfolio")
-  whyReason1Description      String   @default("Every product meets rigorous international pharmaceutical and healthcare quality standards.")
-  whyReason2Title            String   @default("Trusted Global Partnerships")
-  whyReason2Description      String   @default("Direct distribution agreements with leading European and international manufacturers.")
-  whyReason3Title            String   @default("Decades of Regional Expertise")
-  whyReason3Description      String   @default("Established networks and deep market knowledge across the MENA region since our founding.")
-  whyReason4Title            String   @default("Reliable Supply Chain")
-  whyReason4Description      String   @default("Consistent product availability backed by efficient logistics and responsive service.")
+  aboutPreviewCtaText        String   @db.Text
+  aboutPreviewCtaUrl         String   @db.Text
+  partnersSectionTitle       String   @db.Text
+  partnersSectionDescription String?  @db.Text
+  productsSectionTitle       String   @db.Text
+  productsSectionDescription String?  @db.Text
+  servicesSectionTitle       String   @db.Text
+  servicesSectionDescription String?  @db.Text
+  whyTitle                   String   @db.Text
+  whyDescription             String   @db.Text
+  whyEyebrow                 String   @default("Our identity") @db.Text
+  whyReason1Title            String   @default("Quality-Certified Portfolio") @db.Text
+  whyReason1Description      String   @default("Every product meets rigorous international pharmaceutical and healthcare quality standards.") @db.Text
+  whyReason2Title            String   @default("Trusted Global Partnerships") @db.Text
+  whyReason2Description      String   @default("Direct distribution agreements with leading European and international manufacturers.") @db.Text
+  whyReason3Title            String   @default("Decades of Regional Expertise") @db.Text
+  whyReason3Description      String   @default("Established networks and deep market knowledge across the MENA region since our founding.") @db.Text
+  whyReason4Title            String   @default("Reliable Supply Chain") @db.Text
+  whyReason4Description      String   @default("Consistent product availability backed by efficient logistics and responsive service.") @db.Text
   whyImageMediaId            Int?     @unique
-  heroEyebrow                String   @default("FORMULATION / 01 — SYRIA")
-  aboutEyebrow               String   @default("About us")
-  aboutMetric1Value          String   @default("40+")
-  aboutMetric1Label          String   @default("Years in healthcare")
-  aboutMetric2Value          String   @default("300+")
-  aboutMetric2Label          String   @default("Products & equipment")
-  aboutMetric3Value          String   @default("100%")
-  aboutMetric3Label          String   @default("Syria coverage")
-  contactSectionTitle        String
-  contactSectionDescription  String?
+  heroEyebrow                String   @default("FORMULATION / 01 — SYRIA") @db.Text
+  aboutEyebrow               String   @default("About us") @db.Text
+  aboutMetric1Value          String   @default("40+") @db.Text
+  aboutMetric1Label          String   @default("Years in healthcare") @db.Text
+  aboutMetric2Value          String   @default("300+") @db.Text
+  aboutMetric2Label          String   @default("Products & equipment") @db.Text
+  aboutMetric3Value          String   @default("100%") @db.Text
+  aboutMetric3Label          String   @default("Syria coverage") @db.Text
+  contactSectionTitle        String   @db.Text
+  contactSectionDescription  String?  @db.Text
   heroImage                  Media?   @relation("HomePageHeroImage", fields: [heroImageMediaId], references: [id], onDelete: SetNull)
   aboutPreviewImage          Media?   @relation("HomePageAboutPreviewImage", fields: [aboutPreviewImageMediaId], references: [id], onDelete: SetNull)
   whyImage                   Media?   @relation("HomePageWhyImage", fields: [whyImageMediaId], references: [id], onDelete: SetNull)
@@ -202,12 +202,12 @@ model AboutPage {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   singletonKey         String   @unique @default("default")
-  overview             String
+  overview             String   @db.Text
   overviewImageMediaId Int?     @unique
-  vision               String
-  mission              String
-  values               String
-  capabilities         String
+  vision               String   @db.Text
+  mission              String   @db.Text
+  values               String   @db.Text
+  capabilities         String   @db.Text
   overviewImage        Media?   @relation("AboutPageOverviewImage", fields: [overviewImageMediaId], references: [id], onDelete: SetNull)
 }
 
@@ -221,11 +221,11 @@ model ContactInquiry {
   id                  Int                 @id @default(autoincrement())
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  fullName            String
-  email               String
-  phone               String?
-  subject             String
-  message             String
+  fullName            String              @db.Text
+  email               String              @db.Text
+  phone               String?             @db.Text
+  subject             String              @db.Text
+  message             String              @db.Text
   emailDeliveryStatus EmailDeliveryStatus @default(PENDING)
   emailDeliveredAt    DateTime?
 }
