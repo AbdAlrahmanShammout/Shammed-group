@@ -19,6 +19,9 @@ else
 fi
 
 HTTPDOCS=/var/www/vhosts/shammed-group.com/httpdocs
+if [ ! -d "${HTTPDOCS}" ] && [ -d /var/www/vhosts/shammed-group.com/shammed-group.com/httpdocs ]; then
+  HTTPDOCS=/var/www/vhosts/shammed-group.com/shammed-group.com/httpdocs
+fi
 FRONTEND_DIR=${REPO_ROOT}/frontend
 
 export VITE_API_BASE_URL=${VITE_API_BASE_URL:-https://api.shammed-group.com}
@@ -32,7 +35,7 @@ echo Site URL is ${VITE_PUBLIC_SITE_URL}
 echo Target httpdocs is ${HTTPDOCS}
 
 cd "${FRONTEND_DIR}"
-npm install
+npm install --include=dev
 npm run build
 
 if [ ! -d dist ]; then
