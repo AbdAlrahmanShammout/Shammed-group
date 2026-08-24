@@ -1,12 +1,9 @@
 #!/bin/bash
 echo Plesk frontend deploy starting
 
-export PATH="/usr/bin:/bin:/usr/local/bin:/opt/plesk/node/24/bin:/opt/plesk/node/22/bin:/opt/plesk/node/20/bin:/opt/plesk/node/18/bin:${PATH:-}"
-
-if ! command -v npm >/dev/null 2>&1; then
-  echo ERROR npm not found
-  exit 1
-fi
+SCRIPT_DIR=$(dirname "$0")
+. "${SCRIPT_DIR}/plesk-resolve-node.sh"
+plesk_setup_node || exit 1
 
 if [ -d frontend ]; then
   REPO_ROOT=$(pwd)
@@ -28,15 +25,15 @@ export VITE_API_BASE_URL=${VITE_API_BASE_URL:-https://api.shammed-group.com}
 export VITE_PUBLIC_SITE_URL=${VITE_PUBLIC_SITE_URL:-https://shammed-group.com}
 
 echo Deploy cwd is $(pwd)
-echo Using node $(node -v)
-echo Using npm $(npm -v)
+"${PLESK_NODE}" -v
+"${PLESK_NPM}" -v
 echo API URL is ${VITE_API_BASE_URL}
 echo Site URL is ${VITE_PUBLIC_SITE_URL}
 echo Target httpdocs is ${HTTPDOCS}
 
 cd "${FRONTEND_DIR}"
-npm install --include=dev
-npm run build
+plesk_run_npm install --include=dev
+plesk_run_npm run build
 
 if [ ! -d dist ]; then
   echo ERROR frontend dist folder missing after build

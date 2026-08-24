@@ -1,7 +1,9 @@
 #!/bin/bash
 echo STEP 3 build starting
 
-export PATH="/usr/bin:/bin:/usr/local/bin:/opt/plesk/node/24/bin:/opt/plesk/node/22/bin:/opt/plesk/node/20/bin:/opt/plesk/node/18/bin:${PATH:-}"
+SCRIPT_DIR=$(dirname "$0")
+. "${SCRIPT_DIR}/plesk-resolve-node.sh"
+plesk_setup_node || exit 1
 
 if [ -d frontend ]; then
   REPO_ROOT=$(pwd)
@@ -20,7 +22,7 @@ export VITE_PUBLIC_SITE_URL=${VITE_PUBLIC_SITE_URL:-https://shammed-group.com}
 echo API URL is ${VITE_API_BASE_URL}
 echo Site URL is ${VITE_PUBLIC_SITE_URL}
 
-npm run build
+plesk_run_npm run build
 
 if [ -f dist/index.html ]; then
   echo OK dist/index.html exists

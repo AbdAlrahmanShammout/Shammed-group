@@ -1,16 +1,13 @@
 #!/bin/bash
 echo Plesk deploy starting
 
-export PATH="/usr/bin:/bin:/usr/local/bin:/opt/plesk/node/24/bin:/opt/plesk/node/22/bin:/opt/plesk/node/20/bin:/opt/plesk/node/18/bin:${PATH:-}"
-
-if ! command -v npm >/dev/null 2>&1; then
-  echo ERROR npm not found
-  exit 1
-fi
+SCRIPT_DIR=$(dirname "$0")
+. "${SCRIPT_DIR}/plesk-resolve-node.sh"
+plesk_setup_node || exit 1
 
 echo Deploy cwd is $(pwd)
-echo Using node $(node -v)
-echo Using npm $(npm -v)
+"${PLESK_NODE}" -v
+"${PLESK_NPM}" -v
 
 if [ -d backend ]; then
   cd backend
@@ -22,8 +19,8 @@ else
   exit 1
 fi
 
-npm install
-npm run generate
-npm run build
+plesk_run_npm install
+plesk_run_npm run generate
+plesk_run_npm run build
 
 echo Backend build finished

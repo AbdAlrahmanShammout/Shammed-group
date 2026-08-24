@@ -1,12 +1,15 @@
 #!/bin/bash
 echo STEP 1 check starting
 
-export PATH="/usr/bin:/bin:/usr/local/bin:/opt/plesk/node/24/bin:/opt/plesk/node/22/bin:/opt/plesk/node/20/bin:/opt/plesk/node/18/bin:${PATH:-}"
+SCRIPT_DIR=$(dirname "$0")
+. "${SCRIPT_DIR}/plesk-resolve-node.sh"
+if plesk_setup_node; then
+  echo OK node and npm resolved
+else
+  echo FAIL could not resolve node/npm
+fi
 
 echo cwd is $(pwd)
-echo node is $(command -v node || echo MISSING)
-echo npm is $(command -v npm || echo MISSING)
-echo bash is $(command -v bash || echo MISSING)
 
 if [ -d frontend ]; then
   echo OK frontend folder found in cwd
@@ -30,6 +33,12 @@ if [ -d /var/www/vhosts/shammed-group.com/shammed-group.com/httpdocs ]; then
   echo OK httpdocs at /var/www/vhosts/shammed-group.com/shammed-group.com/httpdocs
 else
   echo FAIL httpdocs at shammed-group.com/httpdocs variant
+fi
+
+if [ -x /opt/plesk/node/24/bin/npm ]; then
+  echo OK npm exists at /opt/plesk/node/24/bin/npm
+else
+  echo FAIL npm missing at /opt/plesk/node/24/bin/npm
 fi
 
 echo NODE_ENV is ${NODE_ENV:-empty}

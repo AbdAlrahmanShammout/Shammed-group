@@ -1,7 +1,9 @@
 #!/bin/bash
 echo STEP 2 install starting
 
-export PATH="/usr/bin:/bin:/usr/local/bin:/opt/plesk/node/24/bin:/opt/plesk/node/22/bin:/opt/plesk/node/20/bin:/opt/plesk/node/18/bin:${PATH:-}"
+SCRIPT_DIR=$(dirname "$0")
+. "${SCRIPT_DIR}/plesk-resolve-node.sh"
+plesk_setup_node || exit 1
 
 if [ -d frontend ]; then
   REPO_ROOT=$(pwd)
@@ -15,7 +17,7 @@ fi
 cd "${REPO_ROOT}/frontend"
 
 echo Installing frontend dependencies including devDependencies
-npm install --include=dev
+plesk_run_npm install --include=dev
 
 if [ -d node_modules/vite ]; then
   echo OK vite installed
