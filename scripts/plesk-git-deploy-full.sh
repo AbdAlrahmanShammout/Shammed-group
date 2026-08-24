@@ -1,14 +1,21 @@
 #!/bin/bash
 # Full Plesk Git deploy for Shammed Group monorepo.
-# Style based on Plesk community: use absolute npm/node paths, write a deploy log.
-# In Plesk "additional deployment actions" use ONLY this one line:
+# In Plesk "additional deployment actions" use ONLY:
 #   /bin/bash scripts/plesk-git-deploy-full.sh
 
 set -u
 
 DOMAIN_ROOT=/var/www/vhosts/shammed-group.com
 API_ROOT=${DOMAIN_ROOT}/api.shammed-group.com
-LOGFILE=${DOMAIN_ROOT}/logs/deploy.log
+
+# Prefer subscription logs, otherwise write inside the repo (always writable).
+if [ -d "${DOMAIN_ROOT}/logs" ]; then
+  LOGFILE=${DOMAIN_ROOT}/logs/deploy.log
+elif [ -d logs ]; then
+  LOGFILE=$(pwd)/logs/deploy.log
+else
+  LOGFILE=$(pwd)/deploy.log
+fi
 
 log() {
   echo "$@"
@@ -23,10 +30,12 @@ fail() {
 {
   echo ""
   echo "===== full deploy $(date) ====="
+  echo "LOGFILE=${LOGFILE}"
 } >> "${LOGFILE}" 2>/dev/null || true
 
 log "STEP 0 start"
 log "cwd=$(pwd)"
+log "LOGFILE=${LOGFILE}"
 
 # Resolve repo root
 if [ -d backend ] && [ -d frontend ]; then
@@ -37,6 +46,12 @@ else
   fail "repo root not found (backend/frontend missing)"
 fi
 log "REPO_ROOT=${REPO_ROOT}"
+
+# If preferred log path was not writable, switch to repo-local log.
+if ! touch "${LOGFILE}" 2>/dev/null; then
+  LOGFILE=${REPO_ROOT}/deploy.log
+  log "switched LOGFILE to ${LOGFILE}"
+fi
 
 # Resolve httpdocs
 if [ -d "${DOMAIN_ROOT}/httpdocs" ]; then
@@ -63,7 +78,6 @@ if [ -z "${npmbin}" ]; then
   fail "npm binary not found under /opt/plesk/node/*/bin/npm (Git hook may be chrooted)"
 fi
 
-# Prove binaries are executable from this environment
 if ! "${nodebin}" -v >/dev/null 2>&1; then
   fail "node exists at ${nodebin} but cannot execute (likely chroot)"
 fi
