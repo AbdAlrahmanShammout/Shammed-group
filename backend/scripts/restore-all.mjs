@@ -55,13 +55,30 @@ const RATE_LIMIT_BASE_DELAY_MS = 5_000;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BACKEND_DIR = resolve(__dirname, '..');
-const API_BASE = process.env.API_BASE_URL ?? 'http://localhost:3000';
 const ENV_PATH = resolve(BACKEND_DIR, '.env');
 
 const BRAND_ASSETS_DIR = resolve(BACKEND_DIR, 'tmp/brand-assets');
 const CONTENT_MEDIA_DIR = resolve(BACKEND_DIR, 'tmp/content-media');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+
+function readEnvValue(key) {
+  if (process.env[key]) {
+    return process.env[key].trim();
+  }
+  if (!existsSync(ENV_PATH)) {
+    return null;
+  }
+  const envText = readFileSync(ENV_PATH, 'utf8');
+  const match = envText.match(new RegExp(`^${key}=(.*)$`, 'm'));
+  return match ? match[1].trim() : null;
+}
+
+function resolveApiBase() {
+  return readEnvValue('API_BASE_URL') ?? 'http://localhost:3000';
+}
+
+const API_BASE = resolveApiBase();
 
 function sleep(ms) {
   return new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
@@ -111,10 +128,9 @@ async function fetchWithRateLimitRetry(url, init, label) {
   throw lastError ?? new Error(`Too Many Requests for ${label}`);
 }
 function readAdminPassword() {
-  const envText = readFileSync(ENV_PATH, 'utf8');
-  const match = envText.match(/^ADMIN_PASSWORD=(.*)$/m);
-  if (!match) throw new Error('ADMIN_PASSWORD missing from backend/.env');
-  return match[1].trim();
+  const password = readEnvValue('ADMIN_PASSWORD');
+  if (!password) throw new Error('ADMIN_PASSWORD missing from backend/.env');
+  return password;
 }
 
 function mimeForExt(ext) {
