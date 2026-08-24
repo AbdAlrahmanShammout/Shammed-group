@@ -1,25 +1,16 @@
 #!/bin/bash
 # Full Plesk Git deploy for Shammed Group monorepo.
+# Works inside Plesk Git chroot where subscription root maps to "/".
 # In Plesk "additional deployment actions" use ONLY:
 #   /bin/bash scripts/plesk-git-deploy-full.sh
 
 set -u
 
-DOMAIN_ROOT=/var/www/vhosts/shammed-group.com
-API_ROOT=${DOMAIN_ROOT}/api.shammed-group.com
-
-# Prefer subscription logs, otherwise write inside the repo (always writable).
-if [ -d "${DOMAIN_ROOT}/logs" ]; then
-  LOGFILE=${DOMAIN_ROOT}/logs/deploy.log
-elif [ -d logs ]; then
-  LOGFILE=$(pwd)/logs/deploy.log
-else
-  LOGFILE=$(pwd)/deploy.log
-fi
-
 log() {
   echo "$@"
-  echo "$@" >> "${LOGFILE}" 2>/dev/null || true
+  if [ -n "${LOGFILE:-}" ]; then
+    echo "$@" >> "${LOGFILE}" 2>/dev/null || true
+  fi
 }
 
 fail() {
@@ -27,6 +18,22 @@ fail() {
   exit 1
 }
 
+# Resolve repo root first (works in chroot and normal FS).
+if [ -d backend ] && [ -d frontend ]; then
+  REPO_ROOT=$(pwd)
+elif [ -d /api.shammed-group.com/backend ] && [ -d /api.shammed-group.com/frontend ]; then
+  REPO_ROOT=/api.shammed-group.com
+elif [ -d /var/www/vhosts/shammed-group.com/api.shammed-group.com/backend ]; then
+  REPO_ROOT=/var/www/vhosts/shammed-group.com/api.shammed-group.com
+else
+  echo "ERROR: repo root not found"
+  pwd
+  ls -la
+  exit 1
+fi
+
+# Prefer a writable log inside the repo (always available in chroot).
+LOGFILE=${REPO_ROOT}/deploy.log
 {
   echo ""
   echo "===== full deploy $(date) ====="
@@ -35,35 +42,34 @@ fail() {
 
 log "STEP 0 start"
 log "cwd=$(pwd)"
-log "LOGFILE=${LOGFILE}"
-
-# Resolve repo root
-if [ -d backend ] && [ -d frontend ]; then
-  REPO_ROOT=$(pwd)
-elif [ -d "${API_ROOT}/backend" ] && [ -d "${API_ROOT}/frontend" ]; then
-  REPO_ROOT=${API_ROOT}
-else
-  fail "repo root not found (backend/frontend missing)"
-fi
 log "REPO_ROOT=${REPO_ROOT}"
 
-# If preferred log path was not writable, switch to repo-local log.
-if ! touch "${LOGFILE}" 2>/dev/null; then
-  LOGFILE=${REPO_ROOT}/deploy.log
-  log "switched LOGFILE to ${LOGFILE}"
-fi
+# Resolve httpdocs for chroot + normal layouts.
+HTTPDOCS=""
+for candidate in \
+  /httpdocs \
+  "${REPO_ROOT}/../httpdocs" \
+  /shammed-group.com/httpdocs \
+  /var/www/vhosts/shammed-group.com/httpdocs \
+  /var/www/vhosts/shammed-group.com/shammed-group.com/httpdocs
+do
+  if [ -d "${candidate}" ]; then
+    HTTPDOCS=${candidate}
+    break
+  fi
+done
 
-# Resolve httpdocs
-if [ -d "${DOMAIN_ROOT}/httpdocs" ]; then
-  HTTPDOCS=${DOMAIN_ROOT}/httpdocs
-elif [ -d "${DOMAIN_ROOT}/shammed-group.com/httpdocs" ]; then
-  HTTPDOCS=${DOMAIN_ROOT}/shammed-group.com/httpdocs
-else
+if [ -z "${HTTPDOCS}" ]; then
+  log "ERROR: httpdocs not found"
+  log "listing / :"
+  ls -la / >> "${LOGFILE}" 2>&1 || true
+  log "listing REPO_ROOT/.. :"
+  ls -la "${REPO_ROOT}/.." >> "${LOGFILE}" 2>&1 || true
   fail "httpdocs not found"
 fi
 log "HTTPDOCS=${HTTPDOCS}"
 
-# Resolve absolute npm/node paths (Plesk Node.js toolkit)
+# Resolve absolute npm/node paths (Plesk toolkit). In chroot this often fails.
 npmbin=""
 nodebin=""
 for version in 24 22 20 18; do
@@ -74,15 +80,24 @@ for version in 24 22 20 18; do
   fi
 done
 
+# Fallback: npm already on PATH (rare in Git hook).
+if [ -z "${npmbin}" ] && command -v npm >/dev/null 2>&1 && command -v node >/dev/null 2>&1; then
+  npmbin=$(command -v npm)
+  nodebin=$(command -v node)
+fi
+
 if [ -z "${npmbin}" ]; then
-  fail "npm binary not found under /opt/plesk/node/*/bin/npm (Git hook may be chrooted)"
+  log "listing /opt (if visible):"
+  ls -la /opt >> "${LOGFILE}" 2>&1 || true
+  ls -la /opt/plesk >> "${LOGFILE}" 2>&1 || true
+  fail "npm binary not found (Git hook is likely chrooted without /opt/plesk/node)"
 fi
 
 if ! "${nodebin}" -v >/dev/null 2>&1; then
-  fail "node exists at ${nodebin} but cannot execute (likely chroot)"
+  fail "node exists at ${nodebin} but cannot execute"
 fi
 if ! "${npmbin}" -v >/dev/null 2>&1; then
-  fail "npm exists at ${npmbin} but cannot execute (likely chroot)"
+  fail "npm exists at ${npmbin} but cannot execute"
 fi
 
 log "STEP 0 ok"
