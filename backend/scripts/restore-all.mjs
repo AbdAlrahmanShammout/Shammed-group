@@ -78,6 +78,16 @@ function resolveApiBase() {
   return readEnvValue('API_BASE_URL') ?? 'http://localhost:3000';
 }
 
+function ensurePrismaEnv() {
+  const databaseUrl = readEnvValue('DATABASE_URL');
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL missing from backend/.env');
+  }
+  if (!process.env.DATABASE_URL) {
+    process.env.DATABASE_URL = databaseUrl;
+  }
+}
+
 const API_BASE = resolveApiBase();
 
 function sleep(ms) {
@@ -495,6 +505,7 @@ async function cleanupUnusedMedia(token) {
 async function main() {
   console.log(`Restoring all media to ${API_BASE} …`);
 
+  ensurePrismaEnv();
   const prisma = new PrismaClient();
   try {
     const token = await login(readAdminPassword());
