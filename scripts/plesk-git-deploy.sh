@@ -2,7 +2,9 @@
 echo Plesk deploy starting
 
 SCRIPT_DIR=$(dirname "$0")
+# shellcheck source=plesk-resolve-node.sh
 . "${SCRIPT_DIR}/plesk-resolve-node.sh"
+plesk_init_deploy_log
 plesk_setup_node || exit 1
 
 echo Deploy cwd is $(pwd)
