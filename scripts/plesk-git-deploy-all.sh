@@ -1,7 +1,5 @@
 #!/bin/bash
+# Wrapper kept for compatibility. Prefer:
+#   /bin/bash scripts/plesk-git-deploy-full.sh
 SCRIPT_DIR=$(dirname "$0")
-
-/bin/bash "${SCRIPT_DIR}/plesk-git-deploy.sh"
-/bin/bash "${SCRIPT_DIR}/plesk-git-deploy-frontend.sh"
-
-echo Full deploy finished
+/bin/bash "${SCRIPT_DIR}/plesk-git-deploy-full.sh"
