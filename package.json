@@ -16,6 +16,9 @@
     "frontend:lint": "pnpm --filter frontend lint",
     "frontend:test": "pnpm --filter frontend test",
     "frontend:test:e2e": "pnpm --filter frontend test:e2e",
-    "plesk-test-npm": "bash scripts/plesk-test-npm.sh"
+    "plesk-test-npm": "bash scripts/plesk-test-npm.sh",
+    "migrate": "pnpm --filter backend migrate",
+    "migrate:status": "pnpm --filter backend migrate:status",
+    "plesk-migrate": "bash scripts/plesk-migrate.sh"
   }
 }
