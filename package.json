@@ -19,6 +19,7 @@
     "plesk-test-npm": "bash scripts/plesk-test-npm.sh",
     "migrate": "pnpm --filter backend migrate",
     "migrate:status": "pnpm --filter backend migrate:status",
-    "plesk-migrate": "bash scripts/plesk-migrate.sh"
+    "plesk-migrate": "bash scripts/plesk-migrate.sh",
+    "plesk-migrate:baseline": "bash scripts/plesk-migrate.sh --baseline-init"
   }
 }

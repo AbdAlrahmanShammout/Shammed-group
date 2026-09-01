@@ -31,6 +31,7 @@
     "plesk-test-npm": "bash ../scripts/plesk-test-npm.sh",
     "plesk-deploy": "bash ../scripts/plesk-deploy.sh",
     "plesk-migrate": "bash ../scripts/plesk-migrate.sh",
+    "plesk-migrate:baseline": "bash ../scripts/plesk-migrate.sh --baseline-init",
     "postinstall": "prisma generate"
   },
   "prisma": {
