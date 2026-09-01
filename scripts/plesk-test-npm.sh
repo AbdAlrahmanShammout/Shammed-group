@@ -1,11 +1,13 @@
 #!/bin/bash
 # Test whether this Plesk environment can see and run npm.
-# Run from the repo root in SSH or Plesk Node.js "Run script":
+#
+# Plesk Node.js panel -> Run NPM script (type ONLY this name):
+#   plesk-test-npm
+#
+# SSH or Git additional deployment actions:
 #   /bin/bash scripts/plesk-test-npm.sh
 #
-# Git "additional deployment actions" often run in a chroot where
-# /opt/plesk/node is hidden. If this script fails there, run it from
-# SSH or the Node.js panel instead.
+# Git hooks often run in a chroot where /opt/plesk/node is hidden.
 
 set -u
 

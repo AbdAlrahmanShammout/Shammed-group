@@ -15,6 +15,7 @@
     "frontend:build": "pnpm --filter frontend build",
     "frontend:lint": "pnpm --filter frontend lint",
     "frontend:test": "pnpm --filter frontend test",
-    "frontend:test:e2e": "pnpm --filter frontend test:e2e"
+    "frontend:test:e2e": "pnpm --filter frontend test:e2e",
+    "plesk-test-npm": "bash scripts/plesk-test-npm.sh"
   }
 }

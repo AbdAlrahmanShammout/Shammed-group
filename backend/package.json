@@ -26,6 +26,7 @@
     "restore:media": "node scripts/restore-all.mjs",
     "generate:oes-logo": "node scripts/generate-partner-oes-logo.mjs",
     "cleanup:media": "node scripts/cleanup-unused-media.mjs",
+    "plesk-test-npm": "bash ../scripts/plesk-test-npm.sh",
     "postinstall": "prisma generate"
   },
   "prisma": {
