@@ -5,8 +5,11 @@
 #   plesk-deploy
 #
 # Layout on this host:
-#   api.shammed-group.com/backend  -> build in place (Node.js app)
+#   api.shammed-group.com/backend  -> install, generate, build, migrate
 #   api.shammed-group.com/frontend -> build, then copy dist to httpdocs
+#
+# Migrate step runs: bash scripts/plesk-migrate.sh --baseline-init
+# (same as npm script plesk-migrate:baseline)
 
 set -u
 
@@ -98,6 +101,19 @@ init_log() {
   } >> "${LOGFILE}" 2>/dev/null || LOGFILE=${REPO_ROOT}/deploy.log
 }
 
+migrate_database() {
+  cd "${REPO_ROOT}/backend" || fail "cannot cd backend"
+  log "STEP migrate database (plesk-migrate:baseline)"
+  if [ -x "${REPO_ROOT}/scripts/plesk-migrate.sh" ]; then
+    run_logged bash "${REPO_ROOT}/scripts/plesk-migrate.sh" --baseline-init \
+      || fail "database migrate failed"
+  else
+    run_logged "${NPM_BIN}" run plesk-migrate:baseline \
+      || fail "database migrate failed"
+  fi
+  log "STEP migrate ok"
+}
+
 deploy_backend() {
   cd "${REPO_ROOT}/backend" || fail "cannot cd backend"
   log "STEP 1 backend npm install"
@@ -160,6 +176,7 @@ log "NPM=${NPM_BIN} ($("${NPM_BIN}" -v))"
 log "LOGFILE=${LOGFILE}"
 
 deploy_backend
+migrate_database
 deploy_frontend
 publish_frontend
 

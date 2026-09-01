@@ -122,10 +122,21 @@ parse_args() {
 
 baseline_init_migration() {
   log "Baselining existing DB: mark ${INIT_MIGRATION} as already applied"
-  log "(Use this only when tables from the init migration already exist.)"
-  run_prisma migrate resolve --applied "${INIT_MIGRATION}" \
-    || fail "prisma migrate resolve --applied ${INIT_MIGRATION} failed"
-  log "OK init migration marked as applied"
+  log "(Safe if already applied — continues to migrate deploy.)"
+  local resolve_output=""
+  local resolve_status=0
+  resolve_output=$(run_prisma migrate resolve --applied "${INIT_MIGRATION}" 2>&1)
+  resolve_status=$?
+  printf '%s\n' "${resolve_output}"
+  if [ "${resolve_status}" -eq 0 ]; then
+    log "OK init migration marked as applied"
+    return 0
+  fi
+  if printf '%s' "${resolve_output}" | grep -Eqi 'already recorded as applied|P3008'; then
+    log "OK init migration was already applied — skipping baseline"
+    return 0
+  fi
+  fail "prisma migrate resolve --applied ${INIT_MIGRATION} failed"
 }
 
 main() {
