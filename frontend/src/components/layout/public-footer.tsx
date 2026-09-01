@@ -23,8 +23,14 @@ type PublicFooterProps = {
   readonly companyName?: string;
   readonly homePath: string;
   readonly navItems: readonly PublicNavItem[];
-  readonly email?: string;
-  readonly phone?: string;
+  readonly emails?: readonly {
+    readonly label: string;
+    readonly email: string;
+  }[];
+  readonly phones?: readonly {
+    readonly label: string;
+    readonly phone: string;
+  }[];
   readonly address?: string;
   readonly logoMediaId?: number;
   readonly mapLocations?: readonly PublicFooterMapLocation[];
@@ -40,8 +46,8 @@ export function PublicFooter({
   companyName,
   homePath,
   navItems,
-  email,
-  phone,
+  emails = [],
+  phones = [],
   address,
   logoMediaId,
   mapLocations = [],
@@ -152,22 +158,32 @@ export function PublicFooter({
           ) : null}
           {!isSettingsPending && !isSettingsError ? (
             <div className="flex flex-col gap-2">
-              {email ? (
-                <a
-                  className={cn('break-all transition-colors hover:text-white', focusRingClassName)}
-                  href={`mailto:${email}`}
-                >
-                  {email}
-                </a>
-              ) : null}
-              {phone ? (
-                <a
-                  className={cn('transition-colors hover:text-white', focusRingClassName)}
-                  href={`tel:${phone}`}
-                >
-                  {phone}
-                </a>
-              ) : null}
+              {emails.map((emailItem) => (
+                <p className="flex flex-col gap-0.5" key={`${emailItem.label}-${emailItem.email}`}>
+                  <span className="text-xs font-medium uppercase tracking-wide text-slate-300">
+                    {emailItem.label}
+                  </span>
+                  <a
+                    className={cn('break-all transition-colors hover:text-white', focusRingClassName)}
+                    href={`mailto:${emailItem.email}`}
+                  >
+                    {emailItem.email}
+                  </a>
+                </p>
+              ))}
+              {phones.map((phoneItem) => (
+                <p className="flex flex-col gap-0.5" key={`${phoneItem.label}-${phoneItem.phone}`}>
+                  <span className="text-xs font-medium uppercase tracking-wide text-slate-300">
+                    {phoneItem.label}
+                  </span>
+                  <a
+                    className={cn('transition-colors hover:text-white', focusRingClassName)}
+                    href={`tel:${phoneItem.phone}`}
+                  >
+                    {phoneItem.phone}
+                  </a>
+                </p>
+              ))}
               {address ? <p className="leading-relaxed">{address}</p> : null}
             </div>
           ) : null}

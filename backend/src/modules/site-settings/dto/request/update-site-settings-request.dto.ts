@@ -1,5 +1,52 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, Min, ValidateIf } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+  ValidateIf,
+  ValidateNested,
+} from 'class-validator';
+
+export class UpdateSiteSettingsPhoneItemDto {
+  @ApiProperty({ description: 'Label shown above the phone number', example: 'Sales' })
+  @IsString()
+  @IsNotEmpty()
+  label!: string;
+
+  @ApiProperty({ description: 'Company phone number', example: '+963 11 000 0000' })
+  @IsString()
+  @IsNotEmpty()
+  phone!: string;
+
+  @ApiPropertyOptional({ description: 'Sort order among phones', example: 0 })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  displayOrder?: number;
+}
+
+export class UpdateSiteSettingsEmailItemDto {
+  @ApiProperty({ description: 'Label shown above the email address', example: 'Sales' })
+  @IsString()
+  @IsNotEmpty()
+  label!: string;
+
+  @ApiProperty({ description: 'Company email address', example: 'sales@shammed-group.com' })
+  @IsEmail()
+  email!: string;
+
+  @ApiPropertyOptional({ description: 'Sort order among emails', example: 0 })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  displayOrder?: number;
+}
 
 export class UpdateSiteSettingsRequestDto {
   @ApiPropertyOptional({ description: 'Company display name', example: 'Shammed Group' })
@@ -32,11 +79,27 @@ export class UpdateSiteSettingsRequestDto {
   @IsEmail()
   email?: string;
 
+  @ApiPropertyOptional({ type: () => [UpdateSiteSettingsEmailItemDto] })
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => UpdateSiteSettingsEmailItemDto)
+  emails?: UpdateSiteSettingsEmailItemDto[];
+
   @ApiPropertyOptional({ description: 'Main company phone', example: '+963 11 000 0000' })
   @ValidateIf((_, value) => value !== undefined)
   @IsString()
   @IsNotEmpty()
   phone?: string;
+
+  @ApiPropertyOptional({ type: () => [UpdateSiteSettingsPhoneItemDto] })
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => UpdateSiteSettingsPhoneItemDto)
+  phones?: UpdateSiteSettingsPhoneItemDto[];
 
   @ApiPropertyOptional({
     description: 'WhatsApp contact number',

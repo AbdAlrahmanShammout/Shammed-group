@@ -2,6 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { BaseModelResponseDto } from '@/common/base/base-model-response.dto';
 import { MediaResponse } from '@/modules/media/dto/response/model/media.response';
+import { SiteSettingsEmailResponse } from '@/modules/site-settings/dto/response/model/site-settings-email.response';
+import { SiteSettingsPhoneResponse } from '@/modules/site-settings/dto/response/model/site-settings-phone.response';
 import { SiteSettingsEntity } from '@/modules/site-settings/entity/site-settings.entity';
 
 export class SiteSettingsResponse extends BaseModelResponseDto {
@@ -17,8 +19,14 @@ export class SiteSettingsResponse extends BaseModelResponseDto {
   @ApiProperty({ description: 'Main company email', example: 'info@shammed-group.com' })
   email: string;
 
+  @ApiProperty({ type: () => [SiteSettingsEmailResponse] })
+  emails: SiteSettingsEmailResponse[];
+
   @ApiProperty({ description: 'Main company phone', example: '+963 11 000 0000' })
   phone: string;
+
+  @ApiProperty({ type: () => [SiteSettingsPhoneResponse] })
+  phones: SiteSettingsPhoneResponse[];
 
   @ApiPropertyOptional({ description: 'WhatsApp contact number', example: '+963 11 000 0000' })
   whatsApp?: string;
@@ -68,7 +76,9 @@ export class SiteSettingsResponse extends BaseModelResponseDto {
     this.companyNameEnglish = data.companyNameEnglish;
     this.companyNameArabic = data.companyNameArabic ?? undefined;
     this.email = data.email;
+    this.emails = (data.emails ?? []).map((email) => new SiteSettingsEmailResponse(email));
     this.phone = data.phone;
+    this.phones = (data.phones ?? []).map((phone) => new SiteSettingsPhoneResponse(phone));
     this.whatsApp = data.whatsApp ?? undefined;
     this.address = data.address ?? undefined;
     this.logoMediaId = data.logoMediaId ?? undefined;

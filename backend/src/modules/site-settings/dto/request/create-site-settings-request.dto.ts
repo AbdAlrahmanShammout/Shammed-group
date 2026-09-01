@@ -1,5 +1,51 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+
+export class CreateSiteSettingsPhoneItemDto {
+  @ApiProperty({ description: 'Label shown above the phone number', example: 'Primary' })
+  @IsString()
+  @IsNotEmpty()
+  label!: string;
+
+  @ApiProperty({ description: 'Company phone number', example: '+963 11 000 0000' })
+  @IsString()
+  @IsNotEmpty()
+  phone!: string;
+
+  @ApiPropertyOptional({ description: 'Sort order among phones', example: 0 })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  displayOrder?: number;
+}
+
+export class CreateSiteSettingsEmailItemDto {
+  @ApiProperty({ description: 'Label shown above the email address', example: 'Primary' })
+  @IsString()
+  @IsNotEmpty()
+  label!: string;
+
+  @ApiProperty({ description: 'Company email address', example: 'info@shammed-group.com' })
+  @IsEmail()
+  email!: string;
+
+  @ApiPropertyOptional({ description: 'Sort order among emails', example: 0 })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  displayOrder?: number;
+}
 
 export class CreateSiteSettingsRequestDto {
   @ApiProperty({ description: 'Company display name', example: 'Shammed Group' })
@@ -26,10 +72,26 @@ export class CreateSiteSettingsRequestDto {
   @IsEmail()
   email?: string;
 
+  @ApiPropertyOptional({ type: () => [CreateSiteSettingsEmailItemDto] })
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => CreateSiteSettingsEmailItemDto)
+  emails?: CreateSiteSettingsEmailItemDto[];
+
   @ApiProperty({ description: 'Main company phone', example: '+963 11 000 0000' })
   @IsString()
   @IsNotEmpty()
   phone!: string;
+
+  @ApiPropertyOptional({ type: () => [CreateSiteSettingsPhoneItemDto] })
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => CreateSiteSettingsPhoneItemDto)
+  phones?: CreateSiteSettingsPhoneItemDto[];
 
   @ApiPropertyOptional({ description: 'WhatsApp contact number', example: '+963 11 000 0000' })
   @IsOptional()

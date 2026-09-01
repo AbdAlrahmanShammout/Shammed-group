@@ -305,15 +305,27 @@ async function seedSiteSettings(prisma: PrismaClient): Promise<void> {
     address:
       "Directorate of Health's building, Shahbandar Square, Damascus, Syria, P.O. Box 8001",
   };
+  const phones = {
+    create: [{ label: 'Primary', phone: data.phone, displayOrder: 0 }],
+  };
+  const emails = {
+    create: [{ label: 'Primary', email: data.email, displayOrder: 0 }],
+  };
   const existing = await prisma.siteSettings.findFirst();
   if (existing) {
+    await prisma.siteSettingsPhone.deleteMany({ where: { siteSettingsId: existing.id } });
+    await prisma.siteSettingsEmail.deleteMany({ where: { siteSettingsId: existing.id } });
     await prisma.siteSettings.update({
       where: { id: existing.id },
-      data,
+      data: {
+        ...data,
+        phones,
+        emails,
+      },
     });
     return;
   }
-  await prisma.siteSettings.create({ data });
+  await prisma.siteSettings.create({ data: { ...data, phones, emails } });
 }
 
 async function seedHomePage(prisma: PrismaClient): Promise<void> {

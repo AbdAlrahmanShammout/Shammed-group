@@ -9,7 +9,9 @@ export const mockPublicSiteSettings = {
   companyName: 'Example Company',
   companyNameEnglish: 'Example Company',
   email: mockPublicContactEmail,
+  emails: [{ id: 1, label: 'Primary', email: mockPublicContactEmail, displayOrder: 0 }],
   phone: '+10000000000',
+  phones: [{ id: 1, label: 'Primary', phone: '+10000000000', displayOrder: 0 }],
   address: '1 Example Street',
 };
 

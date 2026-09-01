@@ -32,7 +32,9 @@ export function AdminContactInformationPage(): ReactElement {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-medium">Contact Information</h1>
-        <p className="text-muted-foreground">Manage the main email, phone, WhatsApp, and address.</p>
+        <p className="text-muted-foreground">
+          Manage labeled email addresses, phone numbers, WhatsApp, and address.
+        </p>
       </div>
       <ContactInformationForm siteSettings={settingsQuery.data.siteSettings} />
     </div>

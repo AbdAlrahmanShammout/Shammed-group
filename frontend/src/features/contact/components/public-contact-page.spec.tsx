@@ -16,7 +16,9 @@ const mockSiteSettings = {
     companyName: 'Example Company',
     companyNameEnglish: 'Example Company',
     email: 'contact@example.test',
+    emails: [{ id: 1, label: 'Primary', email: 'contact@example.test', displayOrder: 0 }],
     phone: '+10000000000',
+    phones: [{ id: 1, label: 'Primary', phone: '+10000000000', displayOrder: 0 }],
     whatsApp: '+10000000001',
     address: '1 Example Street',
   },
@@ -116,6 +118,8 @@ describe('PublicContactPage', () => {
     renderPublicContactPage();
     expect(await screen.findByRole('heading', { name: 'Example Company' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'contact@example.test' })).toBeInTheDocument();
+    expect(screen.getAllByText('Primary')).toHaveLength(2);
+    expect(screen.getByRole('link', { name: '+10000000000' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Example Branch' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Open in Google Maps/ })).toHaveAttribute(
       'href',

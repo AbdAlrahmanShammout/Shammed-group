@@ -12,6 +12,8 @@ import { usePublicSocialLinksQuery } from '@/features/site-chrome/hooks/use-publ
 import { applyDocumentColors } from '@/lib/apply-document-colors';
 import { createLocationMapsEmbedUrl } from '@/lib/create-location-maps-embed-url';
 import { createPublicMediaUrl } from '@/lib/create-public-media-url';
+import { toSiteContactEmails } from '@/lib/to-site-contact-emails';
+import { toSiteContactPhones } from '@/lib/to-site-contact-phones';
 
 function applyDocumentFavicon(faviconMediaId: number | undefined): void {
   const existing = document.head.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
@@ -88,14 +90,14 @@ export function PublicSiteShell(): ReactElement {
         address={siteSettings?.address}
         companyName={siteSettings?.companyName}
         copyrightYear={new Date().getFullYear()}
-        email={siteSettings?.email}
+        emails={siteSettings ? toSiteContactEmails(siteSettings) : []}
         homePath={appPaths.home}
         isSettingsError={siteSettingsQuery.isError}
         isSettingsPending={siteSettingsQuery.isPending}
         logoMediaId={siteSettings?.logoMediaId}
         mapLocations={mapLocations}
         navItems={publicNavItems}
-        phone={siteSettings?.phone}
+        phones={siteSettings ? toSiteContactPhones(siteSettings) : []}
         socialLinks={socialLinks}
       />
     </div>

@@ -42,6 +42,20 @@ export class SiteSettingsPrismaRepository implements SiteSettingsRepository {
         textColor: input.textColor,
         secondaryColor: input.secondaryColor,
         borderColor: input.borderColor,
+        phones: {
+          create: input.phones.map((phone) => ({
+            label: phone.label,
+            phone: phone.phone,
+            displayOrder: phone.displayOrder,
+          })),
+        },
+        emails: {
+          create: input.emails.map((email) => ({
+            label: email.label,
+            email: email.email,
+            displayOrder: email.displayOrder,
+          })),
+        },
       },
       include: siteSettingsDetailsInclude,
     });
@@ -63,7 +77,25 @@ export class SiteSettingsPrismaRepository implements SiteSettingsRepository {
     input: UpdateSiteSettingsRepoInput,
     context?: TransactionContext,
   ): Promise<SiteSettingsEntity> {
-    const client = resolvePrismaClient(this.prismaProviderService, context);
+    if (context) {
+      return this.executeUpdate(resolvePrismaClient(this.prismaProviderService, context), input);
+    }
+    if (input.phones !== undefined || input.emails !== undefined) {
+      return this.prismaProviderService.$transaction((tx) => this.executeUpdate(tx, input));
+    }
+    return this.executeUpdate(this.prismaProviderService, input);
+  }
+
+  private async executeUpdate(
+    client: PrismaProviderService | Prisma.TransactionClient,
+    input: UpdateSiteSettingsRepoInput,
+  ): Promise<SiteSettingsEntity> {
+    if (input.phones !== undefined) {
+      await client.siteSettingsPhone.deleteMany({ where: { siteSettingsId: input.id } });
+    }
+    if (input.emails !== undefined) {
+      await client.siteSettingsEmail.deleteMany({ where: { siteSettingsId: input.id } });
+    }
     const result = await client.siteSettings.update({
       where: { id: input.id },
       data: this.buildUpdateData(input),
@@ -114,9 +146,27 @@ export class SiteSettingsPrismaRepository implements SiteSettingsRepository {
     if (input.primaryColor !== undefined) data.primaryColor = input.primaryColor;
     if (input.accentColor !== undefined) data.accentColor = input.accentColor;
     if (input.backgroundColor !== undefined) data.backgroundColor = input.backgroundColor;
-    if (input.textColor !== undefined) data.textColor = input.textColor;
     if (input.secondaryColor !== undefined) data.secondaryColor = input.secondaryColor;
+    if (input.textColor !== undefined) data.textColor = input.textColor;
     if (input.borderColor !== undefined) data.borderColor = input.borderColor;
+    if (input.phones !== undefined) {
+      data.phones = {
+        create: input.phones.map((phone) => ({
+          label: phone.label,
+          phone: phone.phone,
+          displayOrder: phone.displayOrder,
+        })),
+      };
+    }
+    if (input.emails !== undefined) {
+      data.emails = {
+        create: input.emails.map((email) => ({
+          label: email.label,
+          email: email.email,
+          displayOrder: email.displayOrder,
+        })),
+      };
+    }
     return data;
   }
 }

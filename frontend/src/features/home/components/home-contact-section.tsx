@@ -8,6 +8,8 @@ import { ContactForm } from '@/features/contact/components/contact-form';
 import { usePublicSiteSettingsQuery } from '@/features/site-chrome/hooks/use-public-site-settings-query';
 import type { HomePageResponse } from '@/generated/public-home.contract';
 import { focusRingClassName } from '@/lib/a11y/focus-ring-class-name';
+import { toSiteContactEmails } from '@/lib/to-site-contact-emails';
+import { toSiteContactPhones } from '@/lib/to-site-contact-phones';
 import { cn } from '@/lib/utils';
 
 type HomeContactSectionProps = {
@@ -40,32 +42,40 @@ export function HomeContactSection({ homePage }: HomeContactSectionProps): React
           {siteSettingsQuery.isPending ? <p role="status">Loading contact details…</p> : null}
           {siteSettings ? (
             <ul className="flex flex-col gap-4 text-sm">
-              <li>
-                <a
-                  className={cn(
-                    'inline-flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground',
-                    focusRingClassName,
-                  )}
-                  href={`mailto:${siteSettings.email}`}
-                >
-                  <Mail aria-hidden="true" className="size-4 shrink-0" />
-                  {siteSettings.email}
-                </a>
-              </li>
-              {siteSettings.phone ? (
-                <li>
+              {toSiteContactEmails(siteSettings).map((emailItem) => (
+                <li key={`${emailItem.label}-${emailItem.email}`}>
                   <a
                     className={cn(
-                      'inline-flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground',
+                      'inline-flex items-start gap-3 text-muted-foreground transition-colors hover:text-foreground',
                       focusRingClassName,
                     )}
-                    href={`tel:${siteSettings.phone}`}
+                    href={`mailto:${emailItem.email}`}
                   >
-                    <Phone aria-hidden="true" className="size-4 shrink-0" />
-                    {siteSettings.phone}
+                    <Mail aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+                    <span className="flex flex-col gap-0.5">
+                      <span className="text-sm font-medium text-foreground">{emailItem.label}</span>
+                      <span>{emailItem.email}</span>
+                    </span>
                   </a>
                 </li>
-              ) : null}
+              ))}
+              {toSiteContactPhones(siteSettings).map((phoneItem) => (
+                <li key={`${phoneItem.label}-${phoneItem.phone}`}>
+                  <a
+                    className={cn(
+                      'inline-flex items-start gap-3 text-muted-foreground transition-colors hover:text-foreground',
+                      focusRingClassName,
+                    )}
+                    href={`tel:${phoneItem.phone}`}
+                  >
+                    <Phone aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+                    <span className="flex flex-col gap-0.5">
+                      <span className="text-sm font-medium text-foreground">{phoneItem.label}</span>
+                      <span>{phoneItem.phone}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
               {siteSettings.whatsApp ? (
                 <li className="inline-flex items-center gap-3 text-muted-foreground">
                   <Phone aria-hidden="true" className="size-4 shrink-0" />

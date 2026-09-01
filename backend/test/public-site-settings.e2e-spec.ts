@@ -51,6 +51,20 @@ describe('Public site settings (e2e)', () => {
         companyNameEnglish: 'Shammed Group',
         email: DEFAULT_SITE_SETTINGS_EMAIL,
         phone: '+963 11 000 0000',
+        phones: [
+          expect.objectContaining({
+            label: 'Primary',
+            phone: '+963 11 000 0000',
+            displayOrder: 0,
+          }),
+        ],
+        emails: [
+          expect.objectContaining({
+            label: 'Primary',
+            email: DEFAULT_SITE_SETTINGS_EMAIL,
+            displayOrder: 0,
+          }),
+        ],
       }),
     );
   });

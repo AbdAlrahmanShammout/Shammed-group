@@ -1,5 +1,7 @@
 import { BaseEntity } from '@/common/base/base.entity';
 import { MediaEntity } from '@/modules/media/entity/media.entity';
+import { SiteSettingsEmailEntity } from '@/modules/site-settings/entity/site-settings-email.entity';
+import { SiteSettingsPhoneEntity } from '@/modules/site-settings/entity/site-settings-phone.entity';
 import { SiteSettingsZodType } from '@/modules/site-settings/zod/site-settings.zod';
 
 export class SiteSettingsEntity extends BaseEntity {
@@ -22,6 +24,8 @@ export class SiteSettingsEntity extends BaseEntity {
   logo?: MediaEntity;
   favicon?: MediaEntity;
   placeholder?: MediaEntity;
+  phones?: SiteSettingsPhoneEntity[];
+  emails?: SiteSettingsEmailEntity[];
 
   constructor(data: SiteSettingsZodType) {
     super();

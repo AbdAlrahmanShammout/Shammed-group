@@ -12,6 +12,32 @@ export type MediaResponse = {
   readonly byteSize: number;
 };
 
+export type SiteSettingsEmailResponse = {
+  readonly id: number;
+  readonly label: string;
+  readonly email: string;
+  readonly displayOrder: number;
+};
+
+export type SiteSettingsEmailRequestDto = {
+  readonly label: string;
+  readonly email: string;
+  readonly displayOrder?: number;
+};
+
+export type SiteSettingsPhoneResponse = {
+  readonly id: number;
+  readonly label: string;
+  readonly phone: string;
+  readonly displayOrder: number;
+};
+
+export type SiteSettingsPhoneRequestDto = {
+  readonly label: string;
+  readonly phone: string;
+  readonly displayOrder?: number;
+};
+
 export type SiteSettingsResponse = {
   readonly id: number;
   readonly createdAt: string;
@@ -20,7 +46,9 @@ export type SiteSettingsResponse = {
   readonly companyNameEnglish: string;
   readonly companyNameArabic?: string;
   readonly email: string;
+  readonly emails: readonly SiteSettingsEmailResponse[];
   readonly phone: string;
+  readonly phones: readonly SiteSettingsPhoneResponse[];
   readonly whatsApp?: string;
   readonly address?: string;
   readonly logoMediaId?: number;
@@ -46,7 +74,9 @@ export type CreateSiteSettingsRequestDto = {
   readonly companyNameEnglish: string;
   readonly companyNameArabic?: string;
   readonly email?: string;
+  readonly emails?: readonly SiteSettingsEmailRequestDto[];
   readonly phone: string;
+  readonly phones?: readonly SiteSettingsPhoneRequestDto[];
   readonly whatsApp?: string;
   readonly address?: string;
   readonly logoMediaId?: number;
@@ -65,7 +95,9 @@ export type UpdateSiteSettingsRequestDto = {
   readonly companyNameEnglish?: string;
   readonly companyNameArabic?: string | null;
   readonly email?: string;
+  readonly emails?: readonly SiteSettingsEmailRequestDto[];
   readonly phone?: string;
+  readonly phones?: readonly SiteSettingsPhoneRequestDto[];
   readonly whatsApp?: string | null;
   readonly address?: string | null;
   readonly logoMediaId?: number | null;

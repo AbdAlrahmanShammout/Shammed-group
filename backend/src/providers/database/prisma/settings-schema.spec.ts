@@ -26,6 +26,26 @@ describe('settings location social schema', () => {
     expect(phones?.isList).toBe(true);
   });
 
+  it('allows SiteSettings to have labeled phones', () => {
+    const siteSettings = findModel('SiteSettings');
+    const phones = siteSettings.fields.find((field) => field.name === 'phones');
+    const siteSettingsPhone = findModel('SiteSettingsPhone');
+    const label = siteSettingsPhone.fields.find((field) => field.name === 'label');
+    expect(phones?.type).toBe('SiteSettingsPhone');
+    expect(phones?.isList).toBe(true);
+    expect(label?.isRequired).toBe(true);
+  });
+
+  it('allows SiteSettings to have labeled emails', () => {
+    const siteSettings = findModel('SiteSettings');
+    const emails = siteSettings.fields.find((field) => field.name === 'emails');
+    const siteSettingsEmail = findModel('SiteSettingsEmail');
+    const label = siteSettingsEmail.fields.find((field) => field.name === 'label');
+    expect(emails?.type).toBe('SiteSettingsEmail');
+    expect(emails?.isList).toBe(true);
+    expect(label?.isRequired).toBe(true);
+  });
+
   it('stores SocialLink platform as CMS text rather than a hardcoded enum', () => {
     const socialLink = findModel('SocialLink');
     const platform = socialLink.fields.find((field) => field.name === 'platform');

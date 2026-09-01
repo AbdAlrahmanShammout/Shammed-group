@@ -56,6 +56,20 @@ describe('Admin site settings (e2e)', () => {
         companyNameEnglish: 'Shammed Group',
         email: DEFAULT_SITE_SETTINGS_EMAIL,
         phone: '+963 11 000 0000',
+        phones: [
+          expect.objectContaining({
+            label: 'Primary',
+            phone: '+963 11 000 0000',
+            displayOrder: 0,
+          }),
+        ],
+        emails: [
+          expect.objectContaining({
+            label: 'Primary',
+            email: DEFAULT_SITE_SETTINGS_EMAIL,
+            displayOrder: 0,
+          }),
+        ],
       }),
     );
   });
@@ -88,6 +102,62 @@ describe('Admin site settings (e2e)', () => {
       expect.objectContaining({
         code: 'BAD_USER_INPUT',
         statusCode: 422,
+      }),
+    );
+  });
+
+  it('updates labeled contact phones', async () => {
+    const actual = await request(app.getHttpServer())
+      .patch('/admin/site-settings')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        phones: [
+          { label: 'Sales', phone: '+963 11 111 1111' },
+          { label: 'Accounting', phone: '+963 11 222 2222' },
+        ],
+      });
+    expect(actual.status).toBe(200);
+    expect(actual.body.siteSettings).toEqual(
+      expect.objectContaining({
+        phone: '+963 11 111 1111',
+        phones: [
+          expect.objectContaining({ label: 'Sales', phone: '+963 11 111 1111', displayOrder: 0 }),
+          expect.objectContaining({
+            label: 'Accounting',
+            phone: '+963 11 222 2222',
+            displayOrder: 1,
+          }),
+        ],
+      }),
+    );
+  });
+
+  it('updates labeled contact emails', async () => {
+    const actual = await request(app.getHttpServer())
+      .patch('/admin/site-settings')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        emails: [
+          { label: 'Sales', email: 'sales@shammed-group.com' },
+          { label: 'Accounting', email: 'accounts@shammed-group.com' },
+        ],
+      });
+    expect(actual.status).toBe(200);
+    expect(actual.body.siteSettings).toEqual(
+      expect.objectContaining({
+        email: 'sales@shammed-group.com',
+        emails: [
+          expect.objectContaining({
+            label: 'Sales',
+            email: 'sales@shammed-group.com',
+            displayOrder: 0,
+          }),
+          expect.objectContaining({
+            label: 'Accounting',
+            email: 'accounts@shammed-group.com',
+            displayOrder: 1,
+          }),
+        ],
       }),
     );
   });

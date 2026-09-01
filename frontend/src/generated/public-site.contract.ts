@@ -12,6 +12,20 @@ export type MediaResponse = {
   readonly byteSize: number;
 };
 
+export type SiteSettingsEmailResponse = {
+  readonly id: number;
+  readonly label: string;
+  readonly email: string;
+  readonly displayOrder: number;
+};
+
+export type SiteSettingsPhoneResponse = {
+  readonly id: number;
+  readonly label: string;
+  readonly phone: string;
+  readonly displayOrder: number;
+};
+
 export type SiteSettingsResponse = {
   readonly id: number;
   readonly createdAt: string;
@@ -20,7 +34,9 @@ export type SiteSettingsResponse = {
   readonly companyNameEnglish: string;
   readonly companyNameArabic?: string;
   readonly email: string;
+  readonly emails: readonly SiteSettingsEmailResponse[];
   readonly phone: string;
+  readonly phones: readonly SiteSettingsPhoneResponse[];
   readonly whatsApp?: string;
   readonly address?: string;
   readonly logoMediaId?: number;
