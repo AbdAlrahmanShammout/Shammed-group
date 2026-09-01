@@ -107,6 +107,9 @@ deploy_backend() {
   log "STEP 3 backend build"
   run_logged "${NPM_BIN}" run build || fail "backend build failed"
   if [ ! -f "${REPO_ROOT}/backend/dist/main.js" ]; then
+    log "listing backend/dist after build:"
+    ls -la "${REPO_ROOT}/backend/dist" || true
+    ls -la "${REPO_ROOT}/backend/dist/src" || true
     fail "backend/dist/main.js missing after build"
   fi
   log "STEP 3 ok backend/dist/main.js ready"
