@@ -115,10 +115,10 @@ log "STEP 2 backend generate"
 log "STEP 3 backend build"
 "${npmbin}" run build >> "${LOGFILE}" 2>&1 || fail "backend build failed"
 
-if [ ! -f "${REPO_ROOT}/backend/dist/main.js" ]; then
-  fail "backend/dist/main.js missing after build"
+if [ ! -f "${REPO_ROOT}/backend/dist/src/main.js" ]; then
+  fail "backend/dist/src/main.js missing after build"
 fi
-log "STEP 3 ok backend/dist/main.js ready"
+log "STEP 3 ok backend/dist/src/main.js ready"
 
 # Frontend
 export VITE_API_BASE_URL=https://api.shammed-group.com

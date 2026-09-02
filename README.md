@@ -387,7 +387,7 @@ pnpm --filter backend restore
 pnpm backend:build
 pnpm frontend:build
 # Built frontend is at frontend/dist/ — serve with nginx/Caddy/etc.
-# Backend: node backend/dist/main.js
+# Backend: node backend/dist/src/main.js
 ```
 
 ### Plesk production checklist
