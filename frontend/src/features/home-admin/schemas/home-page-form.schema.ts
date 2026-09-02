@@ -32,6 +32,7 @@ export const homePageFormSchema = z.object({
   whyReason4Description: z.string().trim().min(1, 'Required'),
   whyImageMediaId: z.string().trim(),
   heroEyebrow: z.string().trim().min(1, 'Hero eyebrow is required'),
+  heroExperienceLabel: z.string().trim().min(1, 'Hero experience label is required'),
   aboutEyebrow: z.string().trim().min(1, 'About eyebrow is required'),
   aboutMetric1Value: z.string().trim().min(1, 'Required'),
   aboutMetric1Label: z.string().trim().min(1, 'Required'),

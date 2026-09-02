@@ -54,6 +54,7 @@ export class HomePagePrismaRepository implements HomePageRepository {
         whyReason4Title: input.whyReason4Title,
         whyReason4Description: input.whyReason4Description,
         heroEyebrow: input.heroEyebrow,
+        heroExperienceLabel: input.heroExperienceLabel,
         aboutEyebrow: input.aboutEyebrow,
         aboutMetric1Value: input.aboutMetric1Value,
         aboutMetric1Label: input.aboutMetric1Label,
@@ -183,6 +184,9 @@ export class HomePagePrismaRepository implements HomePageRepository {
     }
     if (input.heroEyebrow !== undefined) {
       data.heroEyebrow = input.heroEyebrow;
+    }
+    if (input.heroExperienceLabel !== undefined) {
+      data.heroExperienceLabel = input.heroExperienceLabel;
     }
     if (input.aboutEyebrow !== undefined) {
       data.aboutEyebrow = input.aboutEyebrow;

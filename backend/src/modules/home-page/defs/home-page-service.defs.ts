@@ -35,6 +35,7 @@ export type CreateHomePageServiceInput = {
   readonly whyReason4Description: string;
   readonly whyImageMediaId?: number;
   readonly heroEyebrow: string;
+  readonly heroExperienceLabel: string;
   readonly aboutEyebrow: string;
   readonly aboutMetric1Value: string;
   readonly aboutMetric1Label: string;
@@ -78,6 +79,7 @@ export type UpdateHomePageServiceInput = {
   readonly whyReason4Description?: string;
   readonly whyImageMediaId?: number | null;
   readonly heroEyebrow?: string;
+  readonly heroExperienceLabel?: string;
   readonly aboutEyebrow?: string;
   readonly aboutMetric1Value?: string;
   readonly aboutMetric1Label?: string;

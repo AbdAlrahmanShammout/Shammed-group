@@ -181,6 +181,14 @@ export class CreateHomePageRequestDto {
   @IsNotEmpty()
   heroEyebrow!: string;
 
+  @ApiProperty({
+    description: 'Hero experience annotation shown on the visual',
+    example: '+20 years of advancing healthcare in Syria',
+  })
+  @IsString()
+  @IsNotEmpty()
+  heroExperienceLabel!: string;
+
   @ApiProperty({ description: 'About section eyebrow label', example: 'About us' })
   @IsString()
   @IsNotEmpty()

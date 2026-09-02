@@ -18,7 +18,7 @@ import type { HomePageResponse } from '@/generated/public-home.contract';
 type PharmaVisualProps = {
   readonly shouldReduceMotion: boolean | null;
   readonly minHeight?: number;
-  readonly showExperienceLabel?: boolean;
+  readonly experienceLabel?: string;
 };
 
 /** Center a fixed-size box around the visual focal point (50 % x, 46 % y). */
@@ -34,10 +34,45 @@ function centeredStyle(size: number, dx = 0, dy = 0): CSSProperties {
   };
 }
 
+type ExperienceLabelParts = {
+  readonly highlight: string | null;
+  readonly rest: string;
+};
+
+function splitExperienceLabel(label: string): ExperienceLabelParts {
+  const trimmed = label.trim();
+  const match = trimmed.match(/^(\+\d+)\s+([\s\S]+)$/);
+  if (!match) {
+    return { highlight: null, rest: trimmed };
+  }
+  return { highlight: match[1], rest: match[2] };
+}
+
+function HeroExperienceLabel({
+  label,
+  className,
+}: {
+  readonly label: string;
+  readonly className?: string;
+}): ReactElement {
+  const { highlight, rest } = splitExperienceLabel(label);
+  return (
+    <p className={className} style={{ color: 'rgba(44,52,112,0.52)' }}>
+      {highlight ? (
+        <span className="text-[15px] font-bold" style={{ color: 'rgba(44,52,112,0.72)' }}>
+          {highlight}
+        </span>
+      ) : null}
+      {highlight ? ' ' : null}
+      {rest}
+    </p>
+  );
+}
+
 function PharmaVisual({
   shouldReduceMotion,
   minHeight = 400,
-  showExperienceLabel = true,
+  experienceLabel,
 }: PharmaVisualProps): ReactElement {
   const rm = shouldReduceMotion;
 
@@ -215,7 +250,7 @@ function PharmaVisual({
       </div>
 
       {/* ── Experience label — upper-right editorial annotation ─────────── */}
-      {showExperienceLabel ? (
+      {experienceLabel ? (
         <div
           style={{
             position: 'absolute',
@@ -224,15 +259,13 @@ function PharmaVisual({
             textAlign: 'right',
             lineHeight: 1.45,
             pointerEvents: 'none',
+            maxWidth: '11rem',
           }}
         >
-          <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(44,52,112,0.52)', letterSpacing: '0.01em' }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: 'rgba(44,52,112,0.72)' }}>+20</span>
-            {' '}years of advancing
-          </p>
-          <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(44,52,112,0.52)', letterSpacing: '0.01em' }}>
-            healthcare in Syria
-          </p>
+          <HeroExperienceLabel
+            className="text-right text-[11px] font-medium leading-snug whitespace-pre-line"
+            label={experienceLabel}
+          />
         </div>
       ) : null}
 
@@ -308,19 +341,11 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
             viewport={{ once: true }}
             whileInView={shouldReduceMotion ? undefined : { opacity: 1 }}
           >
-            <PharmaVisual minHeight={280} shouldReduceMotion={shouldReduceMotion} showExperienceLabel={false} />
-            <p
-              className="pointer-events-none absolute right-4 top-4 text-right text-[11px] font-medium leading-snug"
-              style={{ color: 'rgba(44,52,112,0.52)' }}
-            >
-              <span className="text-[15px] font-bold" style={{ color: 'rgba(44,52,112,0.72)' }}>
-                +20
-              </span>
-              {' '}
-              years of advancing
-              <br />
-              healthcare in Syria
-            </p>
+            <PharmaVisual minHeight={280} shouldReduceMotion={shouldReduceMotion} />
+            <HeroExperienceLabel
+              className="pointer-events-none absolute right-4 top-4 max-w-[11rem] text-right text-[11px] font-medium leading-snug whitespace-pre-line"
+              label={homePage.heroExperienceLabel}
+            />
           </motion.div>
 
           {/* CTAs */}
@@ -343,7 +368,10 @@ export function HomeHeroSection({ homePage }: HomeHeroSectionProps): ReactElemen
           whileInView={shouldReduceMotion ? undefined : { opacity: 1 }}
           style={{ minHeight: 400, height: '100%' }}
         >
-          <PharmaVisual shouldReduceMotion={shouldReduceMotion} />
+          <PharmaVisual
+            experienceLabel={homePage.heroExperienceLabel}
+            shouldReduceMotion={shouldReduceMotion}
+          />
         </motion.div>
       </div>
 

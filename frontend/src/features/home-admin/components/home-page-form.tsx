@@ -63,6 +63,8 @@ function createDefaultValues(homePage?: HomePageResponse): HomePageFormValues {
     whyReason4Description: homePage?.whyReason4Description ?? '',
     whyImageMediaId: homePage?.whyImageMediaId?.toString() ?? '',
     heroEyebrow: homePage?.heroEyebrow ?? 'FORMULATION / 01 — SYRIA',
+    heroExperienceLabel:
+      homePage?.heroExperienceLabel ?? '+20 years of advancing healthcare in Syria',
     aboutEyebrow: homePage?.aboutEyebrow ?? 'About us',
     aboutMetric1Value: homePage?.aboutMetric1Value ?? '',
     aboutMetric1Label: homePage?.aboutMetric1Label ?? '',
@@ -149,6 +151,27 @@ export function HomePageForm({ homePage }: HomePageFormProps): ReactElement {
           {form.formState.errors.heroEyebrow ? (
             <p className="text-sm text-destructive" role="alert">
               {form.formState.errors.heroEyebrow.message}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="heroExperienceLabel">
+            Experience label <span aria-hidden="true">*</span>
+          </Label>
+          <Input
+            aria-invalid={Boolean(form.formState.errors.heroExperienceLabel)}
+            aria-required="true"
+            disabled={isPending}
+            id="heroExperienceLabel"
+            placeholder="+20 years of advancing healthcare in Syria"
+            {...form.register('heroExperienceLabel')}
+          />
+          <p className="text-sm text-muted-foreground">
+            Short annotation shown on the hero visual (desktop and mobile).
+          </p>
+          {form.formState.errors.heroExperienceLabel ? (
+            <p className="text-sm text-destructive" role="alert">
+              {form.formState.errors.heroExperienceLabel.message}
             </p>
           ) : null}
         </div>

@@ -207,6 +207,7 @@ model HomePage {
   whyReason4Description      String   @default("Consistent product availability backed by efficient logistics and responsive service.") @db.Text
   whyImageMediaId            Int?     @unique
   heroEyebrow                String   @default("FORMULATION / 01 — SYRIA") @db.Text
+  heroExperienceLabel        String   @default("+20 years of advancing healthcare in Syria") @db.Text
   aboutEyebrow               String   @default("About us") @db.Text
   aboutMetric1Value          String   @default("40+") @db.Text
   aboutMetric1Label          String   @default("Years in healthcare") @db.Text

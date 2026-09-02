@@ -24,6 +24,8 @@ function buildCreateHomePageBody(): Record<string, string> {
     servicesSectionTitle: 'Our Services',
     whyTitle: 'Why Shammed Group',
     whyDescription: 'Experience and international partnerships.',
+    heroEyebrow: 'FORMULATION / 01 — SYRIA',
+    heroExperienceLabel: '+20 years of advancing healthcare in Syria',
     contactSectionTitle: 'Contact Us',
   };
 }

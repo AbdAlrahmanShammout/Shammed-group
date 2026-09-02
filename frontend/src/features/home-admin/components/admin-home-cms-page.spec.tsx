@@ -28,6 +28,8 @@ const mockHomePage = {
     servicesSectionTitle: 'Services',
     whyTitle: 'Why',
     whyDescription: 'Why text',
+    heroEyebrow: 'FORMULATION / 01 — SYRIA',
+    heroExperienceLabel: '+20 years of advancing healthcare in Syria',
     contactSectionTitle: 'Contact',
   },
 };

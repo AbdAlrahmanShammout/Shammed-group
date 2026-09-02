@@ -39,6 +39,7 @@ export class HomePageMapper {
       whyReason4Description: schema.whyReason4Description,
       whyImageMediaId: schema.whyImageMediaId ?? null,
       heroEyebrow: schema.heroEyebrow,
+      heroExperienceLabel: schema.heroExperienceLabel,
       aboutEyebrow: schema.aboutEyebrow,
       aboutMetric1Value: schema.aboutMetric1Value,
       aboutMetric1Label: schema.aboutMetric1Label,

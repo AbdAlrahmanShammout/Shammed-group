@@ -116,6 +116,12 @@ export class HomePageResponse extends BaseModelResponseDto {
   @ApiProperty({ description: 'Hero eyebrow label', example: 'FORMULATION / 01 — SYRIA' })
   heroEyebrow: string;
 
+  @ApiProperty({
+    description: 'Hero experience annotation shown on the visual',
+    example: '+20 years of advancing healthcare in Syria',
+  })
+  heroExperienceLabel: string;
+
   @ApiProperty({ description: 'About section eyebrow label', example: 'About us' })
   aboutEyebrow: string;
 
@@ -188,6 +194,7 @@ export class HomePageResponse extends BaseModelResponseDto {
     this.whyReason4Description = data.whyReason4Description;
     this.whyImageMediaId = data.whyImageMediaId ?? undefined;
     this.heroEyebrow = data.heroEyebrow;
+    this.heroExperienceLabel = data.heroExperienceLabel;
     this.aboutEyebrow = data.aboutEyebrow;
     this.aboutMetric1Value = data.aboutMetric1Value;
     this.aboutMetric1Label = data.aboutMetric1Label;

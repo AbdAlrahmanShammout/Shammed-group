@@ -369,6 +369,7 @@ async function seedHomePage(prisma: PrismaClient): Promise<void> {
     whyReason4Description:
       'Consistent product availability backed by efficient logistics and responsive after-sales service.',
     heroEyebrow: 'FORMULATION / 01 — SYRIA',
+    heroExperienceLabel: '+20 years of advancing healthcare in Syria',
     aboutEyebrow: 'About us',
     aboutMetric1Value: '40+',
     aboutMetric1Label: 'Years in healthcare',

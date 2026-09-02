@@ -220,6 +220,15 @@ export class UpdateHomePageRequestDto {
   @IsNotEmpty()
   heroEyebrow?: string;
 
+  @ApiPropertyOptional({
+    description: 'Hero experience annotation shown on the visual',
+    example: '+20 years of advancing healthcare in Syria',
+  })
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  heroExperienceLabel?: string;
+
   @ApiPropertyOptional({ description: 'About section eyebrow label', example: 'About us' })
   @ValidateIf((_, value) => value !== undefined)
   @IsString()

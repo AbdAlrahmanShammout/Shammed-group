@@ -30,6 +30,7 @@ export type CreateHomePageRepoInput = {
   readonly whyReason4Description: string;
   readonly whyImageMediaId: number | null;
   readonly heroEyebrow: string;
+  readonly heroExperienceLabel: string;
   readonly aboutEyebrow: string;
   readonly aboutMetric1Value: string;
   readonly aboutMetric1Label: string;
@@ -74,6 +75,7 @@ export type UpdateHomePageRepoInput = {
   readonly whyReason4Description?: string;
   readonly whyImageMediaId?: number | null;
   readonly heroEyebrow?: string;
+  readonly heroExperienceLabel?: string;
   readonly aboutEyebrow?: string;
   readonly aboutMetric1Value?: string;
   readonly aboutMetric1Label?: string;

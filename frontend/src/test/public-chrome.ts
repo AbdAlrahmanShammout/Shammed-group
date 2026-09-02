@@ -89,6 +89,8 @@ export const mockPublicHomePage = {
     servicesSectionDescription: 'Selected services.',
     whyTitle: 'Why Example Company',
     whyDescription: 'Experience and partnerships.',
+    heroEyebrow: 'FORMULATION / 01 — SYRIA',
+    heroExperienceLabel: '+20 years of advancing healthcare in Syria',
     contactSectionTitle: 'Contact Us',
     contactSectionDescription: 'Reach our offices.',
   },

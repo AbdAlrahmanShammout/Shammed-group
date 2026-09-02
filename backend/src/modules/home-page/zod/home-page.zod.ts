@@ -40,6 +40,7 @@ export const HomePageZodSchema = BaseZodSchema.extend({
   whyReason4Description: ZodString,
   whyImageMediaId: ZodNumberNullable,
   heroEyebrow: ZodString,
+  heroExperienceLabel: ZodString,
   aboutEyebrow: ZodString,
   aboutMetric1Value: ZodString,
   aboutMetric1Label: ZodString,

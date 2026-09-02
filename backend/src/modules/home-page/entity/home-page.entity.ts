@@ -34,6 +34,7 @@ export class HomePageEntity extends BaseEntity {
   whyReason4Description!: string;
   whyImageMediaId!: number | null;
   heroEyebrow!: string;
+  heroExperienceLabel!: string;
   aboutEyebrow!: string;
   aboutMetric1Value!: string;
   aboutMetric1Label!: string;

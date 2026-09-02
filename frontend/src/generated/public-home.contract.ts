@@ -40,6 +40,7 @@ export type HomePageResponse = {
   readonly whyReason4Description: string;
   readonly whyImageMediaId?: number;
   readonly heroEyebrow: string;
+  readonly heroExperienceLabel: string;
   readonly aboutEyebrow: string;
   readonly aboutMetric1Value: string;
   readonly aboutMetric1Label: string;

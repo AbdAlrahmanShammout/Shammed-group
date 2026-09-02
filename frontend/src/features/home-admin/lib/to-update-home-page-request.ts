@@ -39,6 +39,7 @@ export function toUpdateHomePageRequest(values: HomePageFormValues): UpdateHomeP
     whyReason4Description: values.whyReason4Description,
     whyImageMediaId: toOptionalMediaId(values.whyImageMediaId),
     heroEyebrow: values.heroEyebrow,
+    heroExperienceLabel: values.heroExperienceLabel,
     aboutEyebrow: values.aboutEyebrow,
     aboutMetric1Value: values.aboutMetric1Value,
     aboutMetric1Label: values.aboutMetric1Label,
